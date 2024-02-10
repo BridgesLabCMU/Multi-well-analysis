@@ -176,65 +176,68 @@ end
 
 function main()
     config = parsefile("experiment_config.json")
-    dir  = config["directory"]
-    conditions = config["conditions"]
+    images_directories  = config["images_directory"]
+    all_conditions = config["conditions"]
     sig = config["sig"]
     blockDiameter = config["blockDiameter"] 
     shift_thresh = config["shift_thresh"]
 
-    if isdir("$dir/results_images")
-        rm("$dir/results_images"; recursive = true)
-    end
-    if isdir("$dir/results_data")
-        rm("$dir/results_data"; recursive = true)
-    end
-
-    mkdir("$dir/results_images")
-    mkdir("$dir/results_data")
-    output_file = "$dir/results_data/BF_imaging.csv"
-    num_wells = sum(length(v) for v in values(conditions))
-    files = [f for f in readdir(dir) if occursin(r"\.tif$", f)]
-    ntimepoints = div(length(files), num_wells)
-    file1 = files[1]
-    test_image = load("$dir/$file1"; lazyio=true)
-    height, width = size(test_image)
-    data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
-    all_wells = vcat(values(conditions)...)
-    conditions = values(conditions)
-    @inbounds for (i, wells) in enumerate(conditions)
-        @inbounds for j in eachindex(wells)
-            images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
-            well = wells[j]
-            well_files = sort([f for f in readdir(dir) if occursin(well*"_", f)], 
-                         lt=natural)
-            read_images!(well, dir, height, width, ntimepoints, images, well_files)
-            images = Float64.(images)
-            normalized_stack = similar(images)
-            registered_stack = similar(images)
-            fpMax = maximum(images) 
-            fpMin = minimum(images) 
-            fpMean = (fpMax - fpMin) / 2.0 + fpMin
-            fixed_thresh = fpMean - 0.04
-            images, output_stack = stack_preprocess(images, normalized_stack,
-                                                    registered_stack, blockDiameter[1],
-                                                    shift_thresh, fpMean, ntimepoints, 
-                                                    shift_thresh, sig)
-            masks = zeros(Bool, size(images))
-            compute_mask!(output_stack, images, masks, sig, 
-                          fixed_thresh, ntimepoints, blockDiameter, fpMean)
-            output_stack = Gray{N0f8}.(output_stack)
-            overlay = zeros(RGB{N0f8}, size(output_stack)...)
-            output_images!(output_stack, masks, overlay, dir, well)
-            let images = images
-                @floop for t in 1:ntimepoints
-                    @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
-                    @inbounds data_matrix[t, i*j] = signal 
+    @inbounds for k in eachindex(images_directories)
+        dir = images_directories[k]
+        conditions = all_conditions[k]
+        if isdir("$dir/results_images")
+            rm("$dir/results_images"; recursive = true)
+        end
+        if isdir("$dir/results_data")
+            rm("$dir/results_data"; recursive = true)
+        end
+        mkdir("$dir/results_images")
+        mkdir("$dir/results_data")
+        output_file = "$dir/results_data/BF_imaging.csv"
+        num_wells = sum(length(v) for v in values(conditions))
+        files = [f for f in readdir(dir) if occursin(r"\.tif$", f)]
+        ntimepoints = div(length(files), num_wells)
+        file1 = files[1]
+        test_image = load("$dir/$file1"; lazyio=true)
+        height, width = size(test_image)
+        data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        all_wells = vcat(values(conditions)...)
+        conditions = values(conditions)
+        @inbounds for (i, wells) in enumerate(conditions)
+            @inbounds for j in eachindex(wells)
+                images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
+                well = wells[j]
+                well_files = sort([f for f in readdir(dir) if occursin(well*"_", f)], 
+                             lt=natural)
+                read_images!(well, dir, height, width, ntimepoints, images, well_files)
+                images = Float64.(images)
+                normalized_stack = similar(images)
+                registered_stack = similar(images)
+                fpMax = maximum(images) 
+                fpMin = minimum(images) 
+                fpMean = (fpMax - fpMin) / 2.0 + fpMin
+                fixed_thresh = fpMean - 0.04
+                images, output_stack = stack_preprocess(images, normalized_stack,
+                                                        registered_stack, blockDiameter[1],
+                                                        shift_thresh, fpMean, ntimepoints, 
+                                                        shift_thresh, sig)
+                masks = zeros(Bool, size(images))
+                compute_mask!(output_stack, images, masks, sig, 
+                              fixed_thresh, ntimepoints, blockDiameter, fpMean)
+                output_stack = Gray{N0f8}.(output_stack)
+                overlay = zeros(RGB{N0f8}, size(output_stack)...)
+                output_images!(output_stack, masks, overlay, dir, well)
+                let images = images
+                    @floop for t in 1:ntimepoints
+                        @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
+                        @inbounds data_matrix[t, i*j] = signal 
+                    end
                 end
-            end
-        end # loop over wells for a condition 
-    end # loop over conditions 
-    df = DataFrame(data_matrix, Symbol.(all_wells))
-    df .= ifelse.(isnan.(df), 0, df)
-    write(output_file, df)
+            end # loop over wells for a condition 
+        end # loop over conditions 
+        df = DataFrame(data_matrix, Symbol.(all_wells))
+        df .= ifelse.(isnan.(df), 0, df)
+        write(output_file, df)
+    end # loop over directories
 end
 main()
