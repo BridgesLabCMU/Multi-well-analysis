@@ -38,34 +38,33 @@ end
 function main()
     config = parsefile("experiment_config.json")
     bulk_data  = config["bulk_data"]
-    images_dir  = config["directory"]
+    images_dir  = config["images_directory"]
     
-    bulk_data_dir = dirname(bulk_data)
-    if isdir(images_dir)
-        if isdir("$images_dir/Bulk data")
-            rm("$images_dir/Bulk data"; recursive = true)
+    for j in eachindex(bulk_data)
+        bulk_data_dir = bulk_data[j][1:end-4] 
+        images_dir = images_dirs[j]
+        if isdir(images_dir)
+            output_dir = images_dir 
+        else
+            if isdir(bulk_data_dir)
+                rm(bulk_data_dir; recursive = true)
+            end
+            mkdir(bulk_data_dir)
+            output_dir = bulk_data_dir
         end
-        mkdir("$images_dir/Bulk data")
-        output_dir = "$images_dir/Bulk data" 
-    else
-        if isdir("$bulk_data_dir/Bulk data")
-            rm("$bulk_data_dir/Bulk data"; recursive = true)
-        end
-        mkdir("$bulk_data_dir/Bulk data")
-        output_dir = "$bulk_data_dir/Bulk data"
-    end
-
-    df = DataFrame(CSV.File(bulk_data, header=false))
-    well_names = [string(c, r) for c in 'A':'H', r in 1:12]
-    rows = passmissing(occursin).([r"Read \d+"], df.Column1)
-    rows = [ismissing(x) ? false : x for x in rows]
-    row_indices = findall(rows)
-    reads = [df[index, :Column1] for index in row_indices]
-    for i in eachindex(row_indices)
-        data_matrix = extract_matrix(df, i, row_indices, well_names)
-        filename = determine_filename(reads[i])
-        if filename != nothing
-            CSV.write("$output_dir/$filename", data_matrix)
+        
+        df = DataFrame(CSV.File(bulk_data, header=false))
+        well_names = [string(c, r) for c in 'A':'H', r in 1:12]
+        rows = passmissing(occursin).([r"Read \d+"], df.Column1)
+        rows = [ismissing(x) ? false : x for x in rows]
+        row_indices = findall(rows)
+        reads = [df[index, :Column1] for index in row_indices]
+        for i in eachindex(row_indices)
+            data_matrix = extract_matrix(df, i, row_indices, well_names)
+            filename = determine_filename(reads[i])
+            if filename != nothing
+                CSV.write("$output_dir/$filename", data_matrix)
+            end
         end
     end 
 end
