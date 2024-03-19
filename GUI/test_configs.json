@@ -1,0 +1,90 @@
+{
+    "notes": "asdasd",
+    "directory": "/Users/dtboyes/Documents/Labs/BRIDGES LAB/Scanner GUI",
+    "images_directory": "",
+    "conditions": [
+        {
+            "sample1": [
+                "A1",
+                "A2",
+                "A3"
+            ]
+        },
+        {
+            "sample2": [
+                "A1",
+                "A2",
+                "A3",
+                "B3"
+            ]
+        },
+        {
+            "sample2": [
+                "E4",
+                "F3",
+                "F4"
+            ]
+        },
+        {
+            "sample3": [
+                "A1",
+                "E5",
+                "E6",
+                "F6"
+            ]
+        },
+        {
+            "sample3": [
+                "E4",
+                "F3",
+                "F4"
+            ]
+        }
+    ],
+    "acquisition_frequency": 2,
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "jitter",
+        "plot3": "heatmap"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "lum",
+            " OD"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "CY5_imaging"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "sample1",
+        "plot2": "sample2",
+        "plot3": "sample3"
+    },
+    "plot_titles": {
+        "plot1": "1",
+        "plot2": "2",
+        "plot3": "3"
+    },
+    "plot_xlabs": {
+        "plot1": "1",
+        "plot2": "2",
+        "plot3": "3"
+    },
+    "plot_ylabs": {
+        "plot1": "1",
+        "plot2": "2",
+        "plot3": "3"
+    },
+    "plot_filenames": {
+        "plot1": "1",
+        "plot2": "2",
+        "plot3": "3"
+    },
+    "sig": 2,
+    "blockDiameter": 101.0,
+    "shift_thresh": 100
+}

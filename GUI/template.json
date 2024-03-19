@@ -1,0 +1,28 @@
+{
+    "notes": "In this experiment, I did blah blah",
+    "directory": "/Users/jojo/Downloads/Lab-resources/test_data",
+    "conditions": {
+        "Untreated": ["A7", "A8", "A9", "B7", "B8", "B9"],
+        "V. cholerae": ["A1", "A2", "A3", "A4", "A5", "A6"],
+        "V. harveyi": ["B1", "B2", "B3", "B4", "B5", "B6"],
+        "V. fischeri": ["C1", "C2", "C3", "C4", "C5", "C6"],
+        "V. anguillarum": ["D1", "D2", "D3", "D4", "D5", "D6"],
+        "V. parahaemolyticus": ["E1", "E2", "E3", "E4", "E5", "E6"],
+        "V. vulnificus": ["F1", "F2", "F3", "F4", "F5", "F6"],
+        "E. coli": ["G1", "G2", "G3", "G4", "G5", "G6"],
+        "P. aeruginosa": ["H1", "H2", "H3", "H4", "H5", "H6"]
+    },
+    "acquisition_frequency": 2,
+    "plot_types": {"plot_1" : "line", "plot_2" : "jitter", "plot_3" : "heatmap"},
+    "plot_dtypes": {"plot_1" : ["lum", "OD"], "plot_2" : ["BF_imaging"], "plot_3" : ["CY5_imaging"]}, 
+    "plot_conditions": {"plot_1" : ["Untreated", "V. cholerae"], "plot_2" : ["V. harveyi", "V. anguillarum"], "plot_3" : ["P. aeruginosa"]}, 
+    "plot_normalization": {"plot_1" : "V. cholerae", "plot_2" : "V. harveyi", "plot_3" : "P. aeruginosa"}, 
+    "plot_titles": {"plot_1" : "plot_1", "plot_2" : "plot_2", "plot_3" : "plot_3"},
+    "plot_ylabs": {"plot_1" : "Fluorescence (a.u.)", "plot_2" : "Luminescence", "plot_3" : "Biofilm biomass (a.u.)"},
+    "plot_xlabs": {"plot_1" : "Time (h)", "plot_2" : "OD600", "plot_3" : "Fluorescence (a.u.)"},
+    "plot_filenames": {"plot_1" : "plot_1", "plot_2" : "plot_2", "plot_3" : "plot_3"},
+    "sig": 2,
+    "blockDiameter": 101.0,
+    "shift_thresh": 100 
+}
+
