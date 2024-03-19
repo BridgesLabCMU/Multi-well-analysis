@@ -1,0 +1,58 @@
+{
+    "notes": "blah",
+    "aquisition_frequency": 2,
+    "directory": "/home/jojo/Multi-well-analysis/src/GUI",
+    "images_directory": "",
+    "conditions": [
+        {
+            "blah": [
+                "G1"
+            ]
+        }
+    ],
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "jitter",
+        "plot3": "heatmap"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "lum",
+            " OD"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "CY5_imaging"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": ""
+    },
+    "plot_titles": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
+    },
+    "plot_xlabs": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
+    },
+    "plot_ylabs": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
+    },
+    "plot_filenames": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
+    },
+    "sig": 2,
+    "blockDiameter": 101.0,
+    "shift_thresh": 100
+}

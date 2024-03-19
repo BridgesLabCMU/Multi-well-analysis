@@ -14,6 +14,7 @@ condition_names = [""]
 
 plot_types = {"plot1": "", "plot2": "", "plot3":""}
 plot_dtypes = {"plot1":[], "plot2":[], "plot3":[]}
+plot_xaxes = {"plot1":"", "plot2":"", "plot3":""}
 plot_normalizations = {"plot1":"", "plot2":"", "plot3":""}
 plot_titles = {"plot1":"", "plot2":"", "plot3":""}
 plot_ylabs = {"plot1":"", "plot2":"", "plot3":""}
@@ -71,21 +72,22 @@ def disable_plate_count():
 # save all parameters to json file
 def save_to_json():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
+    json_dict["aquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
     json_dict["directory"] = HOME_DIR
     json_dict["images_directory"] = IMAGES_DIR
     json_dict["conditions"] = conditions_list
-    json_dict["acquisition_frequency"] = 2
     store_plot_options()
     json_dict["plot_types"] = plot_types
     json_dict["plot_dtypes"] = plot_dtypes
+    json_dict["plot_xaxis"] = plot_xaxes
     json_dict["plot_normalization"] = plot_normalizations
     json_dict["plot_titles"] = plot_titles
     json_dict["plot_xlabs"] = plot_xlabs
     json_dict["plot_ylabs"] = plot_ylabs
     json_dict["plot_filenames"] = plot_filenames
     json_dict["sig"] = 2
-    json_dict["blockDiameter"] = 101.0
-    json_dict["shift_thresh"] = 100
+    json_dict["blockDiameter"] = [501, 101]
+    json_dict["shift_thresh"] = 50
     with open(HOME_DIR + "/test_configs.json", "w") as file:
         json.dump(json_dict, file, indent = 4)
 
@@ -93,6 +95,7 @@ def save_to_json():
 def store_plot_options():
     save_plot_types(plot1_type_selection, plot2_type_selection, plot3_type_selection)
     save_plot_dtypes(plot1_dtype_selection, plot2_dtype_selection, plot3_dtype_selection)
+    save_plot_xaxis(plot1_xaxis_selection, plot2_xaxis_selection, plot3_xaxis_selection)
     save_plot_normalization(plot1_normalization_selection, plot2_normalization_selection, plot3_normalization_selection)
     save_plot_titles(plot1_title_entry, plot2_title_entry, plot3_title_entry)
     save_plot_xlabs(plot1_xlabs_entry, plot2_xlabs_entry, plot3_xlabs_entry)
@@ -108,6 +111,10 @@ def save_plot_dtypes(plot1_dtype_selection, plot2_dtype_selection, plot3_dtype_s
     plot_dtypes["plot1"] = plot1_dtype_selection.get().split(",")
     plot_dtypes["plot2"] = plot2_dtype_selection.get().split(",")
     plot_dtypes["plot3"] = plot3_dtype_selection.get().split(",")
+def save_plot_xaxis(plot1_xaxis_selection, plot2_xaxis_selection, plot3_xaxis_selection):
+    plot_xaxes["plot1"] = plot1_xaxis_selection.get()
+    plot_xaxes["plot2"] = plot2_xaxis_selection.get()
+    plot_xaxes["plot3"] = plot3_xaxis_selection.get()
 def save_plot_normalization(plot1_normalization_selection, plot2_normalization_selection, plot3_normalization_selection):
     plot_normalizations["plot1"] = plot1_normalization_selection.get()
     plot_normalizations["plot2"] = plot2_normalization_selection.get()
@@ -142,6 +149,12 @@ def plot2_dtype_select(value):
     plot2_dtype_selection.set(value)
 def plot3_dtype_select(value):
     plot3_dtype_selection.set(value)
+def plot1_xaxis_select(value):
+    plot1_xaxis_selection.set(value)
+def plot2_xaxis_select(value):
+    plot2_xaxis_selection.set(value)
+def plot3_xaxis_select(value):
+    plot3_xaxis_selection.set(value)
 def plot1_normalization_select(value):
     plot1_normalization_selection.set(value)
 def plot2_normalization_select(value):
@@ -163,6 +176,13 @@ if __name__ == "__main__":
 
     notes_entry = Text(root, width = 35, height = 4)
     notes_entry.pack(side=TOP, anchor = "w", padx = 10)
+
+    # ACQUISITION FREQUENCY
+    acquisition_lbl = ttk.Label(root, text = "Acquisition Frequency (#/hr)")
+    acquisition_lbl.pack(side=TOP, anchor = "w", padx = 10)
+
+    acquisition_freq = Text(root, width = 35, height = 4)
+    acquisition_freq.pack(side=TOP, anchor = "w", padx = 10)
 
     # CHECKBOX FOR IMAGES DIRECTORY
     var = ttk.IntVar()
@@ -285,6 +305,32 @@ if __name__ == "__main__":
 
     plot3_dtype_option_menu = ttk.OptionMenu(plot_dtype_options_frame, plot3_dtype_selection, *plot_dtype_options, command = plot3_dtype_select)
     plot3_dtype_option_menu.pack(side=LEFT, after = plot2_dtype_option_menu, anchor = "w", padx = 5)
+
+    # PLOT xaxis OPTIONS
+    plot1_xaxis_selection = ttk.StringVar()
+    plot2_xaxis_selection = ttk.StringVar()
+    plot3_xaxis_selection = ttk.StringVar()
+    plot1_xaxis_selection.set("")
+    plot2_xaxis_selection.set("")
+    plot3_xaxis_selection.set("")
+
+    plot_xaxis_frm = ttk.Frame(root)
+    plot_xaxis_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
+
+    plot1_xaxis_label = ttk.Label(plot_xaxis_frm, text="Plot 1 xaxis:")
+    plot1_xaxis_label.pack(side=LEFT, anchor = "w", padx = 5)
+    plot1_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_frm, plot1_xaxis_selection, *condition_names, command = plot1_xaxis_select)
+    plot1_xaxis_option_menu.pack(side=LEFT, after = plot1_xaxis_label, anchor = "w", padx = 5)
+
+    plot2_xaxis_label = ttk.Label(plot_xaxis_frm, text="Plot 2 xaxis:")
+    plot2_xaxis_label.pack(side=LEFT, after = plot1_xaxis_option_menu, anchor = "w", padx = 5)
+    plot2_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_frm, plot2_xaxis_selection, *condition_names, command = plot2_xaxis_select)
+    plot2_xaxis_option_menu.pack(side=LEFT, after = plot2_xaxis_label, anchor = "w", padx = 5)
+
+    plot3_xaxis_label = ttk.Label(plot_xaxis_frm, text="Plot 3 xaxis:")
+    plot3_xaxis_label.pack(side=LEFT, after = plot2_xaxis_option_menu, anchor = "w", padx = 5)
+    plot3_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_frm, plot3_xaxis_selection, *condition_names, command = plot3_xaxis_select)
+    plot3_xaxis_option_menu.pack(side=LEFT, after = plot3_xaxis_label, anchor = "w", padx = 5)
 
 
     # PLOT NORMALIZATION OPTIONS
