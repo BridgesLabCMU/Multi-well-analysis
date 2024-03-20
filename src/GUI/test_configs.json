@@ -1,12 +1,12 @@
 {
-    "notes": "blah",
+    "notes": "blahblah",
     "aquisition_frequency": 2,
-    "directory": "/home/jojo/Multi-well-analysis/src/GUI",
+    "directory": "/Users/jojo/Downloads/Multi-well-analysis/src/GUI",
     "images_directory": "",
     "conditions": [
         {
             "blah": [
-                "G1"
+                "C1"
             ]
         }
     ],
@@ -27,10 +27,20 @@
             "CY5_imaging"
         ]
     },
+    "plot_xaxis": {
+        "plot1": "nothing",
+        "plot2": "OD",
+        "plot3": "Time"
+    },
+    "plot_conditions": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
+    },
     "plot_normalization": {
-        "plot1": "",
-        "plot2": "",
-        "plot3": ""
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah"
     },
     "plot_titles": {
         "plot1": "blah",
@@ -53,6 +63,9 @@
         "plot3": "blah"
     },
     "sig": 2,
-    "blockDiameter": 101.0,
-    "shift_thresh": 100
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
 }
