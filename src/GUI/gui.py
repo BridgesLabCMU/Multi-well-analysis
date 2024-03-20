@@ -10,7 +10,6 @@
 # 8. change to loops
 ##################
 
-
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
@@ -24,15 +23,6 @@ json_dict = {}
 conditions_list = []
 condition_names = [""]
 
-plot_types = {"plot1": "", "plot2": "", "plot3":""}
-plot_dtypes = {"plot1":[], "plot2":[], "plot3":[]}
-plot_xaxes = {"plot1":"", "plot2":"", "plot3":""}
-plot_conditions = {"plot1":[], "plot2":[], "plot3":[]}
-plot_normalizations = {"plot1":"", "plot2":"", "plot3":""}
-plot_titles = {"plot1":"", "plot2":"", "plot3":""}
-plot_ylabs = {"plot1":"", "plot2":"", "plot3":""}
-plot_xlabs = {"plot1":"", "plot2":"", "plot3":""}
-plot_filenames = {"plot1":"", "plot2":"", "plot3":""}
 # toggle_checkbox shows folder selection widgets if checkbox is checked
 def toggle_checkbox():
     if var.get():
@@ -58,12 +48,6 @@ def read_sample_name():
     sample_prompt_text.config(text = f"Enter cells for sample: {sample_name}")
     enter_cells.configure(state="active")
     plate_count_option_menu.configure(state="active")
-    plot1_conditions_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot1_conditions_selection, sample_name))
-    plot2_conditions_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot2_conditions_selection, sample_name))
-    plot3_conditions_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot3_conditions_selection, sample_name))
-    plot1_normalization_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot1_normalization_selection, sample_name))
-    plot2_normalization_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot2_normalization_selection, sample_name))
-    plot3_normalization_option_menu['menu'].add_command(label=sample_name, command=ttk._setit(plot3_normalization_selection, sample_name))
 
 # save_sample_cells() saves the current list of sample_cells to
 # the conditions_list dictionary, then clears the selected cells and the table
@@ -85,10 +69,6 @@ def disable_plate_count():
     plate_count_option_menu.configure(state="disabled")
     plate_cells_var.set(1)
 
-def return_nplots():
-    content = nplots.get("1.0", "end-1c")
-    print(content)
-
 # save all parameters to json file
 def save_to_json():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
@@ -96,104 +76,14 @@ def save_to_json():
     json_dict["directory"] = HOME_DIR
     json_dict["images_directory"] = IMAGES_DIR
     json_dict["conditions"] = conditions_list
-    json_dict["nplots"] = int(nplots.get("1.0", "end-1c"))
-    store_plot_options()
-    json_dict["plot_types"] = plot_types
-    json_dict["plot_dtypes"] = plot_dtypes
-    json_dict["plot_xaxis"] = plot_xaxes
-    json_dict["plot_conditions"] = plot_conditions
-    json_dict["plot_normalization"] = plot_normalizations
-    json_dict["plot_titles"] = plot_titles
-    json_dict["plot_xlabs"] = plot_xlabs
-    json_dict["plot_ylabs"] = plot_ylabs
-    json_dict["plot_filenames"] = plot_filenames
     json_dict["sig"] = 2
     json_dict["blockDiameter"] = [501, 101]
     json_dict["shift_thresh"] = 50
     with open(HOME_DIR + "/test_configs.json", "w") as file:
         json.dump(json_dict, file, indent = 4)
 
-# calling plot option storing functions
-def store_plot_options():
-    save_plot_types(plot1_type_selection, plot2_type_selection, plot3_type_selection)
-    save_plot_dtypes(plot1_dtype_selection, plot2_dtype_selection, plot3_dtype_selection)
-    save_plot_xaxis(plot1_xaxis_selection, plot2_xaxis_selection, plot3_xaxis_selection)
-    save_plot_conditions(plot1_conditions_selection, plot2_conditions_selection, plot3_conditions_selection)
-    save_plot_normalization(plot1_normalization_selection, plot2_normalization_selection, plot3_normalization_selection)
-    save_plot_titles(plot1_title_entry, plot2_title_entry, plot3_title_entry)
-    save_plot_xlabs(plot1_xlabs_entry, plot2_xlabs_entry, plot3_xlabs_entry)
-    save_plot_ylabs(plot1_ylabs_entry, plot2_ylabs_entry, plot3_ylabs_entry)
-    save_plot_filenames(plot1_filename_entry, plot2_filename_entry, plot3_filename_entry)
-
-# storing plot options in list variables
-def save_plot_types(plot1_type_selection, plot2_type_selection, plot3_type_selection):
-    plot_types["plot1"] = plot1_type_selection.get()
-    plot_types["plot2"] = plot2_type_selection.get()
-    plot_types["plot3"] = plot3_type_selection.get()
-def save_plot_dtypes(plot1_dtype_selection, plot2_dtype_selection, plot3_dtype_selection):
-    plot_dtypes["plot1"] = plot1_dtype_selection.get().split(",")
-    plot_dtypes["plot2"] = plot2_dtype_selection.get().split(",")
-    plot_dtypes["plot3"] = plot3_dtype_selection.get().split(",")
-def save_plot_xaxis(plot1_xaxis_selection, plot2_xaxis_selection, plot3_xaxis_selection):
-    plot_xaxes["plot1"] = plot1_xaxis_selection.get()
-    plot_xaxes["plot2"] = plot2_xaxis_selection.get()
-    plot_xaxes["plot3"] = plot3_xaxis_selection.get()
-def save_plot_conditions(plot1_conditions_selection, plot2_conditions_selection, plot3_conditions_selection):
-    plot_conditions["plot1"] = plot1_conditions_selection.get()
-    plot_conditions["plot2"] = plot2_conditions_selection.get()
-    plot_conditions["plot3"] = plot3_conditions_selection.get()
-def save_plot_normalization(plot1_normalization_selection, plot2_normalization_selection, plot3_normalization_selection):
-    plot_normalizations["plot1"] = plot1_normalization_selection.get()
-    plot_normalizations["plot2"] = plot2_normalization_selection.get()
-    plot_normalizations["plot3"] = plot3_normalization_selection.get()
-def save_plot_titles(plot1_title_entry, plot2_title_entry, plot3_title_entry):
-    plot_titles["plot1"] = plot1_title_entry.get()
-    plot_titles["plot2"] = plot2_title_entry.get()
-    plot_titles["plot3"] = plot3_title_entry.get()
-def save_plot_xlabs(plot1_xlabs_entry, plot2_xlabs_entry, plot3_xlabs_entry):
-    plot_xlabs["plot1"] = plot1_xlabs_entry.get()
-    plot_xlabs["plot2"] = plot2_xlabs_entry.get()
-    plot_xlabs["plot3"] = plot3_xlabs_entry.get()
-def save_plot_ylabs(plot1_ylabs_entry, plot2_ylabs_entry, plot3_ylabs_entry):
-    plot_ylabs["plot1"] = plot1_ylabs_entry.get()
-    plot_ylabs["plot2"] = plot2_ylabs_entry.get()
-    plot_ylabs["plot3"] = plot3_ylabs_entry.get()
-def save_plot_filenames(plot1_filename_entry, plot2_filename_entry, plot3_filename_entry):
-    plot_filenames["plot1"] = plot1_filename_entry.get()
-    plot_filenames["plot2"] = plot2_filename_entry.get()
-    plot_filenames["plot3"] = plot3_filename_entry.get()
 def plate_count_select(value):
     plate_count_var.set(value)
-def plot1_type_select(value):
-    plot1_type_selection.set(value)
-def plot2_type_select(value):
-    plot2_type_selection.set(value)
-def plot3_type_select(value):
-    plot3_type_selection.set(value)
-def plot1_dtype_select(value):
-    plot1_dtype_selection.set(value)
-def plot2_dtype_select(value):
-    plot2_dtype_selection.set(value)
-def plot3_dtype_select(value):
-    plot3_dtype_selection.set(value)
-def plot1_xaxis_select(value):
-    plot1_xaxis_selection.set(value)
-def plot2_xaxis_select(value):
-    plot2_xaxis_selection.set(value)
-def plot3_xaxis_select(value):
-    plot3_xaxis_selection.set(value)
-def plot1_conditions_select(value):
-    plot1_conditions_selection.set(value)
-def plot2_conditions_select(value):
-    plot2_conditions_selection.set(value)
-def plot3_conditions_select(value):
-    plot3_conditions_selection.set(value)
-def plot1_normalization_select(value):
-    plot1_normalization_selection.set(value)
-def plot2_normalization_select(value):
-    plot2_normalization_selection.set(value)
-def plot3_normalization_select(value):
-    plot3_normalization_selection.set(value)
 
 if __name__ == "__main__":
     root = Tk()
@@ -279,218 +169,6 @@ if __name__ == "__main__":
 
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
     enter_cells.pack(side=LEFT, anchor = "w",pady=5)
-
-    # NUMBER OF PLOTS
-    nplots_lbl = ttk.Label(root, text = "Number of plots")
-    nplots_lbl.pack(side=TOP, anchor = "w", padx = 10)
-    nplots = Text(root, width = 35, height = 4)
-    nplots.pack(side=TOP, anchor = "w", padx = 10)
-    nplots_button = ttk.Button(root, text="Enter", command=return_nplots)
-    nplots_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
-
-    # PLOT OPTIONS DROP DOWN MENUS
-
-    plot_type_options_frame = ttk.Frame(root)
-    plot_type_options_frame.pack(side=TOP, after=enter_cells_frame, anchor = "w", padx=5)
-    plot_type_options = ["line", "jitter", "heatmap", ""]
-
-    plot1_type_selection = ttk.StringVar()
-    plot2_type_selection = ttk.StringVar()
-    plot3_type_selection = ttk.StringVar()
-
-    plot1_type_selection.set(plot_type_options[0])
-    plot2_type_selection.set(plot_type_options[1])
-    plot3_type_selection.set(plot_type_options[2])
-
-    plot_type_selection_label = ttk.Label(plot_type_options_frame, text = "Select plot types:")
-    plot_type_selection_label.pack(side=LEFT, anchor = "nw", padx=5, pady=5)
-
-    plot1_type_option_menu = ttk.OptionMenu(plot_type_options_frame, plot1_type_selection, *plot_type_options, command = plot1_type_select)
-    plot1_type_option_menu.pack(side=LEFT, after = plot_type_selection_label, anchor = "w", padx = 5)
-
-    plot2_type_option_menu = ttk.OptionMenu(plot_type_options_frame, plot2_type_selection, *plot_type_options, command = plot2_type_select)
-    plot2_type_option_menu.pack(side=LEFT, after = plot1_type_option_menu, anchor = "w", padx = 5)
-
-    plot3_type_option_menu = ttk.OptionMenu(plot_type_options_frame, plot3_type_selection, *plot_type_options, command = plot3_type_select)
-    plot3_type_option_menu.pack(side=LEFT, after = plot2_type_option_menu, anchor = "w", padx = 5)
-
-    # PLOT DTYPE OPTIONS DROP DOWN MENUS
-    plot_dtype_options_frame = ttk.Frame(root)
-    plot_dtype_options_frame.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot_dtype_options = ["lum, OD", "BF_imaging", "CY5_imaging"]
-    plot1_dtype_selection = ttk.StringVar()
-    plot2_dtype_selection = ttk.StringVar()
-    plot3_dtype_selection = ttk.StringVar()
-    plot1_dtype_selection.set(plot_dtype_options[0])
-    plot2_dtype_selection.set(plot_dtype_options[1])
-    plot3_dtype_selection.set(plot_dtype_options[2])
-
-    plot_dtype_selection_label = ttk.Label(plot_dtype_options_frame, text = "Select plot data types:")
-    plot_dtype_selection_label.pack(side=LEFT, anchor = "nw", padx=5, pady=5)
-
-    plot1_dtype_option_menu = ttk.OptionMenu(plot_dtype_options_frame, plot1_dtype_selection, *plot_dtype_options, command = plot1_dtype_select)
-    plot1_dtype_option_menu.pack(side=LEFT, after = plot_dtype_selection_label, anchor = "w", padx = 5)
-
-    plot2_dtype_option_menu = ttk.OptionMenu(plot_dtype_options_frame, plot2_dtype_selection, *plot_dtype_options, command = plot2_dtype_select)
-    plot2_dtype_option_menu.pack(side=LEFT, after = plot1_dtype_option_menu, anchor = "w", padx = 5)
-
-    plot3_dtype_option_menu = ttk.OptionMenu(plot_dtype_options_frame, plot3_dtype_selection, *plot_dtype_options, command = plot3_dtype_select)
-    plot3_dtype_option_menu.pack(side=LEFT, after = plot2_dtype_option_menu, anchor = "w", padx = 5)
-
-    # PLOT XAXIS OPTIONS DROP DOWN MENUS
-    plot_xaxis_options_frame = ttk.Frame(root)
-    plot_xaxis_options_frame.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot_xaxis_options = ["nothing", "OD", "Time"]
-    plot1_xaxis_selection = ttk.StringVar()
-    plot2_xaxis_selection = ttk.StringVar()
-    plot3_xaxis_selection = ttk.StringVar()
-    plot1_xaxis_selection.set(plot_xaxis_options[0])
-    plot2_xaxis_selection.set(plot_xaxis_options[1])
-    plot3_xaxis_selection.set(plot_xaxis_options[2])
-
-    plot_xaxis_selection_label = ttk.Label(plot_xaxis_options_frame, text = "Select plot x-axes:")
-    plot_xaxis_selection_label.pack(side=LEFT, anchor = "nw", padx=5, pady=5)
-
-    plot1_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_options_frame, plot1_xaxis_selection, *plot_xaxis_options, command = plot1_xaxis_select)
-    plot1_xaxis_option_menu.pack(side=LEFT, after = plot_xaxis_selection_label, anchor = "w", padx = 5)
-
-    plot2_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_options_frame, plot2_xaxis_selection, *plot_xaxis_options, command = plot2_xaxis_select)
-    plot2_xaxis_option_menu.pack(side=LEFT, after = plot1_xaxis_option_menu, anchor = "w", padx = 5)
-
-    plot3_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_options_frame, plot3_xaxis_selection, *plot_xaxis_options, command = plot3_xaxis_select)
-    plot3_xaxis_option_menu.pack(side=LEFT, after = plot2_xaxis_option_menu, anchor = "w", padx = 5)
-
-    # PLOT CONDITION OPTIONS
-    plot1_conditions_selection = ttk.StringVar()
-    plot2_conditions_selection = ttk.StringVar()
-    plot3_conditions_selection = ttk.StringVar()
-    plot1_conditions_selection.set("")
-    plot2_conditions_selection.set("")
-    plot3_conditions_selection.set("")
-
-    plot_conditions_frm = ttk.Frame(root)
-    plot_conditions_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot1_conditions_label = ttk.Label(plot_conditions_frm, text="Plot 1 conditions:")
-    plot1_conditions_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_conditions_option_menu = ttk.OptionMenu(plot_conditions_frm, plot1_conditions_selection, *condition_names, command = plot1_conditions_select)
-    plot1_conditions_option_menu.pack(side=LEFT, after = plot1_conditions_label, anchor = "w", padx = 5)
-
-    plot2_conditions_label = ttk.Label(plot_conditions_frm, text="Plot 2 conditions:")
-    plot2_conditions_label.pack(side=LEFT, after = plot1_conditions_option_menu, anchor = "w", padx = 5)
-    plot2_conditions_option_menu = ttk.OptionMenu(plot_conditions_frm, plot2_conditions_selection, *condition_names, command = plot2_conditions_select)
-    plot2_conditions_option_menu.pack(side=LEFT, after = plot2_conditions_label, anchor = "w", padx = 5)
-
-    plot3_conditions_label = ttk.Label(plot_conditions_frm, text="Plot 3 conditions:")
-    plot3_conditions_label.pack(side=LEFT, after = plot2_conditions_option_menu, anchor = "w", padx = 5)
-    plot3_conditions_option_menu = ttk.OptionMenu(plot_conditions_frm, plot3_conditions_selection, *condition_names, command = plot3_conditions_select)
-    plot3_conditions_option_menu.pack(side=LEFT, after = plot3_conditions_label, anchor = "w", padx = 5)
-
-    # PLOT NORMALIZATION OPTIONS
-    plot1_normalization_selection = ttk.StringVar()
-    plot2_normalization_selection = ttk.StringVar()
-    plot3_normalization_selection = ttk.StringVar()
-    plot1_normalization_selection.set("")
-    plot2_normalization_selection.set("")
-    plot3_normalization_selection.set("")
-
-    plot_normalization_frm = ttk.Frame(root)
-    plot_normalization_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot1_normalization_label = ttk.Label(plot_normalization_frm, text="Plot 1 normalization:")
-    plot1_normalization_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_normalization_option_menu = ttk.OptionMenu(plot_normalization_frm, plot1_normalization_selection, *condition_names, command = plot1_normalization_select)
-    plot1_normalization_option_menu.pack(side=LEFT, after = plot1_normalization_label, anchor = "w", padx = 5)
-
-    plot2_normalization_label = ttk.Label(plot_normalization_frm, text="Plot 2 normalization:")
-    plot2_normalization_label.pack(side=LEFT, after = plot1_normalization_option_menu, anchor = "w", padx = 5)
-    plot2_normalization_option_menu = ttk.OptionMenu(plot_normalization_frm, plot2_normalization_selection, *condition_names, command = plot2_normalization_select)
-    plot2_normalization_option_menu.pack(side=LEFT, after = plot2_normalization_label, anchor = "w", padx = 5)
-
-    plot3_normalization_label = ttk.Label(plot_normalization_frm, text="Plot 3 normalization:")
-    plot3_normalization_label.pack(side=LEFT, after = plot2_normalization_option_menu, anchor = "w", padx = 5)
-    plot3_normalization_option_menu = ttk.OptionMenu(plot_normalization_frm, plot3_normalization_selection, *condition_names, command = plot3_normalization_select)
-    plot3_normalization_option_menu.pack(side=LEFT, after = plot3_normalization_label, anchor = "w", padx = 5)
-
-    # PLOT TITLES
-    plot_title_frm = ttk.Frame(root)
-    plot_title_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot1_title_label = ttk.Label(plot_title_frm, text="Plot 1 title:")
-    plot1_title_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_title_entry = ttk.Entry(plot_title_frm)
-    plot1_title_entry.pack(side=LEFT, after = plot1_title_label, anchor = "w", padx = 5)
-
-    plot2_title_label = ttk.Label(plot_title_frm, text="Plot 2 title:")
-    plot2_title_label.pack(side=LEFT, after = plot1_title_entry, anchor = "w", padx = 5)
-    plot2_title_entry = ttk.Entry(plot_title_frm)
-    plot2_title_entry.pack(side=LEFT, after = plot2_title_label, anchor = "w", padx = 5)
-
-    plot3_title_label = ttk.Label(plot_title_frm, text="Plot 3 title:")
-    plot3_title_label.pack(side=LEFT, after = plot2_title_entry, anchor = "w", padx = 5)
-    plot3_title_entry = ttk.Entry(plot_title_frm)
-    plot3_title_entry.pack(side=LEFT, after = plot3_title_label, anchor = "w", padx = 5)
-
-    # PLOT YLABS
-    plot_ylabs_frm = ttk.Frame(root)
-    plot_ylabs_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-
-    plot1_ylabs_label = ttk.Label(plot_ylabs_frm, text="Plot 1 y-label:")
-    plot1_ylabs_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_ylabs_entry = ttk.Entry(plot_ylabs_frm)
-    plot1_ylabs_entry.pack(side=LEFT, after = plot1_ylabs_label, anchor = "w", padx = 5)
-
-    plot2_ylabs_label = ttk.Label(plot_ylabs_frm, text="Plot 2 y-label:")
-    plot2_ylabs_label.pack(side=LEFT, after = plot1_ylabs_entry, anchor = "w", padx = 5)
-    plot2_ylabs_entry = ttk.Entry(plot_ylabs_frm)
-    plot2_ylabs_entry.pack(side=LEFT, after = plot2_ylabs_label, anchor = "w", padx = 5)
-
-    plot3_ylabs_label = ttk.Label(plot_ylabs_frm, text="Plot 3 y-label:")
-    plot3_ylabs_label.pack(side=LEFT, after = plot2_ylabs_entry, anchor = "w", padx = 5)
-    plot3_ylabs_entry = ttk.Entry(plot_ylabs_frm)
-    plot3_ylabs_entry.pack(side=LEFT, after = plot3_ylabs_label, anchor = "w", padx = 5)
-
-    # PLOT XLABS
-    plot_xlabs_frm = ttk.Frame(root)
-    plot_xlabs_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot1_xlabs_label = ttk.Label(plot_xlabs_frm, text="Plot 1 x-label:")
-    plot1_xlabs_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_xlabs_entry = ttk.Entry(plot_xlabs_frm)
-    plot1_xlabs_entry.pack(side=LEFT, after = plot1_xlabs_label, anchor = "w", padx = 5)
-
-    plot2_xlabs_label = ttk.Label(plot_xlabs_frm, text="Plot 2 x-label:")
-    plot2_xlabs_label.pack(side=LEFT, after = plot1_xlabs_entry, anchor = "w", padx = 5)
-    plot2_xlabs_entry = ttk.Entry(plot_xlabs_frm)
-    plot2_xlabs_entry.pack(side=LEFT, after = plot2_xlabs_label, anchor = "w", padx = 5)
-
-    plot3_xlabs_label = ttk.Label(plot_xlabs_frm, text="Plot 3 x-label:")
-    plot3_xlabs_label.pack(side=LEFT, after = plot2_xlabs_entry, anchor = "w", padx = 5)
-    plot3_xlabs_entry = ttk.Entry(plot_xlabs_frm)
-    plot3_xlabs_entry.pack(side=LEFT, after = plot3_xlabs_label, anchor = "w", padx = 5)
-
-
-    # PLOT FILENAMES
-    plot_filename_frm = ttk.Frame(root)
-    plot_filename_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
-
-    plot1_filename_label = ttk.Label(plot_filename_frm, text="Plot 1 filename:")
-    plot1_filename_label.pack(side=LEFT, anchor = "w", padx = 5)
-    plot1_filename_entry = ttk.Entry(plot_filename_frm)
-    plot1_filename_entry.pack(side=LEFT, after = plot1_filename_label, anchor = "w", padx = 5)
-
-    plot2_filename_label = ttk.Label(plot_filename_frm, text="Plot 2 filename:")
-    plot2_filename_label.pack(side=LEFT, after = plot1_filename_entry, anchor = "w", padx = 5)
-    plot2_filename_entry = ttk.Entry(plot_filename_frm)
-    plot2_filename_entry.pack(side=LEFT, after = plot2_filename_label, anchor = "w", padx = 5)
-
-    plot3_filename_label = ttk.Label(plot_filename_frm, text="Plot 3 filename:")
-    plot3_filename_label.pack(side=LEFT, after = plot2_filename_entry, anchor = "w", padx = 5)
-    plot3_filename_entry = ttk.Entry(plot_filename_frm)
-    plot3_filename_entry.pack(side=LEFT, after = plot3_filename_label, anchor = "w", padx = 5)
 
     # SAVE TO JSON FILE
 
