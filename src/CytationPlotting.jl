@@ -34,7 +34,7 @@ function dose_response(conditions, plot_conditions,
         push!(error, stds[1])
     end
     
-    if plot_normalization != "nothing"
+    if plot_normalization != ""
         norm_data = [] 
         for i in eachindex(conditions)
             if plot_normalization in keys(condition[i])
@@ -156,7 +156,7 @@ function heatplot(conditions, plot_conditions,
     block_mean = mean(block_matrices, dims=3)
     block_std = std(block_matrices, dims=3)
 
-    if plot_normalization != "nothing"
+    if plot_normalization != ""
         norms = []
         for i in eachindex(conditions)
             if plot_normalization in keys(conditions[i])
@@ -216,7 +216,7 @@ function twin_y(conditions, plot_conditions,
     p_twin = twinx(p)
     
     for j in 1:length(data) 
-        if plot_normalization != "nothing"
+        if plot_normalization != ""
             condition_data = DataFrame() 
             for i in eachindex(conditions)
                 if plot_normalization in keys(conditions[i])
@@ -249,7 +249,7 @@ function twin_y(conditions, plot_conditions,
             end
             means = mean.(eachcol(condition_data))
             stds = std.(eachcol(condition_data))
-            if plot_normalization != "nothing"
+            if plot_normalization != ""
                 if normalization_method == "percent"
                     means = (means ./ max_norm .- 1) .* 100
                     stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
@@ -311,7 +311,7 @@ function line_plot(conditions, plot_conditions,
     end
     p = plot(size=plot_size)
 
-    if plot_normalization != "nothing"
+    if plot_normalization != ""
         condition_data = DataFrame() 
         for i in eachindex(conditions)
             if plot_normalization in keys(conditions[i])
@@ -344,7 +344,7 @@ function line_plot(conditions, plot_conditions,
         end
         means = mean.(eachcol(condition_data))
         stds = std.(eachcol(condition_data))
-        if plot_normalization != "nothing"
+        if plot_normalization != ""
             if normalization_method == "percent"
                 means = (means ./ max_norm .- 1) .* 100
                 stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
@@ -418,7 +418,7 @@ function jitter_plot(conditions, plot_conditions,
                       plot_filename, data, default_color, plot_size, plots_directory)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
-    if plot_normalization != "nothing"
+    if plot_normalization != ""
         norm_data = [] 
         for i in eachindex(conditions)
             if plot_normalization in keys(conditions[i])
@@ -502,7 +502,7 @@ function select_data(plot_dtype, lum, OD, lux, BF_imaging, CFP_imaging,
         data = YFP
     elseif plot_dtype == "CY5"
         data = CY5
-    elseif plot_dtype == "lux" 
+    elseif plot_dtype == "RLU" 
         data = lux
     else
         error("Can't select a data type that doesn't exist.")
@@ -562,7 +562,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
         else
             error("Can only plot time or OD on the x-axis.")
         end
-    elseif plot_type == "twin-y"
+    elseif plot_type == "two-axis"
         if plot_xaxis == "Time"
             t = range(0,stop=nrow(data[1][1]) - 1,length=nrow(data[1][1])) ./ acquisition_frequency 
             twin_y(conditions, plot_conditions, 
@@ -659,12 +659,12 @@ function main()
             data_directories[i] = bulk_data[i][1:end-4]
         end
         data_directory = data_directories[i]
-        if "lum" in data_types || "lux" in data_types && isfile("$data_directory/lum.csv")
+        if "lum" in data_types || "RLU" in data_types && isfile("$data_directory/lum.csv")
             lum[i] = CSV.read("$data_directory/lum.csv", DataFrame)
         else
             lum[i] = nothing
         end
-        if "OD" in data_types || "lux" in data_types && isfile("$data_directory/OD600.csv")
+        if "OD" in data_types || "RLU" in data_types && isfile("$data_directory/OD600.csv")
             OD[i] = CSV.read("$data_directory/OD600.csv", DataFrame)
         else
             OD[i] = nothing
@@ -704,7 +704,7 @@ function main()
         else  
             CY5[i] = nothing
         end
-        if "lux" in data_types && lum[i] != nothing && OD[i] != nothing 
+        if "RLU" in data_types && lum[i] != nothing && OD[i] != nothing 
             lux[i] = lum[i] ./ OD[i]
         else
             lux[i] = nothing

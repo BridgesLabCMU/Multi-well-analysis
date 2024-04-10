@@ -268,7 +268,7 @@ if __name__ == "__main__":
         plot_normalization_label.pack(side=LEFT, anchor="w", padx=5)
         plot_normalization_option_menu = ttk.OptionMenu(plot_normalization_frm,
                                                         plot_normalization_selections[i-1],
-                                                        *condition_names,
+                                                        *condition_names+[""],
                                                         command=lambda value, index=i: plot_normalization_select(value,index))
         plot_normalization_option_menu.pack(side=LEFT, after=plot_normalization_label, anchor="w", padx=10)
         plot_normalization_option_menus.append(plot_normalization_option_menu)
