@@ -1,0 +1,115 @@
+{
+    "notes": "notes",
+    "acquisition_frequency": 2,
+    "images_directory": [],
+    "bulk_data": [],
+    "conditions": [
+        {
+            "s1": [
+                "A1",
+                "A2",
+                "A3"
+            ]
+        },
+        {
+            "s1": [
+                "B1",
+                "B2",
+                "B3"
+            ]
+        },
+        {
+            "s2": [
+                "C1",
+                "C2",
+                "C3"
+            ]
+        },
+        {
+            "s3": [
+                "A6",
+                "B6",
+                "C6"
+            ]
+        },
+        {
+            "s3": [
+                "A7",
+                "B7",
+                "C7"
+            ]
+        },
+        {
+            "s3": [
+                "A8",
+                "B8",
+                "C8"
+            ]
+        }
+    ],
+    "good_data_directory": "",
+    "experiment_directory": "",
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "jitter",
+        "plot3": "heatmap"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "lum",
+            "OD"
+        ],
+        "plot2": [
+            "BF_imaging",
+            "CY5_imaging"
+        ],
+        "plot3": [
+            "OD",
+            "BF_imaging"
+        ]
+    },
+    "plot_conditions": {
+        "plot1": [
+            "s1",
+            "s2"
+        ],
+        "plot2": [
+            "s1",
+            "s3"
+        ],
+        "plot3": [
+            "s2"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "s1",
+        "plot2": "s2",
+        "plot3": "s3"
+    },
+    "plot_titles": {
+        "plot1": "t1",
+        "plot2": "t2",
+        "plot3": "t3"
+    },
+    "plot_xlabs": {
+        "plot1": "x1",
+        "plot2": "x2",
+        "plot3": "x3"
+    },
+    "plot_ylabs": {
+        "plot1": "y1",
+        "plot2": "y2",
+        "plot3": "y3"
+    },
+    "plot_filenames": {
+        "plot1": "f1",
+        "plot2": "f2",
+        "plot3": "f3"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
+}

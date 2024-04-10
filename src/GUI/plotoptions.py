@@ -1,0 +1,280 @@
+from tkinter import ttk
+from tkinter import *
+from gui import *
+import json
+import numpy as np
+from PIL import Image, ImageTk
+
+
+
+
+
+num_plots = 0
+with open("temp_plot_num.txt", "r") as fr:
+    num_plots = int(fr.read())
+    fr.close()
+
+
+condition_names = []
+with open("temp_conditions.txt", "r") as fr:
+    for line in fr:
+        if line[:-1] not in condition_names:
+            condition_names.append(line[:-1])
+    fr.close()
+
+plot_types = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_dtypes = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_conditions = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_normalizations = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_xlabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_filenames = {f"plot{i}": "" for i in range(1, num_plots+1)}
+
+# save all parameters to json file
+def save_to_json():
+    with open("temp_config.json", "r") as file:
+        json_dict = json.load(file)
+    store_plot_options()
+    json_dict["plot_types"] = plot_types
+    json_dict["plot_dtypes"] = plot_dtypes
+    json_dict["plot_conditions"] = plot_conditions
+    json_dict["plot_normalization"] = plot_normalizations
+    json_dict["plot_titles"] = plot_titles
+    json_dict["plot_xlabs"] = plot_xlabs
+    json_dict["plot_ylabs"] = plot_ylabs
+    json_dict["plot_filenames"] = plot_filenames
+    json_dict["sig"] = 2
+    json_dict["blockDiameter"] = [501, 101]
+    json_dict["shift_thresh"] = 50
+    with open(HOME_DIR + "/experiment_config.json", "w") as file:
+        json.dump(json_dict, file, indent = 4)
+
+# calling plot option storing functions
+def store_plot_options():
+    save_plot_types(plot_type_selections)
+    save_plot_dtypes(plot_dtype_selections)
+    save_plot_conditions(plot_condition_selections)
+    save_plot_normalization(plot_normalization_selections)
+    save_plot_titles(plot_title_entries)
+    save_plot_xlabs(plot_xlabs_entries)
+    save_plot_ylabs(plot_ylabs_entries)
+    save_plot_filenames(plot_filename_entries)
+
+# storing plot options in list variables
+def save_plot_types(plot_type_selections):
+    for i in range(0,len(plot_type_selections)):
+        plot_types[f"plot{i+1}"] = plot_type_selections[i].get()
+def save_plot_dtypes(plot_dtype_selections):
+    for i in range(0,len(plot_dtype_selections)):
+        plot_dtypes[f"plot{i+1}"] = plot_dtype_selections[i]
+def save_plot_conditions(plot_condition_selections):
+    for i in range(0, len(plot_condition_selections)):
+        plot_conditions[f"plot{i+1}"] = plot_condition_selections[i]
+def save_plot_normalization(plot_normalization_selections):
+    for i in range(0,len(plot_normalization_selections)):
+        plot_normalizations[f"plot{i+1}"] = plot_normalization_selections[i].get()
+def save_plot_titles(plot_title_entries):
+    for i in range(0, len(plot_title_entries)):
+        plot_titles[f"plot{i+1}"] = plot_title_entries[i].get()
+def save_plot_xlabs(plot_xlabs_entries):
+    for i in range(0, len(plot_xlabs_entries)):
+        plot_xlabs[f"plot{i+1}"] = plot_xlabs_entries[i].get()
+def save_plot_ylabs(plot_ylabs_entries):
+    for i in range(0, len(plot_ylabs_entries)):
+        plot_ylabs[f"plot{i+1}"] = plot_ylabs_entries[i].get()
+def save_plot_filenames(plot_filename_entries):
+    for i in range(0, len(plot_filename_entries)):
+        plot_filenames[f"plot{i+1}"] = plot_filename_entries[i].get()    
+
+
+def plot_type_select(value, i):
+    plot_type_selections[i-1].set(value)
+def plot_normalization_select(value, i):
+    plot_normalization_selections[i-1].set(value)
+
+def dtype_listbox_on_select(event):
+    plot_dtype_selections.clear()
+    for listbox in plot_dtype_listboxes:
+        selected_indices = listbox.curselection()
+        plot_dtype_selections.append([listbox.get(idx) for idx in selected_indices])
+
+def condition_listbox_on_select(event):
+    plot_condition_selections.clear()
+    for listbox in plot_condition_listboxes:
+        selected_indices = listbox.curselection()
+        plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
+
+
+def destroy_windows():
+    for file_name in os.listdir(os.getcwd()):
+        if file_name[0:4] == "temp":
+            os.remove(file_name)
+    root2.destroy()
+    
+if __name__ == "__main__":
+
+    root2 = Tk()
+    root2.title("Scanner")
+    root2.geometry("1000x1000")
+    frm2= ttk.Frame(root2)
+    frm2.grid()
+    frm2.pack(padx=2, pady=0)
+    
+    background_image = ttk.PhotoImage(file="resized_image.png")  
+    bg = ttk.Label(root2, image = background_image) 
+    bg.place(x = 0,y = 0)
+
+
+    # PLOT TYPE OPTIONS
+    plot_type_selections = []
+    plot_type_labels = []
+    plot_type_option_menus = []
+    plot_type_options = ["line", "jitter", "heatmap"]
+    plot_type_frm = ttk.Frame(root2)
+    plot_type_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    
+    for i in range(1, num_plots + 1):
+        plot_type_selection = ttk.StringVar()
+        plot_type_selection.set("")
+        plot_type_selections.append(plot_type_selection)
+        plot_type_label = ttk.Label(plot_type_frm, text=f"Plot {i} type:")
+        plot_type_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_type_option_menu = ttk.OptionMenu(plot_type_frm, 
+                                               plot_type_selections[i-1], 
+                                               *plot_type_options, 
+                                               command=lambda value, index = i: plot_type_select(value, index))
+        plot_type_option_menu.pack(side=LEFT, after=plot_type_label, anchor="w", padx=5)
+        plot_type_option_menus.append(plot_type_option_menu)
+
+    # PLOT DTYPE OPTIONS
+        
+    plot_dtype_listboxes = []  
+    plot_dtype_selections = []
+    plot_dtype_options = ["lum", "OD", "BF_imaging", "CY5_imaging"]
+    plot_dtype_options_lens = [len(x) for x in plot_dtype_options]
+    max_len_dtype_ind = np.argmax(plot_dtype_options_lens)
+    plot_dtype_frm = ttk.Frame(root2)
+    plot_dtype_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    
+    for i in range(1, num_plots + 1):
+        # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
+        plot_dtype_label = ttk.Label(plot_dtype_frm, text=f"Plot {i} dtype:")
+        plot_dtype_label.pack(side=LEFT, anchor="w")
+        plot_dtype_listbox = ttk.Listbox(plot_dtype_frm, 
+                                         selectmode=ttk.MULTIPLE, 
+                                         height=len(plot_dtype_options), 
+                                         width = plot_dtype_options_lens[max_len_dtype_ind],
+                                         exportselection=False)
+        for option in plot_dtype_options:
+            plot_dtype_listbox.insert(ttk.END, option)
+        plot_dtype_listbox.bind("<<ListboxSelect>>", dtype_listbox_on_select)
+        plot_dtype_listbox.pack(side=ttk.LEFT, after = plot_dtype_label, padx=10)  
+        plot_dtype_listboxes.append(plot_dtype_listbox)
+    
+
+    # PLOT CONDITION OPTIONS
+    plot_condition_listboxes = []
+    plot_condition_selections = []
+    plot_condition_options_lens = [len(x) for x in condition_names]
+    max_len_condition_ind = np.argmax(plot_condition_options_lens)
+    plot_condition_frm = ttk.Frame(root2)
+    plot_condition_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    
+    for i in range(1, num_plots + 1):
+        plot_condition_label = ttk.Label(plot_condition_frm, text=f"Plot {i} condition:")
+        plot_condition_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_condition_listbox = ttk.Listbox(plot_condition_frm, 
+                                             selectmode=ttk.MULTIPLE, 
+                                             height=len(condition_names), 
+                                             width = plot_condition_options_lens[max_len_condition_ind],
+                                             exportselection=False)
+        for option in condition_names:
+            plot_condition_listbox.insert(ttk.END, option)
+        plot_condition_listbox.bind("<<ListboxSelect>>", condition_listbox_on_select)
+
+        plot_condition_listboxes.append(plot_condition_listbox)         
+        plot_condition_listbox.pack(side=ttk.LEFT, after = plot_condition_label, padx=10)  
+
+    # PLOT NORMALIZATION OPTIONS
+    plot_normalization_selections = []
+    plot_normalization_labels = []
+    plot_normalization_option_menus = []
+    plot_normalization_frm = ttk.Frame(root2)
+    plot_normalization_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    
+    for i in range(1, num_plots + 1):
+        plot_normalization_selection = ttk.StringVar()
+        plot_normalization_selection.set("")
+        plot_normalization_selections.append(plot_normalization_selection)
+        plot_normalization_label = ttk.Label(plot_normalization_frm, text=f"Plot {i} normalization:")
+        plot_normalization_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_normalization_option_menu = ttk.OptionMenu(plot_normalization_frm, 
+                                                        plot_normalization_selections[i-1], 
+                                                        *condition_names, 
+                                                        command=lambda value, index=i: plot_normalization_select(value,index))
+        plot_normalization_option_menu.pack(side=LEFT, after=plot_normalization_label, anchor="w", padx=10)
+        plot_normalization_option_menus.append(plot_normalization_option_menu)
+    
+    
+    
+    # PLOT TITLES
+    plot_title_frm = ttk.Frame(root2)
+    plot_title_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+    plot_title_entries = []
+    for i in range(1, num_plots + 1):
+        plot_title_label = ttk.Label(plot_title_frm, 
+                                     text=f"Plot {i} title:")
+        plot_title_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_title_entry = ttk.Entry(plot_title_frm)
+        plot_title_entry.pack(side=LEFT, after=plot_title_label, anchor="w", padx=5)
+        plot_title_entries.append(plot_title_entry)
+
+    # PLOT YLABS
+    plot_ylabs_frm = ttk.Frame(root2)
+    plot_ylabs_frm.pack(side=TOP, anchor = "w", padx=5, pady=5)
+
+    plot_ylabs_entries = []
+    for i in range(1, num_plots + 1):
+        plot_ylabs_label = ttk.Label(plot_ylabs_frm, 
+                                     text=f"Plot {i} y-label:")
+        plot_ylabs_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_ylabs_entry = ttk.Entry(plot_ylabs_frm)
+        plot_ylabs_entry.pack(side=LEFT, after=plot_ylabs_label, anchor="w", padx=5)
+        plot_ylabs_entries.append(plot_ylabs_entry)
+
+    # PLOT XLABS
+    plot_xlabs_frm = ttk.Frame(root2)
+    plot_xlabs_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    plot_xlabs_entries = []
+    for i in range(1, num_plots + 1):
+        plot_xlabs_label = ttk.Label(plot_xlabs_frm, 
+                                     text=f"Plot {i} x-label:")
+        plot_xlabs_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_xlabs_entry = ttk.Entry(plot_xlabs_frm)
+        plot_xlabs_entry.pack(side=LEFT, after=plot_xlabs_label, anchor="w", padx=5)
+        plot_xlabs_entries.append(plot_xlabs_entry)
+    
+    # PLOT FILENAMES
+    plot_filename_frm = ttk.Frame(root2)
+    plot_filename_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+    plot_filename_entries = []
+    for i in range(1, num_plots + 1):
+        plot_filename_label = ttk.Label(plot_filename_frm, 
+                                        text=f"Plot {i} filename:")
+        plot_filename_label.pack(side=LEFT, anchor="w", padx=5)
+        plot_filename_entry = ttk.Entry(plot_filename_frm)
+        plot_filename_entry.pack(side=LEFT, after=plot_filename_label, anchor="w", padx=5)
+        plot_filename_entries.append(plot_filename_entry)
+
+    # SAVE TO JSON FILE
+    save_to_json_btn = ttk.Button(root2, 
+                                  text="Save to JSON", 
+                                  command=save_to_json)
+    save_to_json_btn.pack(side=TOP, anchor = "s", padx = 10)
+    # EXIT
+    quit_btn = ttk.Button(root2, text="Done", 
+                          command=destroy_windows)
+    quit_btn.pack(side=TOP, padx = 10)
+    root2.mainloop()
