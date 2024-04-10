@@ -25,11 +25,11 @@ plot_xaxes = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_xlabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
-plot_xticks = {f"plot{i}": [] for i in range(1, num_plots+1)}
-plot_yticks = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_xticks = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_yticks = {f"plot{i}": "" for i in range(1, num_plots+1)}
 color_labels = {f"plot{i}": "" for i in range(1, num_plots+1)}
-plot_sizes = {f"plot{i}": [] for i in range(1, num_plots+1)}
-dose_concs = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_sizes = {f"plot{i}": "" for i in range(1, num_plots+1)}
+dose_concs = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_filenames = {f"plot{i}": "" for i in range(1, num_plots+1)}
 
 # save all parameters to json file
@@ -98,22 +98,47 @@ def save_plot_xlabs(plot_xlab_entries):
         plot_xlabs[f"plot{i+1}"] = plot_xlab_entries[i].get()
 def save_plot_ylabs(plot_ylab_entries):
     for i in range(0, len(plot_ylab_entries)):
-        plot_ylabs[f"plot{i+1}"] = plot_ylab_entries[i].get()
+        plot_ylabs_i = plot_ylab_entries[i].get()
+        if plot_ylabs_i != "":
+            if "," in plot_ylabs_i:
+                plot_ylabs[f"plot{i+1}"] = plot_ylabs_i.split(",")
+        else:
+            plot_ylabs[f"plot{i+1}"] = [plot_ylabs_i]
 def save_plot_xticks(plot_xtick_entries):
     for i in range(0, len(plot_xtick_entries)):
-        plot_xticks[f"plot{i+1}"] = plot_xtick_entries[i].get()
+        plot_xticks_i = plot_xtick_entries[i].get()
+        if plot_xticks_i != "":
+            if "," in plot_xticks_i:
+                plot_xticks[f"plot{i+1}"] = plot_xticks_i.split(",")
+        else:
+            plot_xticks[f"plot{i+1}"] = [plot_xticks_i]
 def save_plot_yticks(plot_ytick_entries):
     for i in range(0, len(plot_ytick_entries)):
-        plot_yticks[f"plot{i+1}"] = plot_ytick_entries[i].get()
+        plot_yticks_i = plot_ytick_entries[i].get()
+        if plot_yticks_i != "":
+            if "," in plot_yticks_i:
+                plot_yticks[f"plot{i+1}"] = plot_yticks_i.split(",")
+        else:
+            plot_yticks[f"plot{i+1}"] = [plot_yticks_i]
 def save_color_labels(color_label_entries):
     for i in range(0, len(color_label_entries)):
         color_labels[f"plot{i+1}"] = color_label_entries[i].get()
 def save_plot_sizes(plot_size_entries):
     for i in range(0, len(plot_size_entries)):
-        plot_sizes[f"plot{i+1}"] = plot_size_entries[i].get()
+        plot_sizes_i = plot_size_entries[i].get()
+        if plot_sizes_i != "":
+            if "," in plot_sizes_i:
+                plot_sizes[f"plot{i+1}"] = [int(x) for x in plot_sizes_i.split(",")]
+        else:
+            plot_sizes[f"plot{i+1}"] = [300, 250]
 def save_dose_concs(dose_conc_entries):
     for i in range(0, len(dose_conc_entries)):
-        dose_concs[f"plot{i+1}"] = dose_conc_entries[i].get()
+        dose_concs_i = dose_conc_entries[i].get()
+        if dose_concs_i != "":
+            if "," in dose_concs_i:
+                dose_concs[f"plot{i+1}"] = [int(x) for x in dose_concs_i.split(",")]
+        else:
+            dose_concs[f"plot{i+1}"] = []
 def save_plot_filenames(plot_filename_entries):
     for i in range(0, len(plot_filename_entries)):
         plot_filenames[f"plot{i+1}"] = plot_filename_entries[i].get()
