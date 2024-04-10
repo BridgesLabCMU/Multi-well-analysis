@@ -1,0 +1,167 @@
+{
+    "notes": "Testing code on Sandhya's data",
+    "acquisition_frequency": 2,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240409_10x_BF_Cy5_YFP_Biospa_Drawer3 09-Apr-2024 17-30-25/240409_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [],
+    "conditions": [
+        {
+            "WT": [
+                "A11",
+                "B11",
+                "C11",
+                "D11"
+            ]
+        },
+        {
+            "random": [
+                "A12",
+                "B12",
+                "C12",
+                "D12",
+                "E12",
+                "F12",
+                "G12",
+                "H12"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "experiment_directory": "B:/Jojo",
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "line",
+        "plot3": "line",
+        "plot4": "line"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "BF_imaging"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "YFP_imaging"
+        ],
+        "plot4": [
+            "CY5_imaging"
+        ]
+    },
+    "plot_conditions": {
+        "plot1": [
+            "WT"
+        ],
+        "plot2": [
+            "WT"
+        ],
+        "plot3": [
+            "WT"
+        ],
+        "plot4": [
+            "WT"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "WT",
+        "plot2": "WT",
+        "plot3": "WT",
+        "plot4": "WT"
+    },
+    "plot_xaxis": {
+        "plot1": "Time",
+        "plot2": "Time",
+        "plot3": "Time",
+        "plot4": "Time"
+    },
+    "plot_titles": {
+        "plot1": "Brightfield",
+        "plot2": "Duplicate",
+        "plot3": "YFP",
+        "plot4": "CY5"
+    },
+    "plot_xlabs": {
+        "plot1": "Time (h)",
+        "plot2": "Time (h)",
+        "plot3": "Time (h)",
+        "plot4": "Time (h)"
+    },
+    "plot_ylabs": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "plot_xticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "plot_yticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "color_label": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "plot_size": {
+        "plot1": [
+            300,
+            250
+        ],
+        "plot2": [
+            300,
+            250
+        ],
+        "plot3": [
+            300,
+            250
+        ],
+        "plot4": [
+            300,
+            250
+        ]
+    },
+    "dose_concs": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_filenames": {
+        "plot1": "BF",
+        "plot2": "duplicate",
+        "plot3": "YFP",
+        "plot4": "CY5"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
+}

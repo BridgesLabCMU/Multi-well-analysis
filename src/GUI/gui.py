@@ -135,7 +135,7 @@ def create_new_window():
         for cond in all_conditions:
             fw.write(cond)
             fw.write("\n")
-    os.system('set LANG=en_US.UTF-8 && python3 plotoptions.py')
+    os.system('set LANG=en_US.UTF-8 && python3 ./GUI/plotoptions.py')
 
 
 if __name__ == "__main__":

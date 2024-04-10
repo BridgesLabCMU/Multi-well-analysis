@@ -177,7 +177,7 @@ if __name__ == "__main__":
     frm2.grid()
     frm2.pack(padx=2, pady=0)
 
-    background_image = ttk.PhotoImage(file="resized_image.png")
+    background_image = ttk.PhotoImage(file="./GUI/resized_image.png")
     bg = ttk.Label(root2, image = background_image)
     bg.place(x = 0,y = 0)
 
