@@ -25,11 +25,13 @@ def toggle_checkbox_imaging():
         folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
         dir_entry.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
         good_data_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
+        dust_correction_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
     else:
         folder_select_lbl.pack_forget()
         folder_select_lbl_btn.pack_forget()
         dir_entry.pack_forget()
         good_data_checkbox.pack_forget()
+        dust_correction_checkbox.pack_forget()
 
 def toggle_checkbox_bulk():
     if bulk_var.get():
@@ -42,11 +44,11 @@ def toggle_checkbox_bulk():
         bulk_dir_entry.pack_forget()
 
 def send_directory():
-	send_dir_entry.insert(0, string=filedialog.askdirectory())
+    send_dir_entry.insert(0, string=filedialog.askdirectory(initialdir="B:/"))
 
 def images_directory():
     dir_entry.delete(0, "end")
-    IMAGES_DIR.append(tkfilebrowser.askopendirnames())
+    IMAGES_DIR.append(tkfilebrowser.askopendirnames(initialdir="C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY"))
     for i in range(len(IMAGES_DIR)):
         if i == 0:
             dir_entry.insert(i, string=IMAGES_DIR[i][0]+",")
@@ -56,7 +58,7 @@ def images_directory():
 
 def bulk_directory():
     bulk_dir_entry.delete(0, "end")
-    BULK_DIR.append(filedialog.askopenfilenames())
+    BULK_DIR.append(filedialog.askopenfilenames(initialdir="C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY"))
     for i in range(len(BULK_DIR)):
         if i == 0:
             bulk_dir_entry.insert(i, string=BULK_DIR[i][0]+",")
@@ -99,7 +101,7 @@ def disable_plate_count():
 
 def plate_count_select(value):
     plate_count_var.set(value)
-    
+
 def save_plot_number():
     plot_number = plot_number_entry.get("1.0", "end-1c")
     with open("temp_plot_num.txt", "w") as fw:
@@ -116,11 +118,16 @@ def create_new_window():
         good_data_directory = "B:/Good imaging data"
     else:
         good_data_directory = ""
+    if dust_var.get():
+        dust_correction = "True"
+    else:
+        dust_corection = "False"
+    json_dict["dust_correction"] = dust_correction
     json_dict["good_data_directory"] = good_data_directory
     json_dict["experiment_directory"] = send_dir_entry.get()
     with open(HOME_DIR + "/temp_config.json", "w") as file:
         json.dump(json_dict, file, indent = 4)
-    
+
     for cond in conditions_list:
         all_conditions.append(next(iter(cond.keys())))
     print(all_conditions)
@@ -128,8 +135,8 @@ def create_new_window():
         for cond in all_conditions:
             fw.write(cond)
             fw.write("\n")
-    os.system('export LANG="en_US.UTF-8"; python3 plotoptions.py')
-    
+    os.system('set LANG=en_US.UTF-8 && python3 plotoptions.py')
+
 
 if __name__ == "__main__":
     root = Tk()
@@ -146,7 +153,7 @@ if __name__ == "__main__":
     notes_entry = Text(root, width = 35, height = 4)
     notes_entry.pack(side=TOP, anchor = "w", padx = 10)
 
-    # PLOT NUMBERS  
+    # PLOT NUMBERS
     plot_number_frm = ttk.Frame(root)
     plot_number_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
     plot_number_lbl = ttk.Label(plot_number_frm, text = "Enter number of plots")
@@ -155,9 +162,9 @@ if __name__ == "__main__":
     plot_number_entry.pack(side=LEFT, anchor = "w", padx = 10)
     plot_number_btn = ttk.Button(plot_number_frm, text = "Enter", command = save_plot_number)
     plot_number_btn.pack(side=LEFT, anchor = "w", padx = 10)
-    
 
-    
+
+
 
     # ACQUISITION FREQUENCY
     acquisition_lbl = ttk.Label(root, text = "Acquisition Frequency (#/hr)")
@@ -189,7 +196,7 @@ if __name__ == "__main__":
 
     # CHECKBOX FOR IMAGES DIRECTORY
     var = ttk.IntVar()
-    checkbox = ttk.Checkbutton(root, text="Imaging Included (y/n)", variable=var, command = toggle_checkbox_imaging)
+    checkbox = ttk.Checkbutton(root, text="Imaging included", variable=var, command = toggle_checkbox_imaging)
     checkbox.pack(side=TOP, anchor = "w", padx = 10)
 
     # FOLDER SELECTION
@@ -200,11 +207,15 @@ if __name__ == "__main__":
 
     # CHECKBOX FOR GOOD DATA
     good_data_var = ttk.IntVar()
-    good_data_checkbox = ttk.Checkbutton(root, text="Good data (y/n)", variable=good_data_var)
+    good_data_checkbox = ttk.Checkbutton(root, text="Good data", variable=good_data_var)
+
+    # CHECKBOX FOR DUST CORRECTION
+    dust_var = ttk.IntVar()
+    dust_correction_checkbox = ttk.Checkbutton(root, text="Perform dust correction", variable=dust_var)
 
     # BULK DATA SELECTION
     bulk_var = ttk.IntVar()
-    bulk_checkbox = ttk.Checkbutton(root, text="Bulk Data Included (y/n)", variable=bulk_var, command = toggle_checkbox_bulk)
+    bulk_checkbox = ttk.Checkbutton(root, text="Bulk data included", variable=bulk_var, command = toggle_checkbox_bulk)
     bulk_checkbox.pack(side=TOP, anchor = "w", padx = 10)
     bulk_folder_select_lbl = ttk.Label(root, text="Choose file for bulk data")
     bulk_folder_select_lbl_btn = ttk.Button(root, text="Choose file for bulk data", command=bulk_directory)
@@ -242,9 +253,9 @@ if __name__ == "__main__":
     enter_cells_frame.pack(side=TOP, after=table, anchor = "w", padx=5)
 
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
-    enter_cells.pack(side=LEFT, anchor = "w",pady=5)    
-    
-    
+    enter_cells.pack(side=LEFT, anchor = "w",pady=5)
+
+
     # NEXT
     next_btn = ttk.Button(root, text="Next", command=create_new_window)
     next_btn.pack(side=TOP, anchor = "e", padx = 10)

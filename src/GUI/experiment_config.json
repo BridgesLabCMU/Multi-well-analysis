@@ -1,110 +1,130 @@
 {
-    "notes": "notes",
+    "notes": "blah blah",
     "acquisition_frequency": 2,
-    "images_directory": [],
-    "bulk_data": [],
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY"
+    ],
+    "bulk_data": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/bulk_data.csv"
+    ],
     "conditions": [
         {
-            "s1": [
-                "A1",
-                "A2",
-                "A3"
-            ]
-        },
-        {
-            "s1": [
-                "B1",
-                "B2",
-                "B3"
-            ]
-        },
-        {
-            "s2": [
-                "C1",
-                "C2",
-                "C3"
-            ]
-        },
-        {
-            "s3": [
-                "A6",
-                "B6",
-                "C6"
-            ]
-        },
-        {
-            "s3": [
-                "A7",
-                "B7",
-                "C7"
-            ]
-        },
-        {
-            "s3": [
-                "A8",
-                "B8",
-                "C8"
+            "SV36": [
+                "C5"
             ]
         }
     ],
-    "good_data_directory": "",
-    "experiment_directory": "",
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "experiment_directory": "B:/",
     "plot_types": {
         "plot1": "line",
-        "plot2": "jitter",
-        "plot3": "heatmap"
+        "plot2": "two-axis",
+        "plot3": "jitter",
+        "plot4": "heatmap",
+        "plot5": "two-axis"
     },
     "plot_dtypes": {
         "plot1": [
-            "lum",
             "OD"
         ],
         "plot2": [
             "BF_imaging",
-            "CY5_imaging"
+            "YFP_imaging"
         ],
         "plot3": [
-            "OD",
-            "BF_imaging"
+            "RLU"
+        ],
+        "plot4": [
+            "RLU"
+        ],
+        "plot5": [
+            "YFP_imaging"
         ]
     },
     "plot_conditions": {
-        "plot1": [
-            "s1",
-            "s2"
-        ],
-        "plot2": [
-            "s1",
-            "s3"
-        ],
-        "plot3": [
-            "s2"
-        ]
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": [],
+        "plot5": []
     },
     "plot_normalization": {
-        "plot1": "s1",
-        "plot2": "s2",
-        "plot3": "s3"
+        "plot1": "SV36",
+        "plot2": "SV36",
+        "plot3": "SV36",
+        "plot4": "SV36",
+        "plot5": "SV36"
+    },
+    "plot_xaxis": {
+        "plot1": "default",
+        "plot2": "default",
+        "plot3": "OD",
+        "plot4": "Time",
+        "plot5": "default"
     },
     "plot_titles": {
-        "plot1": "t1",
-        "plot2": "t2",
-        "plot3": "t3"
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah",
+        "plot4": "blah",
+        "plot5": "blah"
     },
     "plot_xlabs": {
-        "plot1": "x1",
-        "plot2": "x2",
-        "plot3": "x3"
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah",
+        "plot4": "blah",
+        "plot5": "blah"
     },
     "plot_ylabs": {
-        "plot1": "y1",
-        "plot2": "y2",
-        "plot3": "y3"
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah",
+        "plot4": "blah",
+        "plot5": "blah"
+    },
+    "plot_xticks": {
+        "plot1": "0, 1, 2",
+        "plot2": "0, 1, 2",
+        "plot3": "0, 1, 2",
+        "plot4": "0, 1, 2",
+        "plot5": "0, 1, 2"
+    },
+    "plot_yticks": {
+        "plot1": "0, 1, 2",
+        "plot2": "0, 1, 2",
+        "plot3": "0, 1, 2",
+        "plot4": "0, 1, 2",
+        "plot5": "0, 1, 2"
+    },
+    "color_label": {
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah",
+        "plot4": "blah",
+        "plot5": "blah"
+    },
+    "plot_size": {
+        "plot1": "300, 250",
+        "plot2": "300, 250",
+        "plot3": "300, 250",
+        "plot4": "300, 250",
+        "plot5": "300, 250"
+    },
+    "dose_concs": {
+        "plot1": "0, 1, 2",
+        "plot2": "",
+        "plot3": "",
+        "plot4": "",
+        "plot5": ""
     },
     "plot_filenames": {
-        "plot1": "f1",
-        "plot2": "f2",
-        "plot3": "f3"
+        "plot1": "blah",
+        "plot2": "blah",
+        "plot3": "blah",
+        "plot4": "blah",
+        "plot5": "blah"
     },
     "sig": 2,
     "blockDiameter": [
