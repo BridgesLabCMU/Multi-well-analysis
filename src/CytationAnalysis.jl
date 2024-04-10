@@ -1,4 +1,4 @@
-using Images: imfilter, mapwindow, adjust_histogram!, LinearStretching, Gray, N0f16, N0f8,
+using Images: imfilter, mapwindow, Gray, N0f16, N0f8,
               Kernel, warp, axes, KernelFactors, RGB 
 using ImageMorphology: label_components, component_lengths
 using StatsBase: mean, median, quantile
@@ -31,6 +31,27 @@ function read_images!(well, directory, height, width,
         arr[:, :, t] = load("$directory/$file")
     end
     return nothing 
+end
+
+function dust_correct!(masks)
+    rows, cols, nframes = size(masks)
+    for col in 1:cols
+        for row in 1:rows
+            if masks[row, col, 1]  
+                should_suppress = false
+                for t in 2:nframes
+                    if !masks[row, col, t]
+                        should_suppress = true
+                        break
+                    end
+                end
+                if should_suppress
+					masks[row, col, :] .= false
+                end
+            end
+        end
+    end
+    return nothing
 end
 
 function mean_filter!(X, length_scale)
@@ -71,7 +92,8 @@ function crop(img_stack)
 end
 
 function stack_preprocess(img_stack, normalized_stack, registered_stack,
-                        blockDiameter, shift_thresh, fpMean, nframes, mxshift, sig)       
+                        blockDiameter, fpMean, nframes, mxshift, sig,
+                        CFP_stack, YFP_stack, texas_red_stack, CY5_stack)       
     shifts = (0.0, 0.0) 
     @inbounds for t in 1:nframes
         img = img_stack[:,:,t]
@@ -102,7 +124,19 @@ function stack_preprocess(img_stack, normalized_stack, registered_stack,
     processed_stack, crop_indices = crop(registered_stack)
     row_min, row_max, col_min, col_max = crop_indices
     img_stack = img_stack[row_min:row_max, col_min:col_max, :]
-    return img_stack, processed_stack
+    if CFP_stack != nothing
+        CFP_stack = CFP_stack[row_min:row_max, col_min:col_max, :]
+    end
+    if YFP_stack != nothing
+        YFP_stack = YFP_stack[row_min:row_max, col_min:col_max, :]
+    end
+    if texas_red_stack != nothing
+        texas_red_stack = texas_red_stack[row_min:row_max, col_min:col_max, :]
+    end
+    if CY5_stack != nothing
+        CY5_stack = CY5_stack[row_min:row_max, col_min:col_max, :]
+    end
+    return CFP_stack, YFP_stack, texas_red_stack, CY5_stack, img_stack, processed_stack
 end
 
 function recompute_mask(img, img_copy, raw_img, sig, blockDiameter, fpMean, fixed_thresh)
@@ -161,12 +195,6 @@ function compute_mask!(stack, raw_stack, masks,
 end
 
 function output_images!(stack, masks, overlay, dir, well)
-    flat_stack = vec(stack)
-    img_min = quantile(flat_stack, 0.0035)
-    img_max = quantile(flat_stack, 0.9965)
-    adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, 
-                                              dst_minval=0, dst_maxval=1))
-    save("$dir/results_images/$well"*".tif", stack)
     @inbounds for i in CartesianIndices(stack)
         gray_val = RGB{N0f8}(stack[i], stack[i], stack[i])
         overlay[i] = masks[i] ? RGB{N0f8}(1, 0, 0) : gray_val
@@ -181,6 +209,7 @@ function main()
     sig = config["sig"]
     blockDiameter = config["blockDiameter"] 
     shift_thresh = config["shift_thresh"]
+    dust_correction = config["dust_correction"]
 
     @inbounds for k in eachindex(images_directories)
         dir = images_directories[k]
@@ -193,23 +222,71 @@ function main()
         end
         mkdir("$dir/results_images")
         mkdir("$dir/results_data")
-        output_file = "$dir/results_data/BF_imaging.csv"
+        BF_output_file = "$dir/results_data/BF_imaging.csv"
         num_wells = sum(length(v) for v in values(conditions))
         files = [f for f in readdir(dir) if occursin(r"\.tif$", f)]
         ntimepoints = div(length(files), num_wells)
         file1 = files[1]
         test_image = load("$dir/$file1"; lazyio=true)
         height, width = size(test_image)
-        data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        BF_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        CFP_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        YFP_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        texas_red_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
+        CY5_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
         all_wells = vcat(values(conditions)...)
         conditions = values(conditions)
+        CFP_flag = false
+        YFP_flag = false
+        texas_red_flag = false
+        CY5_flag = false
         @inbounds for (i, wells) in enumerate(conditions)
             @inbounds for j in eachindex(wells)
+                CFP_images = nothing
+                YFP_images = nothing
+                texas_red_images = nothing
+                CY5_images = nothing
                 images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
                 well = wells[j]
-                well_files = sort([f for f in readdir(dir) if occursin(well*"_", f)], 
+                BF_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("Bright Field", f)], 
                              lt=natural)
-                read_images!(well, dir, height, width, ntimepoints, images, well_files)
+                CFP_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("CFP", f)], 
+                             lt=natural)
+                YFP_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("YFP", f)], 
+                             lt=natural)
+                texas_red_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("Texas Red", f)], 
+                             lt=natural)
+                CY5_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("CY5", f)], 
+                             lt=natural)
+                read_images!(well, dir, height, width, ntimepoints, images, BF_well_files)
+                if length(CFP_well_files) > 0
+                    if !CFP_flag
+                        CFP_flag = true
+                    end
+                    CFP_images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
+                    read_images!(well, dir, height, width, ntimepoints, CFP_images, CFP_well_files)
+                end
+                if length(YFP_well_files) > 0
+                    if !YFP_flag
+                        YFP_flag = true
+                    end
+                    YFP_images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
+                    read_images!(well, dir, height, width, ntimepoints, YFP_images, YFP_well_files)
+                end
+                if length(texas_red_well_files) > 0
+                    if !texas_red_flag
+                        texas_red_flag = true
+                    end
+                    texas_red_images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
+                    read_images!(well, dir, height, width, ntimepoints, texas_red_images, texas_red_well_files)
+                end
+                if length(CY5_well_files) > 0
+                    if !CY5_flag
+                        CY5_flag = true
+                    end
+                    CY5_images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
+                    read_images!(well, dir, height, width, ntimepoints, CY5_images, CY5_well_files)
+                end
                 images = Float64.(images)
                 normalized_stack = similar(images)
                 registered_stack = similar(images)
@@ -217,27 +294,87 @@ function main()
                 fpMin = minimum(images) 
                 fpMean = (fpMax - fpMin) / 2.0 + fpMin
                 fixed_thresh = fpMean - 0.04
-                images, output_stack = stack_preprocess(images, normalized_stack,
-                                                        registered_stack, blockDiameter[1],
-                                                        shift_thresh, fpMean, ntimepoints, 
-                                                        shift_thresh, sig)
+                CFP_images, YFP_images, texas_red_images, CY5_images, images, output_stack = stack_preprocess(images, normalized_stack, 
+                                                                                                              registered_stack, blockDiameter[1], 
+                                                                                                              fpMean, ntimepoints, shift_thresh, 
+                                                                                                              sig, CFP_images, YFP_images, 
+                                                                                                              texas_red_images, CY5_images)
                 masks = zeros(Bool, size(images))
                 compute_mask!(output_stack, images, masks, sig, 
                               fixed_thresh, ntimepoints, blockDiameter, fpMean)
+                if dust_correction == "True"
+                    dust_correct!(masks)
+                end
                 output_stack = Gray{N0f8}.(output_stack)
                 overlay = zeros(RGB{N0f8}, size(output_stack)...)
                 output_images!(output_stack, masks, overlay, dir, well)
                 let images = images
                     @floop for t in 1:ntimepoints
                         @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
-                        @inbounds data_matrix[t, i*j] = signal 
+                        @inbounds BF_data_matrix[t, i*j] = signal 
+                    end
+                end
+                if CFP_flag
+                    let CFP_images = CFP_images
+                        @floop for t in 1:ntimepoints
+                            @inbounds signal = @views mean(CFP_images[:,:,t] .* masks[:,:,t]) - mean(CFP_images[:,:,t] .* .!masks[:,:,t])
+                            @inbounds CFP_data_matrix[t, i*j] = signal 
+                        end
+                    end
+                end
+                if YFP_flag
+                    let YFP_images = YFP_images
+                        @floop for t in 1:ntimepoints
+                            @inbounds signal = @views mean(YFP_images[:,:,t] .* masks[:,:,t]) - mean(YFP_images[:,:,t] .* .!masks[:,:,t])
+                            @inbounds YFP_data_matrix[t, i*j] = signal 
+                        end
+                    end
+                end
+                if texas_red_flag
+                    let texas_red_images = texas_red_images
+                        @floop for t in 1:ntimepoints
+                            @inbounds signal = @views mean(texas_red_images[:,:,t] .* masks[:,:,t]) - mean(texas_red_images[:,:,t] .* .!masks[:,:,t])
+                            @inbounds texas_red_data_matrix[t, i*j] = signal 
+                        end
+                    end
+                end
+                if CY5_flag
+                    let CY5_images = CY5_images
+                        @floop for t in 1:ntimepoints
+                            @inbounds signal = @views mean(CY5_images[:,:,t] .* masks[:,:,t]) - mean(CY5_images[:,:,t] .* .!masks[:,:,t])
+                            @inbounds CY5_data_matrix[t, i*j] = signal 
+                        end
                     end
                 end
             end # loop over wells for a condition 
         end # loop over conditions 
-        df = DataFrame(data_matrix, Symbol.(all_wells))
+        df = DataFrame(BF_data_matrix, Symbol.(all_wells))
         df .= ifelse.(isnan.(df), 0, df)
-        write(output_file, df)
+        write(BF_output_file, df)
+        if CFP_flag
+            CFP_output_file = "$dir/results_data/CFP_imaging.csv"
+            df = DataFrame(CFP_data_matrix, Symbol.(all_wells))
+            df .= ifelse.(isnan.(df), 0, df)
+            write(CFP_output_file, df)
+        end
+        if YFP_flag
+            YFP_output_file = "$dir/results_data/YFP_imaging.csv"
+            df = DataFrame(YFP_data_matrix, Symbol.(all_wells))
+            df .= ifelse.(isnan.(df), 0, df)
+            write(YFP_output_file, df)
+        end
+        if texas_red_flag
+            texas_red_output_file = "$dir/results_data/texas_red_imaging.csv"
+            df = DataFrame(texas_red_data_matrix, Symbol.(all_wells))
+            df .= ifelse.(isnan.(df), 0, df)
+            write(texas_red_output_file, df)
+        end
+        if CY5_flag
+            CY5_output_file = "$dir/results_data/CY5_imaging.csv"
+            df = DataFrame(CY5_data_matrix, Symbol.(all_wells))
+            df .= ifelse.(isnan.(df), 0, df)
+            write(CY5_output_file, df)
+        end
     end # loop over directories
 end
 main()
