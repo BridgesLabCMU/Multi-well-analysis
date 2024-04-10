@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     root2 = Tk()
     root2.title("Scanner")
-    root2.geometry("1000x1000")
+    root2.geometry("1500x1000")
     frm2= ttk.Frame(root2)
     frm2.grid()
     frm2.pack(padx=2, pady=0)
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     for i in range(1, num_plots + 1):
         # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
-        plot_dtype_label = ttk.Label(plot_dtype_frm, text=f"Plot {i} dtype:")
+        plot_dtype_label = ttk.Label(plot_dtype_frm, text=f"Plot {i} data type:")
         plot_dtype_label.pack(side=LEFT, anchor="w")
         plot_dtype_listbox = ttk.Listbox(plot_dtype_frm,
                                          selectmode=ttk.MULTIPLE,
@@ -244,7 +244,7 @@ if __name__ == "__main__":
         plot_condition_listbox = ttk.Listbox(plot_condition_frm,
                                              selectmode=ttk.MULTIPLE,
                                              height=len(condition_names),
-                                             width = plot_condition_options_lens[max_len_condition_ind],
+                                             width = plot_condition_options_lens[max_len_condition_ind]*2,
                                              exportselection=False)
         for option in condition_names:
             plot_condition_listbox.insert(ttk.END, option)
@@ -285,7 +285,7 @@ if __name__ == "__main__":
         plot_xaxis_selection = ttk.StringVar()
         plot_xaxis_selection.set("")
         plot_xaxis_selections.append(plot_xaxis_selection)
-        plot_xaxis_label = ttk.Label(plot_xaxis_frm, text=f"Plot {i} xaxis:")
+        plot_xaxis_label = ttk.Label(plot_xaxis_frm, text=f"Plot {i} x-axis:")
         plot_xaxis_label.pack(side=LEFT, anchor="w", padx=5)
         plot_xaxis_option_menu = ttk.OptionMenu(plot_xaxis_frm,
                                                plot_xaxis_selections[i-1],

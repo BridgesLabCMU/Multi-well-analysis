@@ -141,7 +141,7 @@ def create_new_window():
 if __name__ == "__main__":
     root = Tk()
     root.title("Scanner")
-    root.geometry("1000x800")
+    root.geometry("1000x1000")
     frm = ttk.Frame(root)
     frm.grid()
     frm.pack(padx=2, pady=0)
