@@ -81,23 +81,24 @@ def read_sample_name():
 # save_sample_cells() saves the current list of sample_cells to
 # the conditions_list dictionary, then clears the selected cells and the table
 def save_sample_cells():
-    conditions = {}
-    sample_name = sample_name_entry.get()
-    conditions[sample_name] = sorted(list(sample_cells))
-    conditions_list.append(conditions)
-    print(conditions_list)
-    if plate_cells_var.get() < plate_count_var.get():
-        plate_cells_var.set(plate_cells_var.get() + 1)
-    else:
-        enter_cells.configure(state="disabled")
-    sample_cells.clear()
-    table.clear_color()
+	nplates = plate_count_var.get()
+	if len(conditions_list) < nplates:
+		conditions_list.append({})
+	curr_plate = plate_cells_var.get()
+	sample_name = sample_name_entry.get()
+	conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
+	print(conditions_list)
+	if curr_plate < nplates:
+		plate_cells_var.set(plate_cells_var.get() + 1)
+	else:
+		enter_cells.configure(state="disabled")
+	sample_cells.clear()
+	table.clear_color()
 
 # disable_plate_count disables the plate_count_option_menu widget, prevents user from editing it after hitting "Enter"
 def disable_plate_count():
     plate_count_option_menu.configure(state="disabled")
     plate_cells_var.set(1)
-
 
 def plate_count_select(value):
     plate_count_var.set(value)
@@ -187,10 +188,8 @@ if __name__ == "__main__":
     plate_count_enter.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
 
     # CHOOSE FOLDER TO SEND DATA
-    send_folder_select_lbl = ttk.Label(root, text="Choose folder to store this experiment")
     send_folder_select_lbl_btn = ttk.Button(root, text="Choose folder to store this experiment", command=send_directory)
     send_dir_entry = ttk.Entry(root, width = 35)
-    send_folder_select_lbl.pack(side=TOP, anchor = "w", padx = 10)
     send_folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10)
     send_dir_entry.pack(side=TOP, anchor = "w", padx = 10)
 
