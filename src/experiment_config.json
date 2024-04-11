@@ -12,9 +12,7 @@
                 "B11",
                 "C11",
                 "D11"
-            ]
-        },
-        {
+            ],
             "random": [
                 "A12",
                 "B12",
@@ -33,66 +31,48 @@
     "plot_types": {
         "plot1": "line",
         "plot2": "line",
-        "plot3": "line",
-        "plot4": "line"
+        "plot3": "line"
     },
     "plot_dtypes": {
         "plot1": [
             "BF_imaging"
         ],
         "plot2": [
-            "BF_imaging"
-        ],
-        "plot3": [
             "YFP_imaging"
         ],
-        "plot4": [
+        "plot3": [
             "CY5_imaging"
         ]
     },
     "plot_conditions": {
-        "plot1": [
-            "WT"
-        ],
-        "plot2": [
-            "WT"
-        ],
-        "plot3": [
-            "WT"
-        ],
-        "plot4": [
-            "WT"
-        ]
+        "plot1": ["WT"],
+        "plot2": ["WT"],
+        "plot3": ["WT"]
     },
     "plot_normalization": {
         "plot1": "WT",
         "plot2": "WT",
-        "plot3": "WT",
-        "plot4": "WT"
+        "plot3": "WT"
     },
     "plot_xaxis": {
         "plot1": "Time",
         "plot2": "Time",
-        "plot3": "Time",
-        "plot4": "Time"
+        "plot3": "Time"
     },
     "plot_titles": {
         "plot1": "Brightfield",
-        "plot2": "Duplicate",
-        "plot3": "YFP",
-        "plot4": "CY5"
+        "plot2": "YFP",
+        "plot3": "CY5"
     },
     "plot_xlabs": {
         "plot1": "Time (h)",
         "plot2": "Time (h)",
-        "plot3": "Time (h)",
-        "plot4": "Time (h)"
+        "plot3": "Time (h)"
     },
     "plot_ylabs": {
         "plot1": "",
         "plot2": "",
-        "plot3": "",
-        "plot4": ""
+        "plot3": ""
     },
     "plot_xticks": {
         "plot1": [
@@ -102,9 +82,6 @@
             ""
         ],
         "plot3": [
-            ""
-        ],
-        "plot4": [
             ""
         ]
     },
@@ -117,16 +94,12 @@
         ],
         "plot3": [
             ""
-        ],
-        "plot4": [
-            ""
         ]
     },
     "color_label": {
         "plot1": "",
         "plot2": "",
-        "plot3": "",
-        "plot4": ""
+        "plot3": ""
     },
     "plot_size": {
         "plot1": [
@@ -140,23 +113,17 @@
         "plot3": [
             300,
             250
-        ],
-        "plot4": [
-            300,
-            250
         ]
     },
     "dose_concs": {
         "plot1": [],
         "plot2": [],
-        "plot3": [],
-        "plot4": []
+        "plot3": []
     },
     "plot_filenames": {
         "plot1": "BF",
-        "plot2": "duplicate",
-        "plot3": "YFP",
-        "plot4": "CY5"
+        "plot2": "YFP",
+        "plot3": "CY5"
     },
     "sig": 2,
     "blockDiameter": [
