@@ -21,6 +21,7 @@ plot_types = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_dtypes = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_conditions = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_normalizations = {f"plot{i}": "" for i in range(1, num_plots+1)}
+normalization_methods = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_xaxes = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -41,6 +42,7 @@ def save_to_json():
     json_dict["plot_dtypes"] = plot_dtypes
     json_dict["plot_conditions"] = plot_conditions
     json_dict["plot_normalization"] = plot_normalizations
+    json_dict["normalization_method"] = normalization_methods
     json_dict["plot_xaxis"] = plot_xaxes
     json_dict["plot_titles"] = plot_titles
     json_dict["plot_xlabs"] = plot_xlabs
@@ -63,6 +65,7 @@ def store_plot_options():
     save_plot_dtypes(plot_dtype_selections)
     save_plot_conditions(plot_condition_selections)
     save_plot_normalization(plot_normalization_selections)
+    save_normalization_methods(normalization_method_selections)
     save_plot_xaxis(plot_xaxis_selections)
     save_plot_titles(plot_title_entries)
     save_plot_xlabs(plot_xlab_entries)
@@ -87,6 +90,9 @@ def save_plot_conditions(plot_condition_selections):
 def save_plot_normalization(plot_normalization_selections):
     for i in range(0,len(plot_normalization_selections)):
         plot_normalizations[f"plot{i+1}"] = plot_normalization_selections[i].get()
+def save_normalization_methods(normalization_method_selections):
+    for i in range(0,len(normalization_method_selections)):
+        normalization_methods[f"plot{i+1}"] = normalization_method_selections[i]
 def save_plot_xaxis(plot_xaxis_selections):
     for i in range(0,len(plot_xaxis_selections)):
         plot_xaxes[f"plot{i+1}"] = plot_xaxis_selections[i].get()
@@ -155,6 +161,12 @@ def dtype_listbox_on_select(event):
     for listbox in plot_dtype_listboxes:
         selected_indices = listbox.curselection()
         plot_dtype_selections.append([listbox.get(idx) for idx in selected_indices])
+
+def normalization_listbox_on_select(event):
+    normalization_method_selections.clear()
+    for listbox in normalization_method_listboxes:
+        selected_indices = listbox.curselection()
+        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
 
 def condition_listbox_on_select(event):
     plot_condition_selections.clear()
@@ -272,6 +284,30 @@ if __name__ == "__main__":
                                                         command=lambda value, index=i: plot_normalization_select(value,index))
         plot_normalization_option_menu.pack(side=LEFT, after=plot_normalization_label, anchor="w", padx=10)
         plot_normalization_option_menus.append(plot_normalization_option_menu)
+
+    # PLOT NORMALIZATION TYPE OPTIONS
+    normalization_method_listboxes = []
+    normalization_method_selections = []
+    normalization_method_options = ["percent", "fold-change", ""]
+    normalization_method_options_lens = [len(x) for x in normalization_method_options]
+    max_len_normalization_ind = np.argmax(normalization_method_options_lens)
+    normalization_method_frm = ttk.Frame(root2)
+    normalization_method_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+    for i in range(1, num_plots + 1):
+        # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
+        normalization_method_label = ttk.Label(normalization_method_frm, text=f"Plot {i} data type:")
+        normalization_method_label.pack(side=LEFT, anchor="w")
+        normalization_method_listbox = ttk.Listbox(normalization_method_frm,
+                                         selectmode=ttk.MULTIPLE,
+                                         height=len(normalization_method_options),
+                                         width = normalization_method_options_lens[max_len_normalization_ind],
+                                         exportselection=False)
+        for option in normalization_method_options:
+            normalization_method_listbox.insert(ttk.END, option)
+        normalization_method_listbox.bind("<<ListboxSelect>>", normalization_listbox_on_select)
+        normalization_method_listbox.pack(side=ttk.LEFT, after = normalization_method_label, padx=10)
+        normalization_method_listboxes.append(normalization_method_listbox)
 
     # PLOT XAXIS OPTIONS
     plot_xaxis_selections = []

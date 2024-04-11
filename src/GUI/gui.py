@@ -114,7 +114,6 @@ def create_new_window():
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
     json_dict["conditions"] = conditions_list
-    json_dict["acquisition_frequency"] = 2
     if good_data_var.get():
         good_data_directory = "B:/Good imaging data"
     else:
@@ -129,8 +128,7 @@ def create_new_window():
     with open(HOME_DIR + "/temp_config.json", "w") as file:
         json.dump(json_dict, file, indent = 4)
 
-    for cond in conditions_list:
-        all_conditions.append(next(iter(cond.keys())))
+    all_conditions = list(set(key for d in conditions_list for key in d))
     print(all_conditions)
     with open("temp_conditions.txt", "w") as fw:
         for cond in all_conditions:

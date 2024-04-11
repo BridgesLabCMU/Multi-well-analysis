@@ -1,16 +1,22 @@
 {
     "notes": "Testing code on Sandhya's data",
-    "acquisition_frequency": 2,
+    "acquisition_frequency": 1,
     "images_directory": [
         "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240409_10x_BF_Cy5_YFP_Biospa_Drawer3 09-Apr-2024 17-30-25/240409_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [],
     "conditions": [
         {
-            "WT": [
-                "A11",
-                "B11",
-                "C11",
+            "luxC": [
+                "A11"
+            ],
+            "vpsL": [
+                "B11"
+            ],
+            "flaA": [
+                "C11"
+            ],
+            "Ptac": [
                 "D11"
             ],
             "random": [
@@ -45,14 +51,25 @@
         ]
     },
     "plot_conditions": {
-        "plot1": ["WT"],
-        "plot2": ["WT"],
-        "plot3": ["WT"]
+        "plot1": [
+            "Ptac"
+        ],
+        "plot2": [
+            "Ptac"
+        ],
+        "plot3": [
+            "Ptac"
+        ]
     },
     "plot_normalization": {
-        "plot1": "WT",
-        "plot2": "WT",
-        "plot3": "WT"
+        "plot1": "Ptac",
+        "plot2": "Ptac",
+        "plot3": "Ptac"
+    },
+    "normalization_method": {
+        "plot1": "fold-change",
+        "plot2": "fold-change",
+        "plot3": "fold-change"
     },
     "plot_xaxis": {
         "plot1": "Time",
@@ -60,7 +77,7 @@
         "plot3": "Time"
     },
     "plot_titles": {
-        "plot1": "Brightfield",
+        "plot1": "BF",
         "plot2": "YFP",
         "plot3": "CY5"
     },
