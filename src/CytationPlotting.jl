@@ -271,10 +271,12 @@ function twin_y(conditions, plot_conditions,
                 error("Can only plot time or OD on the x-axis.")
             end
             if j == 1
+                stds .= ifelse.(isnan.(stds), 0, stds)
                 plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=latexstring(condition), color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
                 ylabel!(p, plot_ylabel[j], yguidefontcolor=colors[j])
             else
+                stds .= ifelse.(isnan.(stds), 0, stds)
                 plot!(p_twin, xaxis, means, marker=:circle, ribbon=stds, 
                       label=latexstring(condition), color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
@@ -362,6 +364,7 @@ function line_plot(conditions, plot_conditions,
         else
             error("Can only plot time or OD on the x-axis.")
         end
+        stds .= ifelse.(isnan.(stds), 0, stds)
         plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=latexstring(condition))
     end
     xlabel!(p, plot_xlabel)
