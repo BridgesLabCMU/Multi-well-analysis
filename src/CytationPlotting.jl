@@ -620,7 +620,7 @@ function main()
     nplates = length(conditions)
     acquisition_frequency = config["acquisition_frequency"]
     dose_concs = config["dose_concs"]
-    data_directories = config["images_directory"]
+    images_directories = config["images_directory"]
     bulk_data = config["bulk_data"]
     plot_types = config["plot_types"] 
     plot_dtypes = config["plot_dtypes"] 
@@ -636,7 +636,7 @@ function main()
     plot_clabs = config["color_label"] 
     plot_size = config["plot_size"] 
     plot_filenames = config["plot_filenames"] 
-    parent_directory = dirname(bulk_data[1]) 
+    parent_directory = length(bulk_data) > 0 ? dirname(bulk_data[1]) : dirname(images_directories[1]) 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)
         rm(plots_directory; recursive = true)
@@ -655,10 +655,10 @@ function main()
     YFP = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     CY5 = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     for i in 1:nplates
-        if data_directories[i] == "nothing"
-            data_directories[i] = bulk_data[i][1:end-4]
+        if images_directories[i] == "nothing"
+            images_directories[i] = bulk_data[i][1:end-4]
         end
-        data_directory = data_directories[i]
+        data_directory = images_directories[i]
         if "lum" in data_types || "RLU" in data_types && isfile("$data_directory/lum.csv")
             lum[i] = CSV.read("$data_directory/lum.csv", DataFrame)
         else

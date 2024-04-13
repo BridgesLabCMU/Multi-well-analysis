@@ -6,7 +6,7 @@ if %errorlevel% neq 0 goto end
 julia ExtractData.jl
 if %errorlevel% neq 0 goto end
 
-julia CytationAnalysis.jl
+julia CytationAnalysisV2.jl
 if %errorlevel% neq 0 goto end
 
 julia CytationPlotting.jl

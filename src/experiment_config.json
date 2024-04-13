@@ -52,19 +52,19 @@
     },
     "plot_conditions": {
         "plot1": [
-            "Ptac"
+            "luxC"
         ],
         "plot2": [
-            "Ptac"
+            "luxC"
         ],
         "plot3": [
-            "Ptac"
+            "luxC"
         ]
     },
     "plot_normalization": {
-        "plot1": "Ptac",
-        "plot2": "Ptac",
-        "plot3": "Ptac"
+        "plot1": "luxC",
+        "plot2": "luxC",
+        "plot3": "luxC"
     },
     "normalization_method": {
         "plot1": "fold-change",
@@ -87,9 +87,15 @@
         "plot3": "Time (h)"
     },
     "plot_ylabs": {
-        "plot1": "",
-        "plot2": "",
-        "plot3": ""
+        "plot1": [
+            "Biomass (a.u.)"
+        ],
+        "plot2": [
+            "Biomass (a.u.)"
+        ],
+        "plot3": [
+            "Biomass (a.u.)"
+        ]
     },
     "plot_xticks": {
         "plot1": [
