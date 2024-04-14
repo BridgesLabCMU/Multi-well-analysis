@@ -514,7 +514,8 @@ function select_data(plot_dtype, lum, OD, lux, BF_imaging, CFP_imaging,
 end
 
 function generate_plot(conditions, acquisition_frequency, plot_num, plot_type, 
-                      plot_dtypes, plot_xaxis, plot_conditions, 
+                      plot_dtypes, plot_numerators, plot_denominators, 
+                      plot_xaxis, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
@@ -523,9 +524,22 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
                       default_color, dose_concs, plots_directory)
     plot_size = Tuple(plot_size)
-    if length(plot_dtypes) > 2
-        error("Can't plot more than two data types at once.")
-    elseif length(plot_dtypes) == 2 
+    if length(plot_dtypes) == 1
+        data = select_data(plot_dtypes[1], lum, OD, lux, BF_imaging, CFP_imaging, 
+                           YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
+    elseif length(plot_dtypes) == 2 && plot_type != "two-axis" 
+        if length(numerator) == 0
+            error("Passed too many data types without specifying numerator and denominator.")
+        else
+        end
+    elseif length(plot_dtypes) == 2 && plot_type == "two-axis"
+        data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
+        for i in 1:2
+            data[i] = select_data(plot_dtypes[i], lum, OD, lux, BF_imaging, 
+                                  CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                  CY5_imaging, YFP, CY5)
+        end
+    elseif length(plot_dtypes) > 2 && plot_type == "two-axis"
         data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
         for i in 1:2
             data[i] = select_data(plot_dtypes[i], lum, OD, lux, BF_imaging, 
@@ -533,8 +547,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                                   CY5_imaging, YFP, CY5)
         end
     else
-        data = select_data(plot_dtypes[1], lum, OD, lux, BF_imaging, CFP_imaging, 
-                           YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
+        error("Passed too many data types.")
     end
     if plot_conditions[1] == "all"
         plot_conditions = keys(conditions[1])
@@ -627,6 +640,8 @@ function main()
     bulk_data = config["bulk_data"]
     plot_types = config["plot_types"] 
     plot_dtypes = config["plot_dtypes"] 
+    plot_numerators = config["plot_numerators"] 
+    plot_denominators = config["plot_denominators"] 
     plot_xaxis = config["plot_xaxis"] 
     plot_conditions = config["plot_conditions"] 
     plot_normalization = config["plot_normalization"] 
@@ -716,7 +731,8 @@ function main()
     println("Plotting...")
     for (plot_num, plot_type) in plot_types
         generate_plot(conditions, acquisition_frequency, plot_num, plot_type, 
-                      plot_dtypes[plot_num], plot_xaxis[plot_num], plot_conditions[plot_num], 
+                      plot_dtypes[plot_num], plot_numerators[plot_num], plot_denominators[plot_num], 
+                      plot_xaxis[plot_num], plot_conditions[plot_num], 
                       plot_normalization[plot_num], normalization_method[plot_num],
                       plot_titles[plot_num], 
                       plot_ylabels[plot_num], plot_xlabels[plot_num], 

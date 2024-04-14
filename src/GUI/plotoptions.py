@@ -19,6 +19,8 @@ with open("temp_conditions.txt", "r") as fr:
 
 plot_types = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_dtypes = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_numerators = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_denominators = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_conditions = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_normalizations = {f"plot{i}": "" for i in range(1, num_plots+1)}
 normalization_methods = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -40,6 +42,8 @@ def save_to_json():
     store_plot_options()
     json_dict["plot_types"] = plot_types
     json_dict["plot_dtypes"] = plot_dtypes
+    json_dict["plot_numerators"] = plot_numerators
+    json_dict["plot_denominators"] = plot_denominators
     json_dict["plot_conditions"] = plot_conditions
     json_dict["plot_normalization"] = plot_normalizations
     json_dict["normalization_method"] = normalization_methods
@@ -63,6 +67,8 @@ def save_to_json():
 def store_plot_options():
     save_plot_types(plot_type_selections)
     save_plot_dtypes(plot_dtype_selections)
+    save_plot_numerators(plot_numerator_selections)
+    save_plot_denominators(plot_denominator_selections)
     save_plot_conditions(plot_condition_selections)
     save_plot_normalization(plot_normalization_selections)
     save_normalization_methods(normalization_method_selections)
@@ -84,6 +90,12 @@ def save_plot_types(plot_type_selections):
 def save_plot_dtypes(plot_dtype_selections):
     for i in range(0,len(plot_dtype_selections)):
         plot_dtypes[f"plot{i+1}"] = plot_dtype_selections[i]
+def save_plot_numerators(plot_numerator_selections):
+    for i in range(0,len(plot_numerator_selections)):
+        plot_numerators[f"plot{i+1}"] = plot_numerator_selections[i]
+def save_plot_denominators(plot_denominator_selections):
+    for i in range(0,len(plot_denominator_selections)):
+        plot_denominators[f"plot{i+1}"] = plot_denominator_selections[i]
 def save_plot_conditions(plot_condition_selections):
     for i in range(0, len(plot_condition_selections)):
         plot_conditions[f"plot{i+1}"] = plot_condition_selections[i]
@@ -166,6 +178,18 @@ def dtype_listbox_on_select(event):
         selected_indices = listbox.curselection()
         plot_dtype_selections.append([listbox.get(idx) for idx in selected_indices])
 
+def numerator_listbox_on_select(event):
+    plot_numerator_selections.clear()
+    for listbox in plot_numerator_listboxes:
+        selected_indices = listbox.curselection()
+        plot_numerator_selections.append([listbox.get(idx) for idx in selected_indices])
+
+def denominator_listbox_on_select(event):
+    plot_denominator_selections.clear()
+    for listbox in plot_denominator_listboxes:
+        selected_indices = listbox.curselection()
+        plot_denominator_selections.append([listbox.get(idx) for idx in selected_indices])
+
 
 def condition_listbox_on_select(event):
     plot_condition_selections.clear()
@@ -239,6 +263,58 @@ if __name__ == "__main__":
         plot_dtype_listbox.bind("<<ListboxSelect>>", dtype_listbox_on_select)
         plot_dtype_listbox.pack(side=ttk.LEFT, after = plot_dtype_label, padx=10)
         plot_dtype_listboxes.append(plot_dtype_listbox)
+
+    # PLOT NUMERATOR OPTIONS
+
+    plot_numerator_listboxes = []
+    plot_numerator_selections = []
+    plot_numerator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+						  "CY5_imaging", "YFP", "CY5"]
+    plot_numerator_options_lens = [len(x) for x in plot_numerator_options]
+    max_len_numerator_ind = np.argmax(plot_numerator_options_lens)
+    plot_numerator_frm = ttk.Frame(root2)
+    plot_numerator_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+    for i in range(1, num_plots + 1):
+        # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
+        plot_numerator_label = ttk.Label(plot_numerator_frm, text=f"Plot {i} data type:")
+        plot_numerator_label.pack(side=LEFT, anchor="w")
+        plot_numerator_listbox = ttk.Listbox(plot_numerator_frm,
+                                         selectmode=ttk.MULTIPLE,
+                                         height=len(plot_numerator_options),
+                                         width = plot_numerator_options_lens[max_len_numerator_ind],
+                                         exportselection=False)
+        for option in plot_numerator_options:
+            plot_numerator_listbox.insert(ttk.END, option)
+        plot_numerator_listbox.bind("<<ListboxSelect>>", numerator_listbox_on_select)
+        plot_numerator_listbox.pack(side=ttk.LEFT, after = plot_numerator_label, padx=10)
+        plot_numerator_listboxes.append(plot_numerator_listbox)
+
+    # PLOT DENOMINATOR OPTIONS
+
+    plot_denominator_listboxes = []
+    plot_denominator_selections = []
+    plot_denominator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+						  "CY5_imaging", "YFP", "CY5"]
+    plot_denominator_options_lens = [len(x) for x in plot_denominator_options]
+    max_len_denominator_ind = np.argmax(plot_denominator_options_lens)
+    plot_denominator_frm = ttk.Frame(root2)
+    plot_denominator_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+    for i in range(1, num_plots + 1):
+        # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
+        plot_denominator_label = ttk.Label(plot_denominator_frm, text=f"Plot {i} data type:")
+        plot_denominator_label.pack(side=LEFT, anchor="w")
+        plot_denominator_listbox = ttk.Listbox(plot_denominator_frm,
+                                         selectmode=ttk.MULTIPLE,
+                                         height=len(plot_denominator_options),
+                                         width = plot_denominator_options_lens[max_len_denominator_ind],
+                                         exportselection=False)
+        for option in plot_denominator_options:
+            plot_denominator_listbox.insert(ttk.END, option)
+        plot_denominator_listbox.bind("<<ListboxSelect>>", denominator_listbox_on_select)
+        plot_denominator_listbox.pack(side=ttk.LEFT, after = plot_denominator_label, padx=10)
+        plot_denominator_listboxes.append(plot_denominator_listbox)
 
 
     # PLOT CONDITION OPTIONS
