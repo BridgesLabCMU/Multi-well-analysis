@@ -530,7 +530,16 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
     elseif length(plot_dtypes) == 2 && plot_type != "two-axis" 
         if length(numerator) == 0
             error("Passed too many data types without specifying numerator and denominator.")
+        elseif length(numerator) > 1
+            error("Passed too many numerators/denominators.")
         else
+            numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
+                                  CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                  CY5_imaging, YFP, CY5)
+            denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
+                                  CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                  CY5_imaging, YFP, CY5)
+            data = numerator ./ denominator 
         end
     elseif length(plot_dtypes) == 2 && plot_type == "two-axis"
         data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
@@ -540,11 +549,26 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                                   CY5_imaging, YFP, CY5)
         end
     elseif length(plot_dtypes) > 2 && plot_type == "two-axis"
-        data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
-        for i in 1:2
-            data[i] = select_data(plot_dtypes[i], lum, OD, lux, BF_imaging, 
-                                  CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                  CY5_imaging, YFP, CY5)
+        if length(numerator) == 0
+            error("Passed too many data types without specifying numerator and denominator.")
+        elseif length(numerator) > 2
+            error("Passed too many numerators/denominators.")
+        else
+            data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
+            for i in 1:length(plot_numerators)
+                numerator = select_data(plot_numerators[i], lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5)
+                denominator = select_data(plot_denominators[i], lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5)
+                data[i] = numerator ./ denominator 
+            end
+            if length(plot_numerators) == 1
+                data[2] = select_data(plot_dtypes[3], lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5)
+            end
         end
     else
         error("Passed too many data types.")
@@ -576,7 +600,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_filename, data, OD, plot_xaxis, plot_size,
                           plots_directory)
         else
-            error("Can only plot time or OD on the x-axis.")
+            error("Can only plot time or OD on the x-axis of a lineplot.")
         end
     elseif plot_type == "two-axis"
         if plot_xaxis == "Time"
@@ -595,7 +619,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_filename, data, OD, plot_xaxis, plot_size,
                           plots_directory)
         else
-            error("Can only plot time or OD on the x-axis.")
+            error("Can only plot time or OD on the x-axis of a two-axis plot.")
         end
     elseif plot_type == "heatmap"
         heatplot(conditions, plot_conditions, 
