@@ -8,11 +8,14 @@ using Colors: JULIA_LOGO_COLORS
     
 pgfplotsx()
 
+propdiv(a, b, c, d) = sqrt.((a ./ b).^2 .+ (c ./ d).^2)
+
 function dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, dose_concs, plot_size, plots_directory)
+                      plot_filename, data, nums, denoms, 
+                      dose_concs, plot_size, plots_directory)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
     x = dose_concs
     y = []
@@ -110,7 +113,8 @@ function heatplot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, plot_clab, plot_size, plots_directory)
+                      plot_filename, data, nums, denoms, 
+                      plot_clab, plot_size, plots_directory)
 
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
     plot_condition = [key for key in plot_conditions][1] 
@@ -210,7 +214,8 @@ function twin_y(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, xaxis_data, plot_xaxis, plot_size, plots_directory)
+                      plot_filename, data, nums, denoms, 
+                      xaxis_data, plot_xaxis, plot_size, plots_directory)
     colors = [JULIA_LOGO_COLORS.green, JULIA_LOGO_COLORS.purple]
     p = plot(size=plot_size)
     p_twin = twinx(p)
@@ -299,7 +304,8 @@ function line_plot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, xaxis_data, plot_xaxis, plot_size, plots_directory)
+                      plot_filename, data, nums, denoms, 
+                      xaxis_data, plot_xaxis, plot_size, plots_directory)
 
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
@@ -344,7 +350,9 @@ function line_plot(conditions, plot_conditions,
             end
         end
         means = mean.(eachcol(condition_data))
-        stds = std.(eachcol(condition_data))
+        @show nums
+        stds = nums==nothing ? std.(eachcol(condition_data)) : means.*propdiv(std.(eachcol(nums)), mean.(eachcol(nums)), 
+                                                                     std.(eachcol(denoms)), mean.(eachcol(denoms)))
         if plot_normalization != ""
             if normalization_method == "percent"
                 means = (means ./ max_norm .- 1) .* 100
@@ -376,6 +384,7 @@ function jitter_vals(values; width=0.05)
     return values .+ width .* (rand(length(values)) .- 0.5)
 end
 
+"""
 function pval_annotation(pval)
     if pval < 0.0001
         return "****"
@@ -412,6 +421,7 @@ function sig_annot!(p, categories, unique_cats, values)
 		annotate!(mean(xpos), ypos + dy/4, text(pval_annotation(pval), 10))
 	end
 end
+"""
 
 function jitter_plot(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
@@ -477,14 +487,14 @@ function jitter_plot(conditions, plot_conditions,
     boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
              markerstrokecolor=default_color, leg=false, outliers=false, 
              fillalpha=0.1, linewidth=1.5)
-	sig_annot!(p, categories, unique_cats, values)
+	#sig_annot!(p, categories, unique_cats, values)
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
     savefig(p, "$plots_directory/$plot_filename"*".svg")
 end
 
-function select_data(plot_dtype, lum, OD, lux, BF_imaging, CFP_imaging, 
+function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
                     YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
     if plot_dtype == "lum"
         data = lum
@@ -504,8 +514,6 @@ function select_data(plot_dtype, lum, OD, lux, BF_imaging, CFP_imaging,
         data = YFP
     elseif plot_dtype == "CY5"
         data = CY5
-    elseif plot_dtype == "RLU" 
-        data = lux
     else
         error("Can't select a data type that doesn't exist.")
     end
@@ -519,23 +527,25 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_clab, plot_size, plot_filename, 
-                      lum, OD, lux, BF_imaging, CFP_imaging, YFP_imaging, 
+                      lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
                       default_color, dose_concs, plots_directory)
     plot_size = Tuple(plot_size)
     if length(plot_dtypes) == 1
-        data = select_data(plot_dtypes[1], lum, OD, lux, BF_imaging, CFP_imaging, 
+        data = select_data(plot_dtypes[1], lum, OD, BF_imaging, CFP_imaging, 
                            YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
+        nums = nothing
+        denoms = nothing
     elseif length(plot_dtypes) == 2 && plot_type != "two-axis" 
         if length(plot_numerators) == 0
             error("Passed too many data types without specifying numerator and denominator.")
         elseif length(plot_numerators) > 1
             error("Passed too many numerators/denominators.")
         else
-            numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
+            numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
                                   CY5_imaging, YFP, CY5)
-            denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
+            denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
                                   CY5_imaging, YFP, CY5)
             quotient_df = DataFrame()
@@ -544,45 +554,55 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             end
             quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
             data = quotient_df 
+            nums = numerator 
+            denoms = denominator 
         end
     elseif length(plot_dtypes) == 2 && plot_type == "two-axis"
         data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
         for i in 1:2
-            data[i] = select_data(plot_dtypes[i], lum, OD, lux, BF_imaging, 
+            data[i] = select_data(plot_dtypes[i], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
                                   CY5_imaging, YFP, CY5)
         end
+        nums = nothing
+        denoms = nothing
     elseif length(plot_dtypes) > 2 && plot_type == "two-axis"
         if length(plot_numerators) == 0
             error("Passed too many data types without specifying numerator and denominator.")
         elseif length(plot_numerators) > 2
             error("Passed too many numerators/denominators.")
         else
+            nums = []
+            denoms = [] 
             data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
             plot_dtype1 = plot_dtypes[1]
             if in(plot_dtype1, plot_denominators) || in(plot_dtype1, plot_denominators)  
-                numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
+                numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
-                denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
+                denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
                 quotient_df = DataFrame()
                 for col_name in names(numerator[1])
                     quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
                 end
+                push!(nums, numerator[1])
+                push!(denoms, denominator[1])
                 quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
                 data[1] = [quotient_df] 
                 if length(plot_dtypes) == 3
                     plot_dtype = filter(x -> x != plot_numerators[1] && x != plot_denominators[1], plot_dtypes)[1]
-                    data[2] = select_data(plot_dtype, lum, OD, lux, BF_imaging, 
+                    data[2] = select_data(plot_dtype, lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5) 
+                    push!(nums, nothing)
+                    push!(denoms, nothing)
                 else
-                    numerator = select_data(plot_numerators[2], lum, OD, lux, BF_imaging, 
+                    numerator = select_data(plot_numerators[2], lum, OD, BF_imaging, 
                                           CFP_imaging, YFP_imaging, texas_red_imaging, 
                                           CY5_imaging, YFP, CY5)
-                    denominator = select_data(plot_denominators[2], lum, OD, lux, BF_imaging, 
+                    denominator = select_data(plot_denominators[2], lum, OD, BF_imaging, 
                                           CFP_imaging, YFP_imaging, texas_red_imaging, 
                                           CY5_imaging, YFP, CY5)
                     quotient_df = DataFrame()
@@ -591,15 +611,19 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                     end
                     quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
                     data[2] = [quotient_df] 
+                    push!(nums, numerator[1])
+                    push!(denoms, denominator[1])
                 end
             else
-                data[1] = select_data(plot_dtype1, lum, OD, lux, BF_imaging, 
+                data[1] = select_data(plot_dtype1, lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
-                numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
+                push!(nums, nothing)
+                push!(denoms, nothing)
+                numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
-                denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
+                denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
                 quotient_df = DataFrame()
@@ -608,6 +632,8 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                 end
                 quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
                 data[2] = [quotient_df] 
+                push!(nums, numerator[1])
+                push!(denoms, denominator[1])
             end
         end
     else
@@ -630,14 +656,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, t, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
                           plots_directory)
         elseif plot_xaxis == "OD"
             line_plot(conditions, plot_conditions, 
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, OD, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
                           plots_directory)
         else
             error("Can only plot time or OD on the x-axis of a lineplot.")
@@ -649,14 +675,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, t, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
                           plots_directory)
         elseif plot_xaxis == "OD"
             twin_y(conditions, plot_conditions, 
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, OD, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
                           plots_directory)
         else
             error("Can only plot time or OD on the x-axis of a two-axis plot.")
@@ -666,14 +692,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, plot_clab, plot_size,
+                      plot_filename, data, nums, denoms, plot_clab, plot_size,
                       plots_directory)
     elseif plot_type == "dose-response"
         dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, dose_concs, plot_size,
+                      plot_filename, data, nums, denoms, dose_concs, plot_size,
                       plots_directory)
     else
         error("Plot type not implemented yet!")
@@ -728,7 +754,6 @@ function main()
     data_types = vcat(values(plot_dtypes)...)
     lum = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     OD = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
-    lux = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     BF_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     CFP_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     YFP_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
@@ -741,12 +766,12 @@ function main()
             images_directories[i] = bulk_data[i][1:end-4]
         end
         data_directory = images_directories[i]
-        if "lum" in data_types || "RLU" in data_types && isfile("$data_directory/lum.csv")
+        if "lum" in data_types  && isfile("$data_directory/lum.csv")
             lum[i] = CSV.read("$data_directory/lum.csv", DataFrame)
         else
             lum[i] = nothing
         end
-        if "OD" in data_types || "RLU" in data_types && isfile("$data_directory/OD600.csv")
+        if "OD" in data_types && isfile("$data_directory/OD600.csv")
             OD[i] = CSV.read("$data_directory/OD600.csv", DataFrame)
         else
             OD[i] = nothing
@@ -786,11 +811,6 @@ function main()
         else  
             CY5[i] = nothing
         end
-        if "RLU" in data_types && lum[i] != nothing && OD[i] != nothing 
-            lux[i] = lum[i] ./ OD[i]
-        else
-            lux[i] = nothing
-        end
     end
     println("Plotting...")
     for (plot_num, plot_type) in plot_types
@@ -802,7 +822,7 @@ function main()
                       plot_ylabels[plot_num], plot_xlabels[plot_num], 
                       plot_yticks[plot_num], plot_xticks[plot_num], 
                       plot_clabs[plot_num], plot_size[plot_num], plot_filenames[plot_num], 
-                      lum, OD, lux, BF_imaging, CFP_imaging, YFP_imaging, 
+                      lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
                       default_color, dose_concs[plot_num], plots_directory)
     end
