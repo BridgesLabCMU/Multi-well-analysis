@@ -3,7 +3,7 @@
 python3 .\GUI\gui.py
 if %errorlevel% neq 0 goto end
 
-julia ExtractData.jl
+julia ExtractDataV2.jl
 if %errorlevel% neq 0 goto end
 
 julia CytationAnalysisV2.jl
@@ -34,11 +34,17 @@ mkdir "!new_folder!"
 
 for /f "delims=" %%a in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty bulk_data | ForEach-Object { $_ -join '`n' }"') do (
     set "file_path=%%~a"
+	set "dirPath=%filepath:.csv=%"
     if exist "!file_path!" (
         echo Moving file: "!file_path!"
         move "!file_path!" "!new_folder!"
     )
+    if exist "!dirPath!" (
+        echo Moving folder: "!dirPath!"
+        move "!dirPath!" "!new_folder!"
+    )
 )
+
 for /f "delims=" %%g in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty 'good_data_directory'"') do set "good_data=%%g"
 echo good_data: !good_data!
 for /f "delims=" %%i in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty images_directory | ForEach-Object { $_ -join '`n' }"') do (

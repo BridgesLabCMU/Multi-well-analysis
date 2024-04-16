@@ -269,7 +269,7 @@ function main()
                 if CFP_flag
                     let CFP_images = CFP_images
                         @floop for t in 1:ntimepoints
-                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(CFP_images[:,:,t][masks[:,:,t]]) - mean(CFP_images[:,:,t][.!masks[:,:,t]])
+                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(CFP_images[:,:,t]) - mean(CFP_images[:,:,t][.!masks[:,:,t]])
                             @inbounds CFP_data_matrix[t, idx] = signal 
                         end
                     end
@@ -277,7 +277,7 @@ function main()
                 if YFP_flag
                     let YFP_images = YFP_images
                         @floop for t in 1:ntimepoints
-                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(YFP_images[:,:,t][masks[:,:,t]]) - mean(YFP_images[:,:,t][.!masks[:,:,t]])
+                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(YFP_images[:,:,t]) - mean(YFP_images[:,:,t][.!masks[:,:,t]])
                             @inbounds YFP_data_matrix[t, idx] = signal 
                         end
                     end
@@ -285,7 +285,7 @@ function main()
                 if texas_red_flag
                     let texas_red_images = texas_red_images
                         @floop for t in 1:ntimepoints
-                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(texas_red_images[:,:,t][masks[:,:,t]]) - mean(texas_red_images[:,:,t][.!masks[:,:,t]])
+                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(texas_red_images[:,:,t]) - mean(texas_red_images[:,:,t][.!masks[:,:,t]])
                             @inbounds texas_red_data_matrix[t, idx] = signal 
                         end
                     end
@@ -293,7 +293,7 @@ function main()
                 if CY5_flag
                     let CY5_images = CY5_images
                         @floop for t in 1:ntimepoints
-                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(CY5_images[:,:,t][masks[:,:,t]]) - mean(CY5_images[:,:,t][.!masks[:,:,t]])
+                            @inbounds signal = @views !any(masks[:,:,t]) ? 0 : mean(CY5_images[:,:,t]) - mean(CY5_images[:,:,t][.!masks[:,:,t]])
                             @inbounds CY5_data_matrix[t, idx] = signal 
                         end
                     end

@@ -21,27 +21,15 @@ all_conditions = []
 # toggle_checkbox shows folder selection widgets if checkbox is checked
 def toggle_checkbox_imaging():
     if var.get():
-        folder_select_lbl.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
-        folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
-        dir_entry.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
-        good_data_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
-        dust_correction_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_checkbox)
+        folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
+        dir_entry.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
+        good_data_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
+        dust_correction_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
     else:
-        folder_select_lbl.pack_forget()
         folder_select_lbl_btn.pack_forget()
         dir_entry.pack_forget()
         good_data_checkbox.pack_forget()
         dust_correction_checkbox.pack_forget()
-
-def toggle_checkbox_bulk():
-    if bulk_var.get():
-        bulk_folder_select_lbl.pack(side=TOP, anchor = "w", padx = 10, before = sample_name_label)
-        bulk_folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10, before = sample_name_label)
-        bulk_dir_entry.pack(side=TOP, anchor = "w", padx = 10, before = sample_name_label)
-    else:
-        bulk_folder_select_lbl.pack_forget()
-        bulk_folder_select_lbl_btn.pack_forget()
-        bulk_dir_entry.pack_forget()
 
 def send_directory():
     send_dir_entry.insert(0, string=filedialog.askdirectory(initialdir="B:/"))
@@ -81,19 +69,19 @@ def read_sample_name():
 # save_sample_cells() saves the current list of sample_cells to
 # the conditions_list dictionary, then clears the selected cells and the table
 def save_sample_cells():
-	nplates = plate_count_var.get()
-	if len(conditions_list) < nplates:
-		conditions_list.append({})
-	curr_plate = plate_cells_var.get()
-	sample_name = sample_name_entry.get()
-	conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
-	print(conditions_list)
-	if curr_plate < nplates:
-		plate_cells_var.set(plate_cells_var.get() + 1)
-	else:
-		enter_cells.configure(state="disabled")
-	sample_cells.clear()
-	table.clear_color()
+    nplates = plate_count_var.get()
+    if len(conditions_list) < nplates:
+        conditions_list.append({})
+    curr_plate = plate_cells_var.get()
+    sample_name = sample_name_entry.get()
+    conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
+    print(conditions_list)
+    if curr_plate < nplates:
+        plate_cells_var.set(plate_cells_var.get() + 1)
+    else:
+        enter_cells.configure(state="disabled")
+    sample_cells.clear()
+    table.clear_color()
 
 # disable_plate_count disables the plate_count_option_menu widget, prevents user from editing it after hitting "Enter"
 def disable_plate_count():
@@ -121,7 +109,7 @@ def create_new_window():
     if dust_var.get():
         dust_correction = "True"
     else:
-        dust_corection = "False"
+        dust_correction = "False"
     json_dict["dust_correction"] = dust_correction
     json_dict["good_data_directory"] = good_data_directory
     json_dict["experiment_directory"] = send_dir_entry.get()
@@ -198,7 +186,6 @@ if __name__ == "__main__":
 
     # FOLDER SELECTION
     images_dirs = []
-    folder_select_lbl = ttk.Label(root, text="Choose folder where images are located")
     folder_select_lbl_btn = ttk.Button(root, text="Choose folder where images are located", command=images_directory)
     dir_entry = ttk.Entry(root, width = 35)
 
@@ -211,12 +198,10 @@ if __name__ == "__main__":
     dust_correction_checkbox = ttk.Checkbutton(root, text="Perform dust correction", variable=dust_var)
 
     # BULK DATA SELECTION
-    bulk_var = ttk.IntVar()
-    bulk_checkbox = ttk.Checkbutton(root, text="Bulk data included", variable=bulk_var, command = toggle_checkbox_bulk)
-    bulk_checkbox.pack(side=TOP, anchor = "w", padx = 10)
-    bulk_folder_select_lbl = ttk.Label(root, text="Choose file for bulk data")
     bulk_folder_select_lbl_btn = ttk.Button(root, text="Choose file for bulk data", command=bulk_directory)
+    bulk_folder_select_lbl_btn.pack(side=TOP, anchor = "w", padx = 10)
     bulk_dir_entry = ttk.Entry(root, width = 35)
+    bulk_dir_entry.pack(side=TOP, anchor = "w", padx = 10)
 
     # SAMPLE NAME
     sample_name_label = ttk.Label(root, text = "Sample Name")
