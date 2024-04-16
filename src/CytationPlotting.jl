@@ -250,10 +250,11 @@ function twin_y(conditions, plot_conditions,
             means = mean.(eachcol(condition_data))
             stds = std.(eachcol(condition_data))
             if plot_normalization != ""
-                if normalization_method[j] == "percent"
+                norm_method_idx = min(length(normalization_method), j)
+                if normalization_method[norm_method_idx] == "percent"
                     means = (means ./ max_norm .- 1) .* 100
                     stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
-                elseif normalization_method[j] == "fold-change"
+                elseif normalization_method[norm_method_idx] == "fold-change"
                     means = means ./ max_norm
                     stds = sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2)
                 end
@@ -558,25 +559,55 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             error("Passed too many numerators/denominators.")
         else
             data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
-            for i in 1:length(plot_numerators)
-                numerator = select_data(plot_numerators[i], lum, OD, lux, BF_imaging, 
+            plot_dtype1 = plot_dtypes[1]
+            if in(plot_dtype1, plot_denominators) || in(plot_dtype1, plot_denominators)  
+                numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
-                denominator = select_data(plot_denominators[i], lum, OD, lux, BF_imaging, 
+                denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
-				quotient_df = DataFrame()
-				for col_name in names(numerator[1])
-					quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
-				end
+                quotient_df = DataFrame()
+                for col_name in names(numerator[1])
+                    quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+                end
                 quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
-                data[i] = [quotient_df] 
-            end
-            if length(plot_numerators) == 1
-				plot_dtype = filter(x -> x != plot_numerators[1] && x != plot_denominators[1], plot_dtypes)[1]
-                data[2] = select_data(plot_dtype, lum, OD, lux, BF_imaging, 
+                data[1] = [quotient_df] 
+                if length(plot_dtypes) == 3
+                    plot_dtype = filter(x -> x != plot_numerators[1] && x != plot_denominators[1], plot_dtypes)[1]
+                    data[2] = select_data(plot_dtype, lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5) 
+                else
+                    numerator = select_data(plot_numerators[2], lum, OD, lux, BF_imaging, 
+                                          CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                          CY5_imaging, YFP, CY5)
+                    denominator = select_data(plot_denominators[2], lum, OD, lux, BF_imaging, 
+                                          CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                          CY5_imaging, YFP, CY5)
+                    quotient_df = DataFrame()
+                    for col_name in names(numerator[1])
+                        quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+                    end
+                    quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
+                    data[2] = [quotient_df] 
+                end
+            else
+                data[1] = select_data(plot_dtype1, lum, OD, lux, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
+                numerator = select_data(plot_numerators[1], lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5)
+                denominator = select_data(plot_denominators[1], lum, OD, lux, BF_imaging, 
+                                      CFP_imaging, YFP_imaging, texas_red_imaging, 
+                                      CY5_imaging, YFP, CY5)
+                quotient_df = DataFrame()
+                for col_name in names(numerator[1])
+                    quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+                end
+                quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
+                data[2] = [quotient_df] 
             end
         end
     else

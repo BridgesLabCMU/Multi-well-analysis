@@ -144,7 +144,7 @@ if __name__ == "__main__":
                     plot_normalizations[f"plot{i+1}"] = plot_normalization_selections[i].get()
             def save_normalization_methods(normalization_method_selections):
                 for i in range(0,len(normalization_method_selections)):
-                    normalization_methods[f"plot{i+1}"] = normalization_method_selections[i].get()
+                    normalization_methods[f"plot{i+1}"] = normalization_method_selections[i]
             def save_plot_xaxis(plot_xaxis_selections):
                 for i in range(0,len(plot_xaxis_selections)):
                     plot_xaxes[f"plot{i+1}"] = plot_xaxis_selections[i].get()
@@ -233,7 +233,6 @@ if __name__ == "__main__":
                 for listbox in plot_denominator_listboxes:
                     selected_indices = listbox.curselection()
                     plot_denominator_selections.append([listbox.get(idx) for idx in selected_indices])
-
 
             def condition_listbox_on_select(event):
                 plot_condition_selections.clear()
