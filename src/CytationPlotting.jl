@@ -8,7 +8,7 @@ using Colors: JULIA_LOGO_COLORS
     
 pgfplotsx()
 
-propdiv(a, b, c, d) = sqrt.((a ./ b).^2 .+ (c ./ d).^2)
+propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
 function dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
@@ -117,6 +117,10 @@ function heatplot(conditions, plot_conditions,
                       plot_clab, plot_size, plots_directory)
 
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
+    if nums != nothing
+        nums = [combine(df, names(df) .=> maximum .=> names(df)) for df in nums]
+        denoms = [combine(df, names(df) .=> maximum .=> names(df)) for df in denoms]
+    end
     plot_condition = [key for key in plot_conditions][1] 
     replicates = 0
     for i in eachindex(conditions)
@@ -131,6 +135,10 @@ function heatplot(conditions, plot_conditions,
     block_wells = Array{String, 2}(undef, length(plot_conditions), replicates)
     plate = Array{Int, 1}(undef, replicates)
     plate_matrix = zeros(8, 12, length(conditions))
+    if nums != nothing
+        nums_matrix = zeros(8, 12, length(conditions))
+        denoms_matrix = zeros(8, 12, length(conditions))
+    end
     for (j, condition) in enumerate(plot_conditions)
         replicate = 0
         for i in eachindex(conditions)
@@ -139,6 +147,10 @@ function heatplot(conditions, plot_conditions,
                     replicate += 1
                     row, col = well_name_to_position(well)
                     plate_matrix[row, col, i] = data[i][1, Symbol(well)]
+                    if nums != nothing
+                        nums_matrix[row, col, i] = nums[i][1, Symbol(well)]
+                        denoms_matrix[row, col, i] = denoms[i][1, Symbol(well)]
+                    end
                     block_wells[j, replicate] = well
                     if j == 1
                         plate[replicate] = i
@@ -152,13 +164,29 @@ function heatplot(conditions, plot_conditions,
     nrows = max_row - min_row + 1
     ncols = max_col - min_col + 1
     block_matrices = Array{Float64, 3}(undef, nrows, ncols, replicates)
+    if nums != nothing
+        block_nums = Array{Float64, 3}(undef, nrows, ncols, replicates)
+        block_denoms = Array{Float64, 3}(undef, nrows, ncols, replicates)
+    end
     for i in 1:replicates 
         min_row, max_row, min_col, max_col = find_block_boundaries(block_wells[:,i])
         block_matrices[:,:,i] = plate_matrix[min_row:max_row, min_col:max_col, plate[i]]
+        if nums != nothing
+            block_nums[:,:,i] = nums_matrix[min_row:max_row, min_col:max_col, plate[i]]
+            block_denoms[:,:,i] = denoms_matrix[min_row:max_row, min_col:max_col, plate[i]]
+        end
     end
 
     block_mean = mean(block_matrices, dims=3)
-    block_std = std(block_matrices, dims=3)
+    if nums != nothing
+        block_nums_mean = mean(block_nums, dims=3)
+        block_denoms_mean = mean(block_denoms, dims=3)
+        block_nums_std = std(block_nums, dims=3)
+        block_denoms_std = std(block_denoms, dims=3)
+        block_std = block_mean.*propdiv(block_nums_std, block_nums_mean, block_denoms_std, block_denoms_mean)
+    else
+        block_std = std(block_matrices, dims=3)
+    end
 
     if plot_normalization != ""
         norms = []
@@ -237,6 +265,10 @@ function twin_y(conditions, plot_conditions,
 
         for condition in plot_conditions
             condition_data = DataFrame() 
+            if nums[j] != nothing
+                nums_data = DataFrame()
+                denoms_data = DataFrame()
+            end
             if plot_xaxis == "OD"
                 OD = DataFrame()
             end
@@ -250,10 +282,23 @@ function twin_y(conditions, plot_conditions,
                         subset = DataFrame(collect.(eachrow(subset)), :auto)
                         append!(OD, subset)
                     end
+                    if nums[j] != nothing
+                        subset = nums[j][i][!, conditions[i][condition]]
+                        subset = DataFrame(collect.(eachrow(subset)), :auto)
+                        append!(nums_data, subset)
+                        subset = denoms[j][i][!, conditions[i][condition]]
+                        subset = DataFrame(collect.(eachrow(subset)), :auto)
+                        append!(denoms_data, subset)
+                    end
                 end
             end
             means = mean.(eachcol(condition_data))
-            stds = std.(eachcol(condition_data))
+            if nums[j] != nothing
+                stds = means.*propdiv(std.(eachcol(nums_data)), mean.(eachcol(nums_data)), 
+                                     std.(eachcol(denoms_data)), mean.(eachcol(denoms_data)))
+            else
+                stds = std.(eachcol(condition_data))
+            end
             if plot_normalization != ""
                 norm_method_idx = min(length(normalization_method), j)
                 if normalization_method[norm_method_idx] == "percent"
@@ -337,6 +382,8 @@ function line_plot(conditions, plot_conditions,
             OD = DataFrame()
         end
         condition_data = DataFrame() 
+        numerators = DataFrame() 
+        denominators = DataFrame() 
         for i in eachindex(conditions)
             if condition in keys(conditions[i])
                 subset = data[i][!, conditions[i][condition]]
@@ -347,12 +394,19 @@ function line_plot(conditions, plot_conditions,
                     subset = DataFrame(collect.(eachrow(subset)), :auto)
                     append!(OD, subset)
                 end
+                if nums != nothing
+                    subset = nums[i][!, conditions[i][condition]]
+                    subset = DataFrame(collect.(eachrow(subset)), :auto)
+                    append!(numerators, subset)
+                    subset = denoms[i][!, conditions[i][condition]]
+                    subset = DataFrame(collect.(eachrow(subset)), :auto)
+                    append!(denominators, subset)
+                end
             end
         end
         means = mean.(eachcol(condition_data))
-        @show nums
-        stds = nums==nothing ? std.(eachcol(condition_data)) : means.*propdiv(std.(eachcol(nums)), mean.(eachcol(nums)), 
-                                                                     std.(eachcol(denoms)), mean.(eachcol(denoms)))
+        stds = nums==nothing ? std.(eachcol(condition_data)) : means.*propdiv(std.(eachcol(numerators)), mean.(eachcol(numerators)), 
+                                                                     std.(eachcol(denominators)), mean.(eachcol(denominators)))
         if plot_normalization != ""
             if normalization_method == "percent"
                 means = (means ./ max_norm .- 1) .* 100
@@ -548,24 +602,29 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
                                   CY5_imaging, YFP, CY5)
+            data = []
             quotient_df = DataFrame()
-            for col_name in names(numerator[1])
-                quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+            for j in 1:length(numerator)
+                for col_name in names(numerator[j])
+                    quotient_df[!, col_name] = numerator[j][!, col_name] ./ denominator[j][!, col_name]
+                end
+                quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
+                push!(data, quotient_df)
             end
-            quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
-            data = quotient_df 
-            nums = numerator 
+            nums = numerator
             denoms = denominator 
         end
     elseif length(plot_dtypes) == 2 && plot_type == "two-axis"
         data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
+        nums = []
+        denoms = []
         for i in 1:2
             data[i] = select_data(plot_dtypes[i], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
                                   CY5_imaging, YFP, CY5)
+            push!(nums, nothing)
+            push!(denoms, nothing)
         end
-        nums = nothing
-        denoms = nothing
     elseif length(plot_dtypes) > 2 && plot_type == "two-axis"
         if length(plot_numerators) == 0
             error("Passed too many data types without specifying numerator and denominator.")
@@ -584,13 +643,15 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
                 quotient_df = DataFrame()
-                for col_name in names(numerator[1])
-                    quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+                for j in 1:length(numerator)
+                    for col_name in names(numerator[j])
+                        quotient_df[!, col_name] = numerator[j][!, col_name] ./ denominator[j][!, col_name]
+                    end
+                    quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
+                    push!(data[1], quotient_df)
                 end
-                push!(nums, numerator[1])
-                push!(denoms, denominator[1])
-                quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
-                data[1] = [quotient_df] 
+                push!(nums, numerator)
+                push!(denoms, denominator)
                 if length(plot_dtypes) == 3
                     plot_dtype = filter(x -> x != plot_numerators[1] && x != plot_denominators[1], plot_dtypes)[1]
                     data[2] = select_data(plot_dtype, lum, OD, BF_imaging, 
@@ -606,13 +667,15 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                                           CFP_imaging, YFP_imaging, texas_red_imaging, 
                                           CY5_imaging, YFP, CY5)
                     quotient_df = DataFrame()
-                    for col_name in names(numerator[1])
-                        quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
+                    for j in 1:length(numerator)
+                        for col_name in names(numerator[j])
+                            quotient_df[!, col_name] = numerator[j][!, col_name] ./ denominator[j][!, col_name]
+                        end
+                        quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
+                        push!(data[2], quotient_df) 
                     end
-                    quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
-                    data[2] = [quotient_df] 
-                    push!(nums, numerator[1])
-                    push!(denoms, denominator[1])
+                    push!(nums, numerator)
+                    push!(denoms, denominator)
                 end
             else
                 data[1] = select_data(plot_dtype1, lum, OD, BF_imaging, 
@@ -632,8 +695,8 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                 end
                 quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
                 data[2] = [quotient_df] 
-                push!(nums, numerator[1])
-                push!(denoms, denominator[1])
+                push!(nums, numerator)
+                push!(denoms, denominator)
             end
         end
     else
