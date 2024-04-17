@@ -8,7 +8,6 @@ import subprocess
 import numpy as np
 import json
 
-
 HOME_DIR = os.getcwd()
 IMAGES_DIR = []
 BULK_DIR = []
@@ -150,9 +149,6 @@ if __name__ == "__main__":
     plot_number_btn = ttk.Button(plot_number_frm, text = "Enter", command = save_plot_number)
     plot_number_btn.pack(side=LEFT, anchor = "w", padx = 10)
 
-
-
-
     # ACQUISITION FREQUENCY
     acquisition_lbl = ttk.Label(root, text = "Acquisition Frequency (#/hr)")
     acquisition_lbl.pack(side=TOP, anchor = "w", padx = 10)
@@ -236,7 +232,6 @@ if __name__ == "__main__":
 
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
     enter_cells.pack(side=LEFT, anchor = "w",pady=5)
-
 
     # NEXT
     next_btn = ttk.Button(root, text="Next", command=create_new_window)
