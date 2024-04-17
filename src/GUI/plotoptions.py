@@ -400,9 +400,14 @@ if __name__ == "__main__":
             # NORMALIZATION METHOD OPTIONS
             normalization_method_listboxes = []
             normalization_method_selections = []
-            normalization_method_options = ["fold-change", "percent", ""]
+            normalization_method_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+                                  "CY5_imaging", "YFP", "CY5"]
             normalization_method_options_lens = [len(x) for x in normalization_method_options]
+<<<<<<< HEAD
             max_len_norm_ind = np.argmax(normalization_method_options_lens)
+=======
+            max_len_norm_method_ind = np.argmax(normalization_method_options_lens)
+>>>>>>> 1d41ac56ef55079b28fd4be93f37b51489563f28
             normalization_method_frm = ttk.Frame(self.frame.interior)
             normalization_method_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
@@ -413,7 +418,11 @@ if __name__ == "__main__":
                 normalization_method_listbox = ttk.Listbox(normalization_method_frm,
                                                  selectmode=ttk.MULTIPLE,
                                                  height=len(normalization_method_options),
+<<<<<<< HEAD
                                                  width = normalization_method_options_lens[max_len_norm_ind],
+=======
+                                                 width = normalization_method_options_lens[max_len_norm_method_ind],
+>>>>>>> 1d41ac56ef55079b28fd4be93f37b51489563f28
                                                  exportselection=False)
                 for option in normalization_method_options:
                     normalization_method_listbox.insert(ttk.END, option)
