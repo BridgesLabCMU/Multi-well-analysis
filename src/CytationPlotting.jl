@@ -300,7 +300,9 @@ function twin_y(conditions, plot_conditions,
                 stds = std.(eachcol(condition_data))
             end
             if plot_normalization != ""
+                @show normalization_method
                 norm_method_idx = min(length(normalization_method), j)
+                @show norm_method_idx
                 if normalization_method[norm_method_idx] == "percent"
                     means = (means ./ max_norm .- 1) .* 100
                     stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100

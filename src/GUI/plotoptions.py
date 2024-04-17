@@ -210,7 +210,7 @@ if __name__ == "__main__":
             def plot_xaxis_select(value, i):
                 plot_xaxis_selections[i-1].set(value)
 
-            def normalization_method_select(value, i):
+            def normalization_method_listbox_on_select(event):
                 normalization_method_selections.clear()
                 for listbox in normalization_method_listboxes:
                     selected_indices = listbox.curselection()
@@ -402,22 +402,22 @@ if __name__ == "__main__":
             normalization_method_selections = []
             normalization_method_options = ["fold-change", "percent", ""]
             normalization_method_options_lens = [len(x) for x in normalization_method_options]
-            max_len_denominator_ind = np.argmax(normalization_method_options_lens)
+            max_len_norm_ind = np.argmax(normalization_method_options_lens)
             normalization_method_frm = ttk.Frame(self.frame.interior)
             normalization_method_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
-                normalization_method_label = ttk.Label(normalization_method_frm, text=f"Plot {i} denominator(s):")
+                normalization_method_label = ttk.Label(normalization_method_frm, text=f"Plot {i} normalization method(s):")
                 normalization_method_label.pack(side=LEFT, anchor="w")
                 normalization_method_listbox = ttk.Listbox(normalization_method_frm,
                                                  selectmode=ttk.MULTIPLE,
                                                  height=len(normalization_method_options),
-                                                 width = normalization_method_options_lens[max_len_denominator_ind],
+                                                 width = normalization_method_options_lens[max_len_norm_ind],
                                                  exportselection=False)
                 for option in normalization_method_options:
                     normalization_method_listbox.insert(ttk.END, option)
-                normalization_method_listbox.bind("<<ListboxSelect>>", denominator_listbox_on_select)
+                normalization_method_listbox.bind("<<ListboxSelect>>", normalization_method_listbox_on_select)
                 normalization_method_listbox.pack(side=ttk.LEFT, after = normalization_method_label, padx=10)
                 normalization_method_listboxes.append(normalization_method_listbox)
 
