@@ -211,10 +211,11 @@ if __name__ == "__main__":
                 plot_xaxis_selections[i-1].set(value)
 
             def normalization_method_listbox_on_select(event):
+                prev_selected = normalization_method_selections
                 normalization_method_selections.clear()
-                for listbox in normalization_method_listboxes:
+                for i, listbox in enumerate(normalization_method_listboxes):
                     selected_indices = listbox.curselection()
-                    normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
+                    normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) not in prev_selected[i]])
                     print(normalization_method_selections)
 
             def dtype_listbox_on_select(event):
