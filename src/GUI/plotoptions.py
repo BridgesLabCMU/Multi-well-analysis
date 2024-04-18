@@ -215,6 +215,7 @@ if __name__ == "__main__":
                 for listbox in normalization_method_listboxes:
                     selected_indices = listbox.curselection()
                     normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
+                    print(normalization_method_selections)
 
             def dtype_listbox_on_select(event):
                 plot_dtype_selections.clear()
