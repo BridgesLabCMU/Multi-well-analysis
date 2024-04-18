@@ -405,7 +405,6 @@ if __name__ == "__main__":
                                   "CY5_imaging", "YFP", "CY5"]
             normalization_method_options_lens = [len(x) for x in normalization_method_options]
             max_len_norm_ind = np.argmax(normalization_method_options_lens)
-            max_len_norm_method_ind = np.argmax(normalization_method_options_lens)
             normalization_method_frm = ttk.Frame(self.frame.interior)
             normalization_method_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
@@ -417,7 +416,6 @@ if __name__ == "__main__":
                                                  selectmode=ttk.MULTIPLE,
                                                  height=len(normalization_method_options),
                                                  width = normalization_method_options_lens[max_len_norm_ind],
-                                                 width = normalization_method_options_lens[max_len_norm_method_ind],
                                                  exportselection=False)
                 for option in normalization_method_options:
                     normalization_method_listbox.insert(ttk.END, option)
