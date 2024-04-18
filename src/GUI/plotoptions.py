@@ -211,12 +211,17 @@ if __name__ == "__main__":
                 plot_xaxis_selections[i-1].set(value)
 
             def normalization_method_listbox_on_select(event):
-                prev_selected = normalization_method_selections
                 normalization_method_selections.clear()
                 for i, listbox in enumerate(normalization_method_listboxes):
                     selected_indices = listbox.curselection()
-                    normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) not in prev_selected[i]])
+                    if len(prev_selected) != 0:
+                        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) in prev_selected[i]])
+                        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) not in prev_selected[i]])
+                    else:
+                        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
                     print(normalization_method_selections)
+                prev_selected.clear()
+                prev_selected.extend(normalization_method_selections)
 
             def dtype_listbox_on_select(event):
                 plot_dtype_selections.clear()
@@ -402,6 +407,7 @@ if __name__ == "__main__":
             # NORMALIZATION METHOD OPTIONS
             normalization_method_listboxes = []
             normalization_method_selections = []
+            prev_selected =  []
             normalization_method_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
             normalization_method_options_lens = [len(x) for x in normalization_method_options]
