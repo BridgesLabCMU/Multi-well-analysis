@@ -72,6 +72,7 @@ plot_xticks = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_yticks = {f"plot{i}": "" for i in range(1, num_plots+1)}
 color_labels = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_sizes = {f"plot{i}": "" for i in range(1, num_plots+1)}
+ylims = {f"plot{i}": "" for i in range(1, num_plots+1)}
 dose_concs = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_filenames = {f"plot{i}": "" for i in range(1, num_plots+1)}
 
@@ -97,7 +98,7 @@ if __name__ == "__main__":
                 json_dict["plot_xticks"] = plot_xticks
                 json_dict["plot_yticks"] = plot_yticks
                 json_dict["color_label"] = color_labels
-                json_dict["plot_size"] = plot_sizes
+                json_dict["ylims"] = ylims
                 json_dict["dose_concs"] = dose_concs
                 json_dict["plot_filenames"] = plot_filenames
                 json_dict["sig"] = 2
@@ -121,6 +122,7 @@ if __name__ == "__main__":
                 save_plot_yticks(plot_ytick_entries)
                 save_color_labels(color_label_entries)
                 save_plot_sizes(plot_size_entries)
+                save_ylims(ylim_entries)
                 save_dose_concs(dose_conc_entries)
                 save_plot_filenames(plot_filename_entries)
 
@@ -191,6 +193,14 @@ if __name__ == "__main__":
                             plot_sizes[f"plot{i+1}"] = [int(x) for x in plot_sizes_i.split(",")]
                     else:
                         plot_sizes[f"plot{i+1}"] = [300, 250]
+            def save_ylims(ylim_entries):
+                for i in range(0, len(ylim_entries)):
+                    ylims_i = ylim_entries[i].get()
+                    if ylims_i != "":
+                        if "," in ylims_i:
+                            ylims[f"plot{i+1}"] = [int(x) for x in ylims_i.split(",")]
+                    else:
+                        ylims[f"plot{i+1}"] = "default"
             def save_dose_concs(dose_conc_entries):
                 for i in range(0, len(dose_conc_entries)):
                     dose_concs_i = dose_conc_entries[i].get()
@@ -214,32 +224,73 @@ if __name__ == "__main__":
                 normalization_method_selections.clear()
                 for i, listbox in enumerate(normalization_method_listboxes):
                     selected_indices = listbox.curselection()
-                    if len(prev_selected) != 0:
-                        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) in prev_selected[i]])
-                        normalization_method_selections.append([listbox.get(idx) for idx in selected_indices if listbox.get(idx) not in prev_selected[i]])
+                    if len(normalization_method_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in normalization_method_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in normalization_method_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        normalization_method_selections.append(items)
                     else:
                         normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
-                    print(normalization_method_selections)
-                prev_selected.clear()
-                prev_selected.extend(normalization_method_selections)
+                normalization_method_prev_selected.clear()
+                normalization_method_prev_selected.extend(normalization_method_selections)
 
             def dtype_listbox_on_select(event):
                 plot_dtype_selections.clear()
-                for listbox in plot_dtype_listboxes:
+                for i, listbox in enumerate(plot_dtype_listboxes):
                     selected_indices = listbox.curselection()
-                    plot_dtype_selections.append([listbox.get(idx) for idx in selected_indices])
+                    if len(plot_dtype_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in plot_dtype_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in plot_dtype_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        plot_dtype_selections.append(items)
+                    else:
+                        plot_dtype_selections.append([listbox.get(idx) for idx in selected_indices])
+                plot_dtype_prev_selected.clear()
+                plot_dtype_prev_selected.extend(plot_dtype_selections)
 
             def numerator_listbox_on_select(event):
                 plot_numerator_selections.clear()
-                for listbox in plot_numerator_listboxes:
+                for i, listbox in enumerate(plot_numerator_listboxes):
                     selected_indices = listbox.curselection()
-                    plot_numerator_selections.append([listbox.get(idx) for idx in selected_indices])
+                    if len(plot_numerator_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in plot_numerator_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in plot_numerator_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        plot_numerator_selections.append(items)
+                    else:
+                        plot_numerator_selections.append([listbox.get(idx) for idx in selected_indices])
+                plot_numerator_prev_selected.clear()
+                plot_numerator_prev_selected.extend(plot_numerator_selections)
 
             def denominator_listbox_on_select(event):
                 plot_denominator_selections.clear()
-                for listbox in plot_denominator_listboxes:
+                for i, listbox in enumerate(plot_denominator_listboxes):
                     selected_indices = listbox.curselection()
-                    plot_denominator_selections.append([listbox.get(idx) for idx in selected_indices])
+                    if len(plot_denominator_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in plot_denominator_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in plot_denominator_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        plot_denominator_selections.append(items)
+                    else:
+                        plot_denominator_selections.append([listbox.get(idx) for idx in selected_indices])
+                plot_denominator_prev_selected.clear()
+                plot_denominator_prev_selected.extend(plot_denominator_selections)
 
             def condition_listbox_on_select(event):
                 plot_condition_selections.clear()
@@ -285,6 +336,7 @@ if __name__ == "__main__":
             # PLOT DTYPE OPTIONS
 
             plot_dtype_listboxes = []
+            plot_dtype_prev_selected =  []
             plot_dtype_selections = []
             plot_dtype_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
@@ -311,6 +363,7 @@ if __name__ == "__main__":
             # PLOT NUMERATOR OPTIONS
 
             plot_numerator_listboxes = []
+            plot_numerator_prev_selected =  []
             plot_numerator_selections = []
             plot_numerator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
@@ -337,6 +390,7 @@ if __name__ == "__main__":
             # PLOT DENOMINATOR OPTIONS
 
             plot_denominator_listboxes = []
+            plot_denominator_prev_selected =  []
             plot_denominator_selections = []
             plot_denominator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
@@ -407,9 +461,8 @@ if __name__ == "__main__":
             # NORMALIZATION METHOD OPTIONS
             normalization_method_listboxes = []
             normalization_method_selections = []
-            prev_selected =  []
-            normalization_method_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
-                                  "CY5_imaging", "YFP", "CY5"]
+            normalization_method_prev_selected =  []
+            normalization_method_options = ["", "fold-change", "percent"]
             normalization_method_options_lens = [len(x) for x in normalization_method_options]
             max_len_norm_ind = np.argmax(normalization_method_options_lens)
             normalization_method_frm = ttk.Frame(self.frame.interior)
@@ -537,6 +590,18 @@ if __name__ == "__main__":
                 plot_sizes_entry = ttk.Entry(plot_sizes_frm)
                 plot_sizes_entry.pack(side=LEFT, after=plot_sizes_label, anchor="w", padx=5)
                 plot_size_entries.append(plot_sizes_entry)
+
+            # PLOT YLIMS
+            ylims_frm = ttk.Frame(self.frame.interior)
+            ylims_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+            ylim_entries = []
+            for i in range(1, num_plots + 1):
+                ylims_label = ttk.Label(ylims_frm,
+                                             text=f"Plot {i} size:")
+                ylims_label.pack(side=LEFT, anchor="w", padx=5)
+                ylims_entry = ttk.Entry(ylims_frm)
+                ylims_entry.pack(side=LEFT, after=ylims_label, anchor="w", padx=5)
+                ylim_entries.append(ylims_entry)
 
             # DOSE CONCS
             dose_concs_frm = ttk.Frame(self.frame.interior)

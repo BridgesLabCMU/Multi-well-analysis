@@ -300,9 +300,7 @@ function twin_y(conditions, plot_conditions,
                 stds = std.(eachcol(condition_data))
             end
             if plot_normalization != ""
-                @show normalization_method
                 norm_method_idx = min(length(normalization_method), j)
-                @show norm_method_idx
                 if normalization_method[norm_method_idx] == "percent"
                     means = (means ./ max_norm .- 1) .* 100
                     stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
@@ -483,7 +481,7 @@ function jitter_plot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, plots_directory)
+                      plot_filename, data, default_color, plot_size, plots_directory, ylims)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -536,13 +534,24 @@ function jitter_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
-    p = scatter(x_vals, values, group=categories, color=default_color, 
-                markerstrokecolor=default_color, alpha=0.4, 
-                xticks=(1:length(unique_cats), unique_cats), xrotation=45, 
-                xlims=(x_min, x_max), size=plot_size)
-    boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
-             markerstrokecolor=default_color, leg=false, outliers=false, 
-             fillalpha=0.1, linewidth=1.5)
+    if ylims == "default"
+        p = scatter(x_vals, values, group=categories, color=default_color, 
+                    markerstrokecolor=default_color, alpha=0.4, 
+                    xticks=(1:length(unique_cats), unique_cats), xrotation=45, 
+                    xlims=(x_min, x_max), size=plot_size)
+        boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
+                 markerstrokecolor=default_color, leg=false, outliers=false, 
+                 fillalpha=0.1, linewidth=1.5)
+    else
+        ylims = Tuple(ylims)
+        p = scatter(x_vals, values, group=categories, color=default_color, 
+                    markerstrokecolor=default_color, alpha=0.4, 
+                    xticks=(1:length(unique_cats), unique_cats), xrotation=45, 
+                    xlims=(x_min, x_max), ylims=ylims, size=plot_size)
+        boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
+                 markerstrokecolor=default_color, leg=false, outliers=false, 
+                 fillalpha=0.1, linewidth=1.5)
+    end
 	#sig_annot!(p, categories, unique_cats, values)
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
@@ -585,7 +594,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_clab, plot_size, plot_filename, 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
-                      default_color, dose_concs, plots_directory)
+                      default_color, dose_concs, plots_directory, ylims)
     plot_size = Tuple(plot_size)
     if length(plot_dtypes) == 1
         data = select_data(plot_dtypes[1], lum, OD, BF_imaging, CFP_imaging, 
@@ -645,13 +654,15 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
                 quotient_df = DataFrame()
+                quotient_dfs = []
                 for j in 1:length(numerator)
                     for col_name in names(numerator[j])
                         quotient_df[!, col_name] = numerator[j][!, col_name] ./ denominator[j][!, col_name]
                     end
                     quotient_df .= ifelse.(isnan.(quotient_df), 0, quotient_df)
-                    push!(data[1], quotient_df)
+                    push!(quotient_dfs, quotient_df)
                 end
+                data[1] = quotient_dfs
                 push!(nums, numerator)
                 push!(denoms, denominator)
                 if length(plot_dtypes) == 3
@@ -713,7 +724,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plot_size, 
-                      plots_directory)
+                      plots_directory, ylims)
     elseif plot_type == "line"
         if plot_xaxis == "Time"
             t = range(0,stop=nrow(data[1]) - 1,length=nrow(data[1])) ./ acquisition_frequency 
@@ -809,6 +820,7 @@ function main()
     plot_clabs = config["color_label"] 
     plot_size = config["plot_size"] 
     plot_filenames = config["plot_filenames"] 
+    ylims = config["ylims"]
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)
@@ -889,7 +901,7 @@ function main()
                       plot_clabs[plot_num], plot_size[plot_num], plot_filenames[plot_num], 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
-                      default_color, dose_concs[plot_num], plots_directory)
+                      default_color, dose_concs[plot_num], plots_directory, ylims)
     end
 end
 

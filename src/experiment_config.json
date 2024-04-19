@@ -1,0 +1,229 @@
+{
+    "notes": "Testing code on Sandhya's data",
+    "acquisition_frequency": 1,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240409_10x_BF_Cy5_YFP_Biospa_Drawer3 09-Apr-2024 17-30-25/240409_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/SandhyaTestData.csv"
+    ],
+    "conditions": [
+        {
+            "luxC": [
+                "A11"
+            ],
+            "flaA": [
+                "B11"
+            ],
+            "vpsL": [
+                "C11"
+            ],
+            "Ptac": [
+                "D11"
+            ],
+            "random": [
+                "A12",
+                "B12",
+                "C12",
+                "D12",
+                "E12",
+                "F12",
+                "G12",
+                "H12"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "experiment_directory": "B:/Jojo",
+    "plot_types": {
+        "plot1": "two-axis",
+        "plot2": "two-axis",
+        "plot3": "line",
+        "plot4": "jitter"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "BF_imaging",
+            "YFP_imaging",
+            "CY5_imaging"
+        ],
+        "plot2": [
+            "YFP_imaging",
+            "CY5_imaging",
+            "BF_imaging"
+        ],
+        "plot3": [
+            "BF_imaging"
+        ],
+        "plot4": [
+            "BF_imaging"
+        ]
+    },
+    "plot_numerators": {
+        "plot1": [
+            "CY5_imaging"
+        ],
+        "plot2": [
+            "CY5_imaging"
+        ],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_denominators": {
+        "plot1": [
+            "YFP_imaging"
+        ],
+        "plot2": [
+            "YFP_imaging"
+        ],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_conditions": {
+        "plot1": [
+            "luxC"
+        ],
+        "plot2": [
+            "luxC"
+        ],
+        "plot3": [
+            "Ptac",
+            "flaA",
+            "vpsL",
+            "luxC"
+        ],
+        "plot4": [
+            "Ptac",
+            "flaA",
+            "vpsL",
+            "luxC"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "luxC",
+        "plot2": "luxC",
+        "plot3": "luxC",
+        "plot4": "luxC"
+    },
+    "normalization_method": {
+        "plot1": [
+            "",
+            "fold-change"
+        ],
+        "plot2": [
+            "",
+            "fold-change"
+        ],
+        "plot3": [
+            "fold-change"
+        ],
+        "plot4": [
+            "fold-change"
+        ]
+    },
+    "plot_xaxis": {
+        "plot1": "Time",
+        "plot2": "Time",
+        "plot3": "Time",
+        "plot4": "default"
+    },
+    "plot_titles": {
+        "plot1": "test1",
+        "plot2": "test2",
+        "plot3": "test3",
+        "plot4": "test4"
+    },
+    "plot_xlabs": {
+        "plot1": "Time (h)",
+        "plot2": "Time (h)",
+        "plot3": "Time (h)",
+        "plot4": ""
+    },
+    "plot_ylabs": {
+        "plot1": [
+            "Biomass (a.u.)",
+            " Cy5:YFP"
+        ],
+        "plot2": [
+            "Cy5:YFP",
+            " Biomass (a.u.)"
+        ],
+        "plot3": [
+            "Biomass (a.u.)"
+        ],
+        "plot4": [
+            "Biomass (a.u.)"
+        ]
+    },
+    "plot_xticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "plot_yticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "color_label": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "plot_size": {
+        "plot1": [
+            300,
+            250
+        ],
+        "plot2": [
+            300,
+            250
+        ],
+        "plot3": [
+            300,
+            250
+        ],
+        "plot4": [
+            300,
+            250
+        ]
+    },
+    "dose_concs": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_filenames": {
+        "plot1": "test1",
+        "plot2": "test2",
+        "plot3": "test3",
+        "plot4": "test4"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
+}

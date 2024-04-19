@@ -7,3 +7,4 @@ Scripts for analyzing imaging and bulk population data from multi-well experimen
 3. The order of selection for plot data types, etc., should be consistent during plot settings specification. For example, if you are using the "two-axis" plot option, you should select the plot data type corresponding to the left y-axis first, the data type corresponding to the right y-axis second, likewise for their respective normalization methods, etc.
 4. GUI widgets need to be manually closed before analysis can proceed.
 5. B drive should be connected prior to running the GUI.
+6. Specify conditions for all wells in the experiment, even if you do not plan on plotting data from certain wells.
