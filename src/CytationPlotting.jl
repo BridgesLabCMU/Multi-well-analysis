@@ -51,10 +51,10 @@ function dose_response(conditions, plot_conditions,
         norm_std = std(norm_data)
         if normalization_method == "percent"
             y = (y ./ norm_mean .- 1) .* 100
-            error = (sqrt.((error ./ norm_mean).^2 .+ (norm_std / norm_mean)^2) .- 1) .* 100
+            error = (sqrt.((error ./ y).^2 .+ (norm_std / norm_mean)^2) .- 1) .* 100
         elseif normalization_method == "fold-change"
             y = y ./ norm_mean
-            error = sqrt.((error ./ norm_mean).^2 .+ (norm_std / norm_mean)^2)
+            error = sqrt.((error ./ y).^2 .+ (norm_std / norm_mean)^2)
         else
             error("Normalization method not implemented yet!")
         end
@@ -201,12 +201,12 @@ function heatplot(conditions, plot_conditions,
         norm_mean = mean(norms)
         norm_std = std(norms)
         if normalization_method == "percent"
-            block_std = (sqrt.((block_std ./ norm_mean).^2 .+ (norm_std / norm_mean)^2) .- 1) .* 100
             block_mean = (block_mean ./ norm_mean .- 1) .* 100
+            block_std = (sqrt.((block_std ./ block_mean).^2 .+ (norm_std / norm_mean)^2) .- 1) .* 100
             clab_title = "%"
         elseif normalization_method == "fold-change"
             block_mean = block_mean ./ norm_mean
-            block_std = sqrt.((block_std ./ norm_mean).^2 .+ (norm_std / norm_mean)^2)
+            block_std = sqrt.((block_std ./ block_mean).^2 .+ (norm_std / norm_mean)^2)
             clab_title = "Fold-change"
         else
             error("Normalization method not implemented yet!")
@@ -303,10 +303,10 @@ function twin_y(conditions, plot_conditions,
                 norm_method_idx = min(length(normalization_method), j)
                 if normalization_method[norm_method_idx] == "percent"
                     means = (means ./ max_norm .- 1) .* 100
-                    stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
+                    stds = (sqrt.((stds ./ means).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
                 elseif normalization_method[norm_method_idx] == "fold-change"
                     means = means ./ max_norm
-                    stds = sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2)
+                    stds = sqrt.((stds ./ means).^2 .+ (max_std / max_norm)^2)
                 end
             end
             if occursin("\$", plot_ylabel[j])
@@ -319,15 +319,18 @@ function twin_y(conditions, plot_conditions,
             else
                 error("Can only plot time or OD on the x-axis.")
             end
+            if occursin("\$", condition)
+                condition = latexstring(condition)
+            end
             if j == 1
                 stds .= ifelse.(isnan.(stds), 0, stds)
-                plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=latexstring(condition), color=colors[j], 
+                plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=condition, color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
                 ylabel!(p, plot_ylabel[j], yguidefontcolor=colors[j])
             else
                 stds .= ifelse.(isnan.(stds), 0, stds)
                 plot!(p_twin, xaxis, means, marker=:circle, ribbon=stds, 
-                      label=latexstring(condition), color=colors[j], 
+                      label=condition, color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
                 ylabel!(p_twin, plot_ylabel[j], yguidefontcolor=colors[j])
             end
@@ -410,10 +413,10 @@ function line_plot(conditions, plot_conditions,
         if plot_normalization != ""
             if normalization_method == "percent"
                 means = (means ./ max_norm .- 1) .* 100
-                stds = (sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
+                stds = (sqrt.((stds ./ means).^2 .+ (max_std / max_norm)^2) .- 1) .* 100
             elseif normalization_method == "fold-change"
                 means = means ./ max_norm
-                stds = sqrt.((stds ./ max_norm).^2 .+ (max_std / max_norm)^2)
+                stds = sqrt.((stds ./ means).^2 .+ (max_std / max_norm)^2)
             else
                 error("Normalization method not implemented yet!")
             end
@@ -426,7 +429,10 @@ function line_plot(conditions, plot_conditions,
             error("Can only plot time or OD on the x-axis.")
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
-        plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=latexstring(condition))
+        if occursin("\$", condition)
+            condition = latexstring(condition)
+        end
+        plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=condition)
     end
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
@@ -534,25 +540,40 @@ function jitter_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
+    for (k,e) in enumerate(unique_cats)
+        if occursin("\$", e)
+            unique_cats[k] = latexstring(e)
+        end
+    end
     if ylims == "default"
         p = scatter(x_vals, values, group=categories, color=default_color, 
                     markerstrokecolor=default_color, alpha=0.4, 
-                    xticks=(1:length(unique_cats), unique_cats), xrotation=45, 
+                    xrotation=45, 
                     xlims=(x_min, x_max), size=plot_size)
         boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     else
+        for (k, e) in enumerate(ylims)
+            if e == "nothing"
+                if k == 1
+                    ylims[k] = -Inf
+                else
+                    ylims[k] = Inf
+                end
+            end
+        end
         ylims = Tuple(ylims)
         p = scatter(x_vals, values, group=categories, color=default_color, 
                     markerstrokecolor=default_color, alpha=0.4, 
-                    xticks=(1:length(unique_cats), unique_cats), xrotation=45, 
+                    xrotation=45, 
                     xlims=(x_min, x_max), ylims=ylims, size=plot_size)
         boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     end
 	#sig_annot!(p, categories, unique_cats, values)
+    xticks!(1:length(unique_cats), unique_cats)
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
@@ -646,7 +667,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             denoms = [] 
             data = Array{Vector{Union{Nothing, DataFrame}}, 1}(undef, 2)
             plot_dtype1 = plot_dtypes[1]
-            if in(plot_dtype1, plot_denominators) || in(plot_dtype1, plot_denominators)  
+            if in(plot_dtype1, plot_numerators) || in(plot_dtype1, plot_denominators)  
                 numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
                                       CY5_imaging, YFP, CY5)
@@ -901,7 +922,7 @@ function main()
                       plot_clabs[plot_num], plot_size[plot_num], plot_filenames[plot_num], 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
-                      default_color, dose_concs[plot_num], plots_directory, ylims)
+                      default_color, dose_concs[plot_num], plots_directory, ylims[plot_num])
     end
 end
 

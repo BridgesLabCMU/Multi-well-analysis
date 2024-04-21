@@ -189,7 +189,6 @@ if __name__ == "__main__":
             def save_plot_sizes(plot_size_entries):
                 for i in range(0, len(plot_size_entries)):
                     plot_sizes_i = plot_size_entries[i].get()
-                    print(plot_sizes_i)
                     if plot_sizes_i != "":
                         if "," in plot_sizes_i:
                             plot_sizes[f"plot{i+1}"] = [int(x) for x in plot_sizes_i.split(",")]
@@ -200,7 +199,13 @@ if __name__ == "__main__":
                     ylims_i = ylim_entries[i].get()
                     if ylims_i != "":
                         if "," in ylims_i:
-                            ylims[f"plot{i+1}"] = [int(x) for x in ylims_i.split(",")]
+                            ylim_list = []
+                            for x in ylims_i.split(","):
+                                if x == "":
+                                    ylim_list.append("nothing")
+                                else:
+                                    ylim_list.append(int(x))
+                            ylims[f"plot{i+1}"] = ylim_list
                     else:
                         ylims[f"plot{i+1}"] = "default"
             def save_dose_concs(dose_conc_entries):
@@ -231,6 +236,7 @@ if __name__ == "__main__":
                         for idx in selected_indices:
                             if listbox.get(idx) in normalization_method_prev_selected[i]:
                                 items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: normalization_method_prev_selected[i].index(x))
                         for idx in selected_indices:
                             if listbox.get(idx) not in normalization_method_prev_selected[i]:
                                 items.append(listbox.get(idx))
@@ -249,6 +255,7 @@ if __name__ == "__main__":
                         for idx in selected_indices:
                             if listbox.get(idx) in plot_dtype_prev_selected[i]:
                                 items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: plot_dtype_prev_selected[i].index(x))
                         for idx in selected_indices:
                             if listbox.get(idx) not in plot_dtype_prev_selected[i]:
                                 items.append(listbox.get(idx))
@@ -267,6 +274,7 @@ if __name__ == "__main__":
                         for idx in selected_indices:
                             if listbox.get(idx) in plot_numerator_prev_selected[i]:
                                 items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: plot_numerator_prev_selected[i].index(x))
                         for idx in selected_indices:
                             if listbox.get(idx) not in plot_numerator_prev_selected[i]:
                                 items.append(listbox.get(idx))
@@ -285,6 +293,7 @@ if __name__ == "__main__":
                         for idx in selected_indices:
                             if listbox.get(idx) in plot_denominator_prev_selected[i]:
                                 items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: plot_denominator_prev_selected[i].index(x))
                         for idx in selected_indices:
                             if listbox.get(idx) not in plot_denominator_prev_selected[i]:
                                 items.append(listbox.get(idx))
@@ -296,9 +305,22 @@ if __name__ == "__main__":
 
             def condition_listbox_on_select(event):
                 plot_condition_selections.clear()
-                for listbox in plot_condition_listboxes:
+                for i, listbox in enumerate(plot_condition_listboxes):
                     selected_indices = listbox.curselection()
-                    plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
+                    if len(plot_condition_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in plot_condition_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: plot_condition_prev_selected[i].index(x))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in plot_condition_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        plot_condition_selections.append(items)
+                    else:
+                        plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
+                plot_condition_prev_selected.clear()
+                plot_condition_prev_selected.extend(plot_condition_selections)
 
             #def destroy_windows():
             #    for file_name in os.listdir(os.getcwd()):
@@ -420,6 +442,7 @@ if __name__ == "__main__":
             # PLOT CONDITION OPTIONS
             plot_condition_listboxes = []
             plot_condition_selections = []
+            plot_condition_prev_selected = []
             plot_condition_options_lens = [len(x) for x in condition_names]
             max_len_condition_ind = np.argmax(plot_condition_options_lens)
             plot_condition_frm = ttk.Frame(self.frame.interior)

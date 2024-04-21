@@ -24,11 +24,13 @@ def toggle_checkbox_imaging():
         dir_entry.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
         good_data_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
         dust_correction_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
+        image_analysis_checkbox.pack(side=TOP, anchor = "w", padx = 10, before = bulk_folder_select_lbl_btn)
     else:
         folder_select_lbl_btn.pack_forget()
         dir_entry.pack_forget()
         good_data_checkbox.pack_forget()
         dust_correction_checkbox.pack_forget()
+        image_analysis_checkbox.pack_forget()
 
 def send_directory():
     send_dir_entry.insert(0, string=filedialog.askdirectory(initialdir="B:/"))
@@ -109,8 +111,13 @@ def create_new_window():
         dust_correction = "True"
     else:
         dust_correction = "False"
+    if image_analysis_var.get():
+        image_analysis = "True"
+    else:
+        image_analysis = "False"
     json_dict["dust_correction"] = dust_correction
     json_dict["good_data_directory"] = good_data_directory
+    json_dict["image_analysis"] = image_analysis
     json_dict["experiment_directory"] = send_dir_entry.get()
     with open(HOME_DIR + "/temp_config.json", "w") as file:
         json.dump(json_dict, file, indent = 4)
@@ -188,6 +195,10 @@ if __name__ == "__main__":
     # CHECKBOX FOR GOOD DATA
     good_data_var = ttk.IntVar()
     good_data_checkbox = ttk.Checkbutton(root, text="Good data", variable=good_data_var)
+
+    # CHECKBOX FOR PERFORMING IMAGE ANALYSIS
+    image_analysis_var = ttk.IntVar()
+    image_analysis_checkbox = ttk.Checkbutton(root, text="Perform image analysis", variable=image_analysis_var)
 
     # CHECKBOX FOR DUST CORRECTION
     dust_var = ttk.IntVar()

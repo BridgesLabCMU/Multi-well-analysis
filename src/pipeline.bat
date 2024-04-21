@@ -6,8 +6,12 @@ if %errorlevel% neq 0 goto end
 julia ExtractDataV2.jl
 if %errorlevel% neq 0 goto end
 
-julia CytationAnalysisV2.jl
-if %errorlevel% neq 0 goto end
+for /f "delims=" %%i in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty 'image_analysis'"') do set "image_analysis=%%i"
+if "%image_analysis%"=="True" (
+	echo Performing image analysis 
+	julia CytationAnalysisV2.jl
+	if %errorlevel% neq 0 goto end
+)
 
 julia CytationPlotting.jl
 if %errorlevel% neq 0 goto end

@@ -8,3 +8,8 @@ Scripts for analyzing imaging and bulk population data from multi-well experimen
 4. GUI widgets need to be manually closed before analysis can proceed.
 5. B drive should be connected prior to running the GUI.
 6. Specify conditions for all wells in the experiment, even if you do not plan on plotting data from certain wells.
+7. Y-limits can be manually specified (for now, only for jitter plots) like the following: 0,3 (lower and upper) or 0, (just lower) or ,3 (just upper)
+
+## To-do's
+1. Allow more user specifications for plot aesthetics (colors, fonts, ...)
+2. Add a separate statistics script
