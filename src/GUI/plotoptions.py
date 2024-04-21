@@ -99,6 +99,7 @@ if __name__ == "__main__":
                 json_dict["plot_yticks"] = plot_yticks
                 json_dict["color_label"] = color_labels
                 json_dict["ylims"] = ylims
+                json_dict["plot_size"] = plot_sizes
                 json_dict["dose_concs"] = dose_concs
                 json_dict["plot_filenames"] = plot_filenames
                 json_dict["sig"] = 2
@@ -188,6 +189,7 @@ if __name__ == "__main__":
             def save_plot_sizes(plot_size_entries):
                 for i in range(0, len(plot_size_entries)):
                     plot_sizes_i = plot_size_entries[i].get()
+                    print(plot_sizes_i)
                     if plot_sizes_i != "":
                         if "," in plot_sizes_i:
                             plot_sizes[f"plot{i+1}"] = [int(x) for x in plot_sizes_i.split(",")]
@@ -597,7 +599,7 @@ if __name__ == "__main__":
             ylim_entries = []
             for i in range(1, num_plots + 1):
                 ylims_label = ttk.Label(ylims_frm,
-                                             text=f"Plot {i} size:")
+                                             text=f"Plot {i} ylimits (jitter only):")
                 ylims_label.pack(side=LEFT, anchor="w", padx=5)
                 ylims_entry = ttk.Entry(ylims_frm)
                 ylims_entry.pack(side=LEFT, after=ylims_label, anchor="w", padx=5)

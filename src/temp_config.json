@@ -1,39 +1,16 @@
 {
-    "notes": "Testing code on Sandhya's data",
+    "notes": "b",
     "acquisition_frequency": 1,
-    "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240409_10x_BF_Cy5_YFP_Biospa_Drawer3 09-Apr-2024 17-30-25/240409_Plate 1!PLATE_ID!_"
-    ],
-    "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/SandhyaTestData.csv"
-    ],
+    "images_directory": [],
+    "bulk_data": [],
     "conditions": [
         {
-            "luxC": [
-                "A11"
-            ],
-            "flaA": [
-                "B11"
-            ],
-            "vpsL": [
-                "C11"
-            ],
-            "Ptac": [
-                "D11"
-            ],
-            "random": [
-                "A12",
-                "B12",
-                "C12",
-                "D12",
-                "E12",
-                "F12",
-                "G12",
-                "H12"
+            "b": [
+                "C8"
             ]
         }
     ],
-    "dust_correction": "True",
-    "good_data_directory": "B:/Good imaging data",
+    "dust_correction": "False",
+    "good_data_directory": "",
     "experiment_directory": "B:/Jojo"
 }
