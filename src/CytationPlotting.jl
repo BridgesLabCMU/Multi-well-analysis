@@ -55,8 +55,6 @@ function dose_response(conditions, plot_conditions,
         elseif normalization_method == "fold-change"
             y = y ./ norm_mean
             error = sqrt.((error ./ y).^2 .+ (norm_std / norm_mean)^2)
-        else
-            error("Normalization method not implemented yet!")
         end
     end
 
@@ -208,8 +206,6 @@ function heatplot(conditions, plot_conditions,
             block_mean = block_mean ./ norm_mean
             block_std = sqrt.((block_std ./ block_mean).^2 .+ (norm_std / norm_mean)^2)
             clab_title = "Fold-change"
-        else
-            error("Normalization method not implemented yet!")
         end
     end
     if occursin("\$", plot_xlabel)
@@ -417,8 +413,6 @@ function line_plot(conditions, plot_conditions,
             elseif normalization_method == "fold-change"
                 means = means ./ max_norm
                 stds = sqrt.((stds ./ means).^2 .+ (max_std / max_norm)^2)
-            else
-                error("Normalization method not implemented yet!")
             end
         end
         if plot_xaxis == "Time"
@@ -516,8 +510,8 @@ function jitter_plot(conditions, plot_conditions,
                         append!(values, (data[i][!, col] ./ norm_mean .- 1) .* 100)
                    elseif normalization_method == "fold-change"
                         append!(values, data[i][!, col] ./ norm_mean)
-                    else
-                        error("Normalization method not implemented yet!")
+                   elseif normalization_method == ""
+                        append!(values, data[i][!, col])
                     end
                     append!(cat_labels, repeat([col], length(data[i][!, col])))
                 end
@@ -860,8 +854,8 @@ function main()
     YFP = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     CY5 = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     for i in 1:nplates
-        if images_directories[i] == "nothing"
-            images_directories[i] = bulk_data[i][1:end-4]
+        if i > length(images_directories)
+            push!(images_directories, bulk_data[i][1:end-4])
         end
         data_directory = images_directories[i]
         if "lum" in data_types  && isfile("$data_directory/lum.csv")

@@ -5,7 +5,14 @@ using CSV
 function extract_matrix(df, i, row_indices, valid_columns)
     row_index = row_indices[i]
     if i == length(row_indices)
-        df_subset = df[row_index+2:end, :]
+        results_rows = passmissing(occursin).([r"Results"], df.Column1)
+        results_rows = [ismissing(x) ? false : x for x in results_rows]
+        results_row_indices = findall(results_rows)
+        if length(results_row_indices) == 0
+            df_subset = df[row_index+2:end, :]
+        else
+            df_subset = df[row_index+2:results_row_indices[1]-1, :]
+        end
     else
         next_row_index = row_indices[i+1]
         df_subset = df[row_index+2:next_row_index-1, :]
@@ -43,8 +50,8 @@ function main()
     
     for j in eachindex(bulk_data)
         bulk_data_dir = bulk_data[j][1:end-4] 
-        images_dir = images_dirs[j]
-        if isdir(images_dir)
+        if j < length(images_dirs) && isdir(images_dirs[j])
+            images_dir = images_dirs[j]
             output_dir = images_dir 
         else
             if isdir(bulk_data_dir)
@@ -54,9 +61,15 @@ function main()
             output_dir = bulk_data_dir
         end
         df = DataFrame(CSV.File(bulk_data, header=false))
-        metadata_rows = passmissing(occursin).([r"Delay after plate movement"], df.Column2)
+        metadata_rows = passmissing(occursin).([r"Delay after plate movement"], df.Column2)  
         metadata_rows = [ismissing(x) ? false : x for x in metadata_rows]
+        metadata_rows2 = passmissing(occursin).([r"Read Height"], df.Column2)
+        metadata_rows2 = [ismissing(x) ? false : x for x in metadata_rows2]
         metadata_row_indices = findall(metadata_rows)
+        metadata_row_indices2 = findall(metadata_rows2)
+        if length(metadata_row_indices) == 0
+            metadata_row_indices = metadata_row_indices2
+        end
         metadata_df = df[1:metadata_row_indices[1], :]
         CSV.write("$output_dir/metadata.csv", metadata_df, header=false)
 

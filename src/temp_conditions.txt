@@ -1,5 +1,1 @@
-random
-luxC
-Ptac
-flaA
-vpsL
+$\mu$

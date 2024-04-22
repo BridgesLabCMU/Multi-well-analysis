@@ -1,234 +1,164 @@
 {
-    "notes": "Testing code on Sandhya's data",
+    "notes": "Antibiotics-Thymol-041824\n",
     "acquisition_frequency": 1,
-    "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240409_10x_BF_Cy5_YFP_Biospa_Drawer3 09-Apr-2024 17-30-25/240409_Plate 1!PLATE_ID!_"
-    ],
+    "images_directory": [],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/SandhyaTestData.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
     ],
     "conditions": [
         {
-            "luxC": [
-                "A11"
+            "Untreated": [
+                "A1",
+                "A2",
+                "A3"
             ],
-            "flaA": [
-                "B11"
+            "+10 $\\\\mu$g/mL thymol": [
+                "B1",
+                "B2",
+                "B3"
             ],
-            "vpsL": [
-                "C11"
+            "+20 $\\\\mu$g/mL thymol": [
+                "C1",
+                "C2",
+                "C3"
             ],
-            "Ptac": [
-                "D11"
+            "+30 $\\\\mu$g/mL thymol": [
+                "D1",
+                "D2",
+                "D3"
+            ],
+            "+40 $\\\\mu$g/mL thymol": [
+                "E1",
+                "E2",
+                "E3"
+            ],
+            "+50 $\\\\mu$g/mL thymol": [
+                "F1",
+                "F2",
+                "F3"
             ],
             "random": [
-                "A12",
-                "B12",
-                "C12",
-                "D12",
-                "E12",
-                "F12",
-                "G12",
-                "H12"
+                "A4",
+                "A5",
+                "A6",
+                "A7",
+                "A8",
+                "A9",
+                "B4",
+                "B5",
+                "B6",
+                "B7",
+                "B8",
+                "B9",
+                "C4",
+                "C5",
+                "C6",
+                "C7",
+                "C8",
+                "C9",
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D9",
+                "E4",
+                "E5",
+                "E6",
+                "E7",
+                "E8",
+                "E9",
+                "F4",
+                "F5",
+                "F6",
+                "F7",
+                "F8",
+                "F9"
             ]
         }
     ],
-    "dust_correction": "True",
-    "good_data_directory": "B:/Good imaging data",
+    "dust_correction": "False",
+    "good_data_directory": "",
     "image_analysis": "False",
-    "experiment_directory": "B:/Jojo",
+    "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "two-axis",
-        "plot2": "two-axis",
-        "plot3": "line",
-        "plot4": "jitter"
+        "plot1": "jitter"
     },
     "plot_dtypes": {
         "plot1": [
-            "BF_imaging",
-            "CY5_imaging",
-            "YFP_imaging"
-        ],
-        "plot2": [
-            "CY5_imaging",
-            "YFP_imaging",
-            "BF_imaging"
-        ],
-        "plot3": [
-            "BF_imaging"
-        ],
-        "plot4": [
-            "BF_imaging"
+            "lum",
+            "OD"
         ]
     },
     "plot_numerators": {
         "plot1": [
-            "CY5_imaging"
-        ],
-        "plot2": [
-            "CY5_imaging"
-        ],
-        "plot3": [],
-        "plot4": []
+            "lum"
+        ]
     },
     "plot_denominators": {
         "plot1": [
-            "YFP_imaging"
-        ],
-        "plot2": [
-            "YFP_imaging"
-        ],
-        "plot3": [],
-        "plot4": []
+            "OD"
+        ]
     },
     "plot_conditions": {
         "plot1": [
-            "luxC"
-        ],
-        "plot2": [
-            "luxC"
-        ],
-        "plot3": [
-            "luxC",
-            "random",
-            "flaA",
-            "vpsL"
-        ],
-        "plot4": [
-            "luxC",
-            "flaA",
-            "vpsL",
-            "random"
+            "Untreated",
+            "+10 $\\\\mu$g/mL thymol",
+            "+20 $\\\\mu$g/mL thymol",
+            "+40 $\\\\mu$g/mL thymol",
+            "+30 $\\\\mu$g/mL thymol",
+            "+50 $\\\\mu$g/mL thymol"
         ]
     },
     "plot_normalization": {
-        "plot1": "luxC",
-        "plot2": "luxC",
-        "plot3": "luxC",
-        "plot4": "luxC"
+        "plot1": ""
     },
     "normalization_method": {
         "plot1": [
-            "fold-change",
             ""
-        ],
-        "plot2": [
-            "",
-            "fold-change"
-        ],
-        "plot3": [
-            "fold-change"
-        ],
-        "plot4": [
-            "fold-change"
         ]
     },
     "plot_xaxis": {
-        "plot1": "Time",
-        "plot2": "Time",
-        "plot3": "Time",
-        "plot4": "default"
+        "plot1": "default"
     },
     "plot_titles": {
-        "plot1": "test1",
-        "plot2": "test2",
-        "plot3": "test3",
-        "plot4": "test4"
+        "plot1": ""
     },
     "plot_xlabs": {
-        "plot1": "Time (h)",
-        "plot2": "Time (h)",
-        "plot3": "Time (h)",
-        "plot4": ""
+        "plot1": ""
     },
     "plot_ylabs": {
         "plot1": [
-            "Biomass (a.u.)",
-            " Cy5:YFP"
-        ],
-        "plot2": [
-            "Cy5:YFP",
-            " Biomass (a.u.)"
-        ],
-        "plot3": [
-            "Biomass (a.u.)"
-        ],
-        "plot4": [
-            "Biomass (a.u.)"
+            "RLU (luminescence/OD$_{600}$)"
         ]
     },
     "plot_xticks": {
         "plot1": [
-            ""
-        ],
-        "plot2": [
-            ""
-        ],
-        "plot3": [
-            ""
-        ],
-        "plot4": [
             ""
         ]
     },
     "plot_yticks": {
         "plot1": [
             ""
-        ],
-        "plot2": [
-            ""
-        ],
-        "plot3": [
-            ""
-        ],
-        "plot4": [
-            ""
         ]
     },
     "color_label": {
-        "plot1": "",
-        "plot2": "",
-        "plot3": "",
-        "plot4": ""
+        "plot1": ""
     },
     "ylims": {
-        "plot1": "default",
-        "plot2": "default",
-        "plot3": "default",
-        "plot4": [
-            0,
-            "nothing"
-        ]
+        "plot1": "default"
     },
     "plot_size": {
         "plot1": [
             300,
             250
-        ],
-        "plot2": [
-            300,
-            250
-        ],
-        "plot3": [
-            300,
-            250
-        ],
-        "plot4": [
-            300,
-            250
         ]
     },
     "dose_concs": {
-        "plot1": [],
-        "plot2": [],
-        "plot3": [],
-        "plot4": []
+        "plot1": []
     },
     "plot_filenames": {
-        "plot1": "test1",
-        "plot2": "test2",
-        "plot3": "test3",
-        "plot4": "test4"
+        "plot1": "thymol_dose_response_WT"
     },
     "sig": 2,
     "blockDiameter": [
