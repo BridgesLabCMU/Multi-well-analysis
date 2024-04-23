@@ -1,7 +1,12 @@
 @echo off
 
-python3 .\GUI\gui.py
-if %errorlevel% neq 0 goto end
+set "batch_path=%~dp0"
+set "batch_path=%batch_path:~0,-1%"
+
+if not exist "%batch_path%\experiment_config.json" (
+    python3 .\GUI\gui.py
+    if %errorlevel% neq 0 goto end
+)
 
 julia ExtractDataV2.jl
 if %errorlevel% neq 0 goto end
@@ -17,9 +22,7 @@ julia CytationPlotting.jl
 if %errorlevel% neq 0 goto end
 
 setlocal enabledelayedexpansion
-
 set "batch_path=%~dp0"
-
 set "batch_path=%batch_path:~0,-1%"
 
 for /f "delims=" %%i in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty experiment_directory"') do set "experiment_directory=%%i"
@@ -38,14 +41,17 @@ mkdir "!new_folder!"
 
 for /f "delims=" %%a in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty bulk_data | ForEach-Object { $_ -join '`n' }"') do (
     set "file_path=%%~a"
-	set "dirPath=%filepath:.csv=%"
+	set "dirPath=!file_path:~0,-4!"
     if exist "!file_path!" (
+		set "file_path=!file_path:/=\!"  
         echo Moving file: "!file_path!"
         move "!file_path!" "!new_folder!"
     )
     if exist "!dirPath!" (
+		set "dirPath=!dirPath:/=\!"  
+		for %%n in ("!dirPath!") do set "dir_name=%%~nxn"
         echo Moving folder: "!dirPath!"
-        move "!dirPath!" "!new_folder!"
+		%systemroot%\System32\robocopy "!dirPath!" "!new_folder!\!dir_name!" /E /MOVE
     )
 )
 
@@ -74,6 +80,7 @@ for /f "delims=" %%i in ('powershell -Command "Get-Content '%batch_path%\experim
 )
 
 move "%batch_path%\experiment_config.json" "!new_folder!"
+echo "%batch_path%\experiment_config.json"
 
 echo Operation completed.
 pause

@@ -1,1 +1,7 @@
-$\mu$
+20 ug/mL
+Untreated
+40 ug/mL
+30 ug/mL
+50 ug/mL
+random
+10 ug/mL

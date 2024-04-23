@@ -65,6 +65,9 @@ plot_conditions = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_normalizations = {f"plot{i}": "" for i in range(1, num_plots+1)}
 normalization_methods = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_xaxes = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_scales = {f"plot{i}": [] for i in range(1, num_plots+1)}
+plot_fonts = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_colors = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_xlabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -92,6 +95,9 @@ if __name__ == "__main__":
                 json_dict["plot_normalization"] = plot_normalizations
                 json_dict["normalization_method"] = normalization_methods
                 json_dict["plot_xaxis"] = plot_xaxes
+                json_dict["plot_scale"] = plot_scales
+                json_dict["plot_font"] = plot_fonts
+                json_dict["plot_color"] = plot_colors
                 json_dict["plot_titles"] = plot_titles
                 json_dict["plot_xlabs"] = plot_xlabs
                 json_dict["plot_ylabs"] = plot_ylabs
@@ -116,6 +122,9 @@ if __name__ == "__main__":
                 save_plot_normalization(plot_normalization_selections)
                 save_normalization_methods(normalization_method_selections)
                 save_plot_xaxis(plot_xaxis_selections)
+                save_plot_scale(plot_scale_selections)
+                save_plot_font(plot_font_selections)
+                save_plot_color(plot_color_entries)
                 save_plot_titles(plot_title_entries)
                 save_plot_xlabs(plot_xlab_entries)
                 save_plot_ylabs(plot_ylab_entries)
@@ -151,6 +160,15 @@ if __name__ == "__main__":
             def save_plot_xaxis(plot_xaxis_selections):
                 for i in range(0,len(plot_xaxis_selections)):
                     plot_xaxes[f"plot{i+1}"] = plot_xaxis_selections[i].get()
+            def save_plot_scale(plot_scale_selections):
+                for i in range(0,len(plot_scale_selections)):
+                    plot_scales[f"plot{i+1}"] = plot_scale_selections[i]
+            def save_plot_font(plot_font_selections):
+                for i in range(0,len(plot_font_selections)):
+                    plot_fonts[f"plot{i+1}"] = plot_font_selections[i].get()
+            def save_plot_color(plot_color_entries):
+                for i in range(0, len(plot_color_entries)):
+                    plot_colors[f"plot{i+1}"] = plot_color_entries[i].get()
             def save_plot_titles(plot_title_entries):
                 for i in range(0, len(plot_title_entries)):
                     plot_titles[f"plot{i+1}"] = plot_title_entries[i].get()
@@ -226,6 +244,8 @@ if __name__ == "__main__":
                 plot_normalization_selections[i-1].set(value)
             def plot_xaxis_select(value, i):
                 plot_xaxis_selections[i-1].set(value)
+            def plot_font_select(value, i):
+                plot_font_selections[i-1].set(value)
 
             def normalization_method_listbox_on_select(event):
                 normalization_method_selections.clear()
@@ -245,6 +265,25 @@ if __name__ == "__main__":
                         normalization_method_selections.append([listbox.get(idx) for idx in selected_indices])
                 normalization_method_prev_selected.clear()
                 normalization_method_prev_selected.extend(normalization_method_selections)
+
+            def plot_scale_listbox_on_select(event):
+                plot_scale_selections.clear()
+                for i, listbox in enumerate(plot_scale_listboxes):
+                    selected_indices = listbox.curselection()
+                    if len(plot_scale_prev_selected) != 0:
+                        items = []
+                        for idx in selected_indices:
+                            if listbox.get(idx) in plot_scale_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        items = sorted(items, key=lambda x: plot_scale_prev_selected[i].index(x))
+                        for idx in selected_indices:
+                            if listbox.get(idx) not in plot_scale_prev_selected[i]:
+                                items.append(listbox.get(idx))
+                        plot_scale_selections.append(items)
+                    else:
+                        plot_scale_selections.append([listbox.get(idx) for idx in selected_indices])
+                plot_scale_prev_selected.clear()
+                plot_scale_prev_selected.extend(plot_scale_selections)
 
             def dtype_listbox_on_select(event):
                 plot_dtype_selections.clear()
@@ -340,8 +379,8 @@ if __name__ == "__main__":
             plot_type_selections = []
             plot_type_labels = []
             plot_type_option_menus = []
-            plot_type_options = ["line", "two-axis", "jitter", "heatmap"]
-            plot_type_frm = ttk.Frame(self.frame.interior,)
+            plot_type_options = ["line", "two-axis", "jitter", "grouped jitter", "heatmap"]
+            plot_type_frm = ttk.Frame(self.frame.interior)
             plot_type_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
@@ -528,6 +567,64 @@ if __name__ == "__main__":
                                                        command=lambda value, index = i: plot_xaxis_select(value, index))
                 plot_xaxis_option_menu.pack(side=LEFT, after=plot_xaxis_label, anchor="w", padx=5)
                 plot_xaxis_option_menus.append(plot_xaxis_option_menu)
+
+            # PLOT SCALE OPTIONS
+            plot_scale_listboxes = []
+            plot_scale_selections = []
+            plot_scale_prev_selected =  []
+            plot_scale_options = ["log", "linear"]
+            plot_scale_options_lens = [len(x) for x in plot_scale_options]
+            plot_scale_ind = np.argmax(plot_scale_options_lens)
+            plot_scale_frm = ttk.Frame(self.frame.interior)
+            plot_scale_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+            for i in range(1, num_plots + 1):
+                # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
+                plot_scale_label = ttk.Label(plot_scale_frm, text=f"Plot {i} y-scale:")
+                plot_scale_label.pack(side=LEFT, anchor="w")
+                plot_scale_listbox = ttk.Listbox(plot_scale_frm,
+                                                 selectmode=ttk.MULTIPLE,
+                                                 height=len(plot_scale_options),
+                                                 width = plot_scale_options_lens[plot_scale_ind],
+                                                 exportselection=False)
+                for option in plot_scale_options:
+                    plot_scale_listbox.insert(ttk.END, option)
+                plot_scale_listbox.bind("<<ListboxSelect>>", plot_scale_listbox_on_select)
+                plot_scale_listbox.pack(side=ttk.LEFT, after = plot_scale_label, padx=10)
+                plot_scale_listboxes.append(plot_scale_listbox)
+
+            # PLOT FONT
+            plot_font_selections = []
+            plot_font_labels = []
+            plot_font_option_menus = []
+            plot_font_options = ["helvetica", "arial", "courier new", ""]
+            plot_font_frm = ttk.Frame(self.frame.interior)
+            plot_font_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+            for i in range(1, num_plots + 1):
+                plot_font_selection = ttk.StringVar()
+                plot_font_selection.set("")
+                plot_font_selections.append(plot_font_selection)
+                plot_font_label = ttk.Label(plot_font_frm, text=f"Plot {i} font:")
+                plot_font_label.pack(side=LEFT, anchor="w", padx=5)
+                plot_font_option_menu = ttk.OptionMenu(plot_font_frm,
+                                                       plot_font_selections[i-1],
+                                                       *plot_font_options,
+                                                       command=lambda value, index = i: plot_font_select(value, index))
+                plot_font_option_menu.pack(side=LEFT, after=plot_font_label, anchor="w", padx=5)
+                plot_font_option_menus.append(plot_font_option_menu)
+
+            # DEFAULT PLOT COLOR
+            plot_colors_frm = ttk.Frame(self.frame.interior)
+            plot_colors_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+            plot_color_entries = []
+            for i in range(1, num_plots + 1):
+                plot_colors_label = ttk.Label(plot_colors_frm,
+                                             text=f"Plot {i} default color (hex):")
+                plot_colors_label.pack(side=LEFT, anchor="w", padx=5)
+                plot_colors_entry = ttk.Entry(plot_colors_frm)
+                plot_colors_entry.pack(side=LEFT, after=plot_colors_label, anchor="w", padx=5)
+                plot_color_entries.append(plot_colors_entry)
 
             # PLOT TITLES
             plot_title_frm = ttk.Frame(self.frame.interior)

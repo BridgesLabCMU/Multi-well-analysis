@@ -1,5 +1,5 @@
 {
-    "notes": "Antibiotics-Thymol-041824\n",
+    "notes": "Testing code on Emmy's data",
     "acquisition_frequency": 1,
     "images_directory": [],
     "bulk_data": [
@@ -12,27 +12,27 @@
                 "A2",
                 "A3"
             ],
-            "+10 $\\\\mu$g/mL thymol": [
+            "10 ug/mL": [
                 "B1",
                 "B2",
                 "B3"
             ],
-            "+20 $\\\\mu$g/mL thymol": [
+            "20 ug/mL": [
                 "C1",
                 "C2",
                 "C3"
             ],
-            "+30 $\\\\mu$g/mL thymol": [
+            "30 ug/mL": [
                 "D1",
                 "D2",
                 "D3"
             ],
-            "+40 $\\\\mu$g/mL thymol": [
+            "40 ug/mL": [
                 "E1",
                 "E2",
                 "E3"
             ],
-            "+50 $\\\\mu$g/mL thymol": [
+            "50 ug/mL": [
                 "F1",
                 "F2",
                 "F3"
@@ -82,7 +82,7 @@
     "image_analysis": "False",
     "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "jitter"
+        "plot1": "grouped jitter"
     },
     "plot_dtypes": {
         "plot1": [
@@ -103,11 +103,11 @@
     "plot_conditions": {
         "plot1": [
             "Untreated",
-            "+10 $\\\\mu$g/mL thymol",
-            "+20 $\\\\mu$g/mL thymol",
-            "+40 $\\\\mu$g/mL thymol",
-            "+30 $\\\\mu$g/mL thymol",
-            "+50 $\\\\mu$g/mL thymol"
+            "10 ug/mL",
+            "20 ug/mL",
+            "30 ug/mL",
+            "40 ug/mL",
+            "50 ug/mL"
         ]
     },
     "plot_normalization": {
@@ -121,20 +121,36 @@
     "plot_xaxis": {
         "plot1": "default"
     },
+    "plot_scale": {
+        "plot1": [
+            "log"
+        ]
+    },
+    "plot_font": {
+        "plot1": "courier new"
+    },
+    "plot_color": {
+        "plot1": "#53a3a2"
+    },
     "plot_titles": {
         "plot1": ""
     },
     "plot_xlabs": {
-        "plot1": ""
+        "plot1": "[thymol] ($\\mu$g/mL)"
     },
     "plot_ylabs": {
         "plot1": [
-            "RLU (luminescence/OD$_{600}$)"
+            "RLU"
         ]
     },
     "plot_xticks": {
         "plot1": [
-            ""
+            "0",
+            "10",
+            "20",
+            "30",
+            "40",
+            "50"
         ]
     },
     "plot_yticks": {
@@ -158,7 +174,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "thymol_dose_response_WT"
+        "plot1": "test"
     },
     "sig": 2,
     "blockDiameter": [

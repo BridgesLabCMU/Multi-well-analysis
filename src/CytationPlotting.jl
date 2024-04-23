@@ -6,7 +6,41 @@ using HypothesisTests: UnequalVarianceTTest, pvalue
 using LsqFit
 using Colors: JULIA_LOGO_COLORS
     
-pgfplotsx()
+gr()
+
+function convert_latex(string)
+    latex_to_unicode = Dict(
+        "\$\\alpha\$" => "α",
+        "\$\\beta\$" => "β",
+        "\$\\gamma\$" => "γ",
+        "\$\\delta\$" => "δ",
+        "\$\\Delta\$" => "Δ",
+        "\$\\epsilon\$" => "ε",
+        "\$\\zeta\$" => "ζ",
+        "\$\\eta\$" => "η",
+        "\$\\theta\$" => "θ",
+        "\$\\iota\$" => "ι",
+        "\$\\kappa\$" => "κ",
+        "\$\\lambda\$" => "λ",
+        "\$\\mu\$" => "μ",
+        "\$\\nu\$" => "ν",
+        "\$\\xi\$" => "ξ",
+        "\$\\omicron\$" => "ο",
+        "\$\\pi\$" => "π",
+        "\$\\rho\$" => "ρ",
+        "\$\\sigma\$" => "σ",
+        "\$\\tau\$" => "τ",
+        "\$\\upsilon\$" => "υ",
+        "\$\\phi\$" => "φ",
+        "\$\\chi\$" => "χ",
+        "\$\\psi\$" => "ψ",
+        "\$\\omega\$" => "ω"
+    )
+    for (latex, unicode) in latex_to_unicode
+        string = replace(string, latex => unicode)
+    end
+    return string
+end
 
 propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
@@ -20,6 +54,12 @@ function dose_response(conditions, plot_conditions,
     x = dose_concs
     y = []
     error = []
+    
+    if yscale == "linear"
+        yscale = :identity
+    elseif yscale == "log"
+        yscale = :log10
+    end
 
     for condition in plot_conditions
         condition_data = [] 
@@ -68,17 +108,17 @@ function dose_response(conditions, plot_conditions,
 
     fit = curve_fit(model, x, y, p0, lower=lb, upper=ub)
     pstar = coef(fit)
-    plt = scatter(x, y, yerror=error, color="black", mc=:white, label="Data", size=plot_size)
+    plt = scatter(x, y, yerror=error, yscale=yscale, color="black", mc=:white, label="Data", size=plot_size)
     xbase = collect(range(minimum(x), maximum(x), 100))
-    plot!(plt, xbase, model.(xbase, (pstar,)), color="black", label="Fit")
+    plot!(plt, xbase, model.(xbase, (pstar,)), yscale=yscale, color="black", label="Fit")
     if occursin("\$", plot_xlabel) 
-        plot_xlabel = latexstring(plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = latexstring(plot_ylabel[1])
+        plot_ylabel[1] = convert_latex(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(plot_title)
+        plot_title = convert_latex(plot_title)
     end
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
@@ -209,16 +249,16 @@ function heatplot(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = latexstring(plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = latexstring(plot_ylabel[1])
+        plot_ylabel[1] = convert_latex(plot_ylabel[1])
     end
     if occursin("\$", clab_title)
-        clab_title = latexstring(clab_title)
+        clab_title = convert_latex(clab_title)
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(plot_title)
+        plot_title = convert_latex(plot_title)
     end
     plt = heatmap(plot_xticks, reverse(plot_yticks), block_mean[:,:,1], xrotation = 45, yflip=true, color=:cool,
                   colorbar_title=clab_title, size=plot_size)
@@ -239,7 +279,7 @@ function twin_y(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      xaxis_data, plot_xaxis, plot_size, plots_directory)
+                      xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
     colors = [JULIA_LOGO_COLORS.green, JULIA_LOGO_COLORS.purple]
     p = plot(size=plot_size)
     p_twin = twinx(p)
@@ -306,7 +346,7 @@ function twin_y(conditions, plot_conditions,
                 end
             end
             if occursin("\$", plot_ylabel[j])
-                plot_ylabel[j] = latexstring(plot_ylabel[j])
+                plot_ylabel[j] = convert_latex(plot_ylabel[j])
             end
             if plot_xaxis == "Time"
                 xaxis=xaxis_data
@@ -316,16 +356,26 @@ function twin_y(conditions, plot_conditions,
                 error("Can only plot time or OD on the x-axis.")
             end
             if occursin("\$", condition)
-                condition = latexstring(condition)
+                condition = convert_latex(condition)
             end
             if j == 1
+                if yscale[1] == "linear"
+                    yaxisscale = :identity
+                elseif yscale[1] == "log"
+                    yaxisscale = :log10
+                end
                 stds .= ifelse.(isnan.(stds), 0, stds)
-                plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=condition, color=colors[j], 
+                plot!(p, xaxis, means, yscale=yaxisscale, marker=:circle, ribbon=stds, label=condition, color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
                 ylabel!(p, plot_ylabel[j], yguidefontcolor=colors[j])
             else
+                if yscale[1] == "linear"
+                    yaxisscale = :identity
+                elseif yscale[1] == "log"
+                    yaxisscale = :log10
+                end
                 stds .= ifelse.(isnan.(stds), 0, stds)
-                plot!(p_twin, xaxis, means, marker=:circle, ribbon=stds, 
+                plot!(p_twin, xaxis, means, yscale=yaxisscale, marker=:circle, ribbon=stds, 
                       label=condition, color=colors[j], 
                       ytickfontcolor=colors[j], legend=false)
                 ylabel!(p_twin, plot_ylabel[j], yguidefontcolor=colors[j])
@@ -333,10 +383,10 @@ function twin_y(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = latexstring(plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(plot_title)
+        plot_title = convert_latex(plot_title)
     end
     xlabel!(p, plot_xlabel)
     xlabel!(p_twin, "")
@@ -349,16 +399,16 @@ function line_plot(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      xaxis_data, plot_xaxis, plot_size, plots_directory)
+                      xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
 
     if occursin("\$", plot_xlabel)
-        plot_xlabel = latexstring(plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = latexstring(plot_ylabel[1])
+        plot_ylabel[1] = convert_latex(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(plot_title)
+        plot_title = convert_latex(plot_title)
     end
     p = plot(size=plot_size)
 
@@ -374,6 +424,11 @@ function line_plot(conditions, plot_conditions,
         norm_means = maximum.(eachrow(condition_data))
         max_norm = mean(norm_means)
         max_std = std(norm_means)
+    end
+    if yscale == "linear"
+        yscale = :identity
+    elseif yscale == "log"
+        yscale = :log10
     end
 
     for condition in plot_conditions
@@ -424,9 +479,9 @@ function line_plot(conditions, plot_conditions,
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
         if occursin("\$", condition)
-            condition = latexstring(condition)
+            condition = convert_latex(condition)
         end
-        plot!(p, xaxis, means, marker=:circle, ribbon=stds, label=condition)
+        plot!(p, xaxis, means, yscale=yscale, marker=:circle, ribbon=stds, label=condition)
     end
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
@@ -438,50 +493,11 @@ function jitter_vals(values; width=0.05)
     return values .+ width .* (rand(length(values)) .- 0.5)
 end
 
-"""
-function pval_annotation(pval)
-    if pval < 0.0001
-        return "****"
-    elseif pval < 0.001
-        return "***"
-    elseif pval < 0.01
-        return "**"
-    elseif pval < 0.05
-        return "*"
-    else
-        return "n.s."
-    end
-end
-
-function sig_annot!(p, categories, unique_cats, values)
-	ymin, ymax = ylims(p)
-	dy = (ymax - ymin)/10
-    ymax += dy * length(unique_cats)
-	xt = xticks(p[1])[1]
-
-	plot!(ylim=(ymin, ymax + dy))
-
-	for (i, category) in enumerate(unique_cats[2:end])
-		data1 = values[categories .== unique_cats[1]]
-		data2 = values[categories .== category]
-
-		test_result = UnequalVarianceTTest(data1, data2)
-		pval = pvalue(test_result)
-
-		xpos = [xt[1], xt[i+1]]
-        ypos = ymax - i*dy
-
-		plot!(xpos, [ypos, ypos], color=:black)
-		annotate!(mean(xpos), ypos + dy/4, text(pval_annotation(pval), 10))
-	end
-end
-"""
-
 function jitter_plot(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, plots_directory, ylims)
+                      plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -526,25 +542,30 @@ function jitter_plot(conditions, plot_conditions,
     x_max = maximum(x_vals) + 0.5
     box_x = [cat_indices[cat] for cat in categories]
     if occursin("\$", plot_xlabel)
-        plot_xlabel = latexstring(plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = latexstring(plot_ylabel[1])
+        plot_ylabel[1] = convert_latex(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(plot_title)
+        plot_title = convert_latex(plot_title)
     end
     for (k,e) in enumerate(unique_cats)
         if occursin("\$", e)
-            unique_cats[k] = latexstring(e)
+            unique_cats[k] = convert_latex(e)
         end
+    end
+    if yscale == "linear"
+        yscale = :identity
+    elseif yscale == "log"
+        yscale = :log10
     end
     if ylims == "default"
         p = scatter(x_vals, values, group=categories, color=default_color, 
                     markerstrokecolor=default_color, alpha=0.4, 
-                    xrotation=45, 
+                    xrotation=45, yscale=yscale, 
                     xlims=(x_min, x_max), size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
+        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     else
@@ -559,15 +580,123 @@ function jitter_plot(conditions, plot_conditions,
         end
         ylims = Tuple(ylims)
         p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, alpha=0.4, 
+                    markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
                     xrotation=45, 
                     xlims=(x_min, x_max), ylims=ylims, size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, linecolor=default_color, 
+        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     end
-	#sig_annot!(p, categories, unique_cats, values)
-    xticks!(1:length(unique_cats), unique_cats)
+    if plot_xlabel == ""
+        xticks!(1:length(unique_cats), unique_cats)
+    else
+        xticks!(1:length(unique_cats), string.(plot_xticks))
+    end
+    xlabel!(p, plot_xlabel)
+    ylabel!(p, plot_ylabel[1])
+    title!(p, plot_title)
+    savefig(p, "$plots_directory/$plot_filename"*".svg")
+end
+
+function grouped_jitter_plot(conditions, plot_conditions, 
+                      plot_normalization, normalization_method, plot_title, 
+                      plot_ylabel, plot_xlabel, 
+                      plot_yticks, plot_xticks, 
+                      plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
+    data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
+
+    if plot_normalization != ""
+        norm_data = [] 
+        for i in eachindex(conditions)
+            if plot_normalization in keys(conditions[i])
+                subset = data[i][!, conditions[i][plot_normalization]]
+                for entry in subset[1, :]
+                    push!(norm_data, entry)
+                end
+            end
+        end
+        norm_mean = mean(norm_data)
+    end
+
+    categories = String[]
+    values = Float64[]
+    cat_labels = String[]
+
+    for condition in plot_conditions
+        for i in eachindex(conditions)
+            if condition in keys(conditions[i])
+                for col in conditions[i][condition]
+                    append!(categories, repeat([condition], length(data[i][!, col])))
+                    if normalization_method == "percent"
+                        append!(values, (data[i][!, col] ./ norm_mean .- 1) .* 100)
+                   elseif normalization_method == "fold-change"
+                        append!(values, data[i][!, col] ./ norm_mean)
+                   elseif normalization_method == ""
+                        append!(values, data[i][!, col])
+                    end
+                    append!(cat_labels, repeat([col], length(data[i][!, col])))
+                end
+            end
+        end
+    end
+
+    unique_cats = unique(categories)
+    cat_indices = Dict(cat => i for (i, cat) in enumerate(unique_cats))
+    x_vals = [cat_indices[cat] + jitter_vals([0]; width=0.1)[1] for cat in categories]
+    x_min = minimum(x_vals) - 0.5
+    x_max = maximum(x_vals) + 0.5
+    box_x = [cat_indices[cat] for cat in categories]
+    if occursin("\$", plot_xlabel)
+        plot_xlabel = convert_latex(plot_xlabel)
+    end
+    if occursin("\$", plot_ylabel[1])
+        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+    end
+    if occursin("\$", plot_title)
+        plot_title = convert_latex(plot_title)
+    end
+    for (k,e) in enumerate(unique_cats)
+        if occursin("\$", e)
+            unique_cats[k] = convert_latex(e)
+        end
+    end
+    if yscale == "linear"
+        yscale = :identity
+    elseif yscale == "log"
+        yscale = :log10
+    end
+    if ylims == "default"
+        p = scatter(x_vals, values, group=categories, color=default_color, 
+                    markerstrokecolor=default_color, alpha=0.4, 
+                    xrotation=45, yscale=yscale, 
+                    xlims=(x_min, x_max), size=plot_size)
+        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
+                 markerstrokecolor=default_color, leg=false, outliers=false, 
+                 fillalpha=0.1, linewidth=1.5)
+    else
+        for (k, e) in enumerate(ylims)
+            if e == "nothing"
+                if k == 1
+                    ylims[k] = -Inf
+                else
+                    ylims[k] = Inf
+                end
+            end
+        end
+        ylims = Tuple(ylims)
+        p = scatter(x_vals, values, group=categories, color=default_color, 
+                    markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
+                    xrotation=45, 
+                    xlims=(x_min, x_max), ylims=ylims, size=plot_size)
+        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
+                 markerstrokecolor=default_color, leg=false, outliers=false, 
+                 fillalpha=0.1, linewidth=1.5)
+    end
+    if plot_xlabel == ""
+        xticks!(1:length(unique_cats), unique_cats)
+    else
+        xticks!(1:length(unique_cats), string.(plot_xticks))
+    end
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
@@ -609,7 +738,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_clab, plot_size, plot_filename, 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
-                      default_color, dose_concs, plots_directory, ylims)
+                      default_color, dose_concs, plots_directory, ylims, yscale)
     plot_size = Tuple(plot_size)
     if length(plot_dtypes) == 1
         data = select_data(plot_dtypes[1], lum, OD, BF_imaging, CFP_imaging, 
@@ -739,7 +868,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plot_size, 
-                      plots_directory, ylims)
+                      plots_directory, ylims, yscale[1])
+    elseif plot_type == "grouped jitter"
+        grouped_jitter_plot(conditions, plot_conditions, 
+                      plot_normalization, normalization_method[1], plot_title, 
+                      plot_ylabel, plot_xlabel, 
+                      plot_yticks, plot_xticks, 
+                      plot_filename, data, default_color, plot_size, 
+                      plots_directory, ylims, yscale[1])
     elseif plot_type == "line"
         if plot_xaxis == "Time"
             t = range(0,stop=nrow(data[1]) - 1,length=nrow(data[1])) ./ acquisition_frequency 
@@ -748,14 +884,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
                           plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
-                          plots_directory)
+                          plots_directory, yscale[1])
         elseif plot_xaxis == "OD"
             line_plot(conditions, plot_conditions, 
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
                           plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
-                          plots_directory)
+                          plots_directory, yscale[1])
         else
             error("Can only plot time or OD on the x-axis of a lineplot.")
         end
@@ -767,14 +903,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
                           plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
-                          plots_directory)
+                          plots_directory, yscale)
         elseif plot_xaxis == "OD"
             twin_y(conditions, plot_conditions, 
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
                           plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
-                          plots_directory)
+                          plots_directory, yscale)
         else
             error("Can only plot time or OD on the x-axis of a two-axis plot.")
         end
@@ -791,28 +927,20 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, dose_concs, plot_size,
-                      plots_directory)
+                      plots_directory, yscale[1])
     else
         error("Plot type not implemented yet!")
     end
 end
 
 function main()
-    #push!(PGFPlotsX.CUSTOM_PREAMBLE, "\\usepackage{sfmath}\n\\renewcommand{\\familydefault}{\\sfdefault}")
-    push!(PGFPlotsX.CUSTOM_PREAMBLE,
-          """
-    \\usepackage[scaled]{helvet}
-    \\renewcommand\\familydefault{\\sfdefault} 
-    \\usepackage[T1]{fontenc}
-    \\usepackage{helvet, sansmath}
-    \\sansmath
-    """)
-    default(titlefont = (20, "computer modern"), legendfontsize = 15, 
-            guidefont = (20, :black), colorbar_tickfontsize=15, colorbar_titlefontsize=15, tickfont = (15, :black), 
-            guide = L"x", linewidth=2, grid=false, formatter = :plain)
-    default_color = RGB{Float64}(0.8888735002725198,0.43564919034818994,0.2781229361419438) 
-    
     config = JSON.parsefile("experiment_config.json")
+    font = config["plot_font"]["plot1"]
+    default(fontfamily=font, titlefont = (15, "computer modern"), legendfontsize = 15, 
+            guidefont = (15, :black), colorbar_tickfontsize=12, colorbar_titlefontsize=15, tickfont = (12, :black), 
+            guide = L"x", linewidth=2, grid=false, formatter = :plain)
+
+    color = config["plot_color"] 
     conditions = config["conditions"]
     nplates = length(conditions)
     acquisition_frequency = config["acquisition_frequency"]
@@ -835,6 +963,7 @@ function main()
     plot_clabs = config["color_label"] 
     plot_size = config["plot_size"] 
     plot_filenames = config["plot_filenames"] 
+    yscale = config["plot_scale"] 
     ylims = config["ylims"]
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
@@ -916,7 +1045,7 @@ function main()
                       plot_clabs[plot_num], plot_size[plot_num], plot_filenames[plot_num], 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
-                      default_color, dose_concs[plot_num], plots_directory, ylims[plot_num])
+                      color[plot_num], dose_concs[plot_num], plots_directory, ylims[plot_num], yscale[plot_num])
     end
 end
 
