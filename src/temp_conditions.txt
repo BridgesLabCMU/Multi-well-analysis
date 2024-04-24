@@ -1,7 +1,4 @@
-20 ug/mL
-Untreated
-40 ug/mL
-30 ug/mL
-50 ug/mL
+$\Delta dbfQ$ $\Delta vc1807$::Ptac-dbfQ-mNG-KanR
 random
-10 ug/mL
+$\Delta dbfQ$
+WT

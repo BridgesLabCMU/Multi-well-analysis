@@ -5,6 +5,7 @@ using Statistics
 using HypothesisTests: UnequalVarianceTTest, pvalue
 using LsqFit
 using Colors: JULIA_LOGO_COLORS
+using CategoricalArrays
     
 gr()
 
@@ -442,6 +443,11 @@ function line_plot(conditions, plot_conditions,
             if condition in keys(conditions[i])
                 subset = data[i][!, conditions[i][condition]]
                 subset = DataFrame(collect.(eachrow(subset)), :auto)
+                if ncol(condition_data) > ncol(subset)
+                    condition_data = condition_data[:, 1:ncol(subset)]
+                elseif (ncol(subset) > ncol(condition_data)) && (ncol(condition_data) > 0)
+                    subset = subset[:, 1:ncol(condition_data)]
+                end
                 append!(condition_data, subset)
                 if plot_xaxis == "OD"
                     subset = xaxis_data[i][!, conditions[i][condition]]
@@ -598,11 +604,39 @@ function jitter_plot(conditions, plot_conditions,
     savefig(p, "$plots_directory/$plot_filename"*".svg")
 end
 
+function extract_groups(arr)
+    groups = []
+    group_dict = Dict{String, String}()
+    for str in arr
+        group = split(str, " ", limit=2)[1] 
+        if occursin("\$", group)
+            group = latexstring(convert_latex(group))
+        end
+        push!(groups, group)
+        group_dict[str] = group
+    end
+	groups = unique(groups) 	
+    return group_dict, collect(groups)
+end
+
+function Base.unique(ctg::CategoricalArray)
+    l = levels(ctg)
+    newctg = CategoricalArray(l)
+    levels!(newctg, l)
+end
+
 function grouped_jitter_plot(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
+
+    if plot_xticks == []
+        error("Can't plot a grouped jitter plot without specifying x-ticks.")
+    end
+
+    group_dict, groups = extract_groups(plot_conditions)
+
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -618,47 +652,50 @@ function grouped_jitter_plot(conditions, plot_conditions,
         norm_mean = mean(norm_data)
     end
 
-    categories = String[]
     values = Float64[]
-    cat_labels = String[]
+    box_x = []
+    groups_plot = []
 
+    x_val = 1 
+    last_group = nothing
     for condition in plot_conditions
         for i in eachindex(conditions)
             if condition in keys(conditions[i])
+                group = group_dict[condition]
+                if last_group == group 
+                    x_val += 1
+                else
+                    x_val = 1
+                end
                 for col in conditions[i][condition]
-                    append!(categories, repeat([condition], length(data[i][!, col])))
+                    push!(groups_plot, group)
                     if normalization_method == "percent"
                         append!(values, (data[i][!, col] ./ norm_mean .- 1) .* 100)
-                   elseif normalization_method == "fold-change"
+                    elseif normalization_method == "fold-change"
                         append!(values, data[i][!, col] ./ norm_mean)
-                   elseif normalization_method == ""
+                    elseif normalization_method == ""
                         append!(values, data[i][!, col])
                     end
-                    append!(cat_labels, repeat([col], length(data[i][!, col])))
+                    push!(box_x, x_val)
                 end
+                last_group = group
             end
         end
     end
+	unique_vals = unique(box_x)
+	val_to_str = Dict(zip(unique_vals, plot_xticks))
+    box_x = [val_to_str[val] for val in box_x]
+	ctg = CategoricalArray(groups_plot)
+	levels!(ctg, unique(groups_plot))
 
-    unique_cats = unique(categories)
-    cat_indices = Dict(cat => i for (i, cat) in enumerate(unique_cats))
-    x_vals = [cat_indices[cat] + jitter_vals([0]; width=0.1)[1] for cat in categories]
-    x_min = minimum(x_vals) - 0.5
-    x_max = maximum(x_vals) + 0.5
-    box_x = [cat_indices[cat] for cat in categories]
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
-    end
-    for (k,e) in enumerate(unique_cats)
-        if occursin("\$", e)
-            unique_cats[k] = convert_latex(e)
-        end
+        plot_title = latexstring(convert_latex(plot_title))
     end
     if yscale == "linear"
         yscale = :identity
@@ -666,13 +703,10 @@ function grouped_jitter_plot(conditions, plot_conditions,
         yscale = :log10
     end
     if ylims == "default"
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, alpha=0.4, 
-                    xrotation=45, yscale=yscale, 
-                    xlims=(x_min, x_max), size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
-                 markerstrokecolor=default_color, leg=false, outliers=false, 
-                 fillalpha=0.1, linewidth=1.5)
+        p = plot()
+        groupedboxplot!(p, box_x, values, group=ctg, yscale=yscale, 
+                 leg=true, outliers=true,  
+                 linewidth=1.5)
     else
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -684,18 +718,10 @@ function grouped_jitter_plot(conditions, plot_conditions,
             end
         end
         ylims = Tuple(ylims)
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
-                    xrotation=45, 
-                    xlims=(x_min, x_max), ylims=ylims, size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
-                 markerstrokecolor=default_color, leg=false, outliers=false, 
-                 fillalpha=0.1, linewidth=1.5)
-    end
-    if plot_xlabel == ""
-        xticks!(1:length(unique_cats), unique_cats)
-    else
-        xticks!(1:length(unique_cats), string.(plot_xticks))
+        p = plot()
+        groupedboxplot!(p, box_x, values, group=ctg, 
+                 leg=true, outliers=true,  
+                 linewidth=1.5)
     end
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])

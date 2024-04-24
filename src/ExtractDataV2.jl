@@ -50,7 +50,7 @@ function main()
     
     for j in eachindex(bulk_data)
         bulk_data_dir = bulk_data[j][1:end-4] 
-        if j < length(images_dirs) && isdir(images_dirs[j])
+        if j <= length(images_dirs) && isdir(images_dirs[j])
             images_dir = images_dirs[j]
             output_dir = images_dir 
         else
@@ -60,7 +60,7 @@ function main()
             mkdir(bulk_data_dir)
             output_dir = bulk_data_dir
         end
-        df = DataFrame(CSV.File(bulk_data, header=false))
+        df = DataFrame(CSV.File(bulk_data[j], header=false))
         metadata_rows = passmissing(occursin).([r"Delay after plate movement"], df.Column2)  
         metadata_rows = [ismissing(x) ? false : x for x in metadata_rows]
         metadata_rows2 = passmissing(occursin).([r"Read Height"], df.Column2)

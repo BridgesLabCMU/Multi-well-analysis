@@ -1,156 +1,183 @@
 {
-    "notes": "Testing code on Emmy's data",
+    "notes": "Complementation_042324",
     "acquisition_frequency": 1,
-    "images_directory": [],
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240423_BF_10x_Time_Biospa_Emmy_Drawer4 23-Apr-2024 12-53-38/240423_Plate 1!PLATE_ID!_",
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240419_10X_bf_lux_Emmy_biospa_all_Drawer4 19-Apr-2024 12-28-22/240419_Plate 1!PLATE_ID!_"
+    ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
+        "B:/Emmy/Cytation/Complementation/042324/Complementation_042324.csv",
+        "B:/Emmy/Cytation/Complementation/041924/Complementation.csv"
     ],
     "conditions": [
         {
-            "Untreated": [
-                "A1",
-                "A2",
-                "A3"
+            "WT": [
+                "A10",
+                "B10",
+                "C10"
             ],
-            "10 ug/mL": [
-                "B1",
-                "B2",
-                "B3"
+            "$\\Delta dbfQ$": [
+                "A11",
+                "B11",
+                "C11"
             ],
-            "20 ug/mL": [
-                "C1",
-                "C2",
-                "C3"
-            ],
-            "30 ug/mL": [
-                "D1",
-                "D2",
-                "D3"
-            ],
-            "40 ug/mL": [
-                "E1",
-                "E2",
-                "E3"
-            ],
-            "50 ug/mL": [
-                "F1",
-                "F2",
-                "F3"
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR": [
+                "C12"
             ],
             "random": [
+                "A12",
+                "B12"
+            ]
+        },
+        {
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR": [
+                "A11",
+                "A12"
+            ],
+            "random": [
+                "A1",
+                "A10",
+                "A2",
+                "A3",
                 "A4",
                 "A5",
                 "A6",
                 "A7",
                 "A8",
                 "A9",
+                "B1",
+                "B10",
+                "B11",
+                "B12",
+                "B2",
+                "B3",
                 "B4",
                 "B5",
                 "B6",
                 "B7",
                 "B8",
                 "B9",
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C2",
+                "C3",
                 "C4",
                 "C5",
                 "C6",
                 "C7",
                 "C8",
                 "C9",
+                "D1",
+                "D10",
+                "D11",
+                "D12",
+                "D2",
+                "D3",
                 "D4",
                 "D5",
                 "D6",
                 "D7",
                 "D8",
                 "D9",
+                "E1",
+                "E10",
+                "E11",
+                "E12",
+                "E2",
+                "E3",
                 "E4",
                 "E5",
                 "E6",
                 "E7",
                 "E8",
                 "E9",
+                "F1",
+                "F10",
+                "F11",
+                "F12",
+                "F2",
+                "F3",
                 "F4",
                 "F5",
                 "F6",
                 "F7",
                 "F8",
-                "F9"
+                "F9",
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6",
+                "G7",
+                "G8",
+                "G9"
             ]
         }
     ],
-    "dust_correction": "False",
-    "good_data_directory": "",
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
     "image_analysis": "False",
     "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "grouped jitter"
+        "plot1": "line"
     },
     "plot_dtypes": {
         "plot1": [
-            "lum",
-            "OD"
+            "BF_imaging"
         ]
     },
     "plot_numerators": {
-        "plot1": [
-            "lum"
-        ]
+        "plot1": []
     },
     "plot_denominators": {
-        "plot1": [
-            "OD"
-        ]
+        "plot1": []
     },
     "plot_conditions": {
         "plot1": [
-            "Untreated",
-            "10 ug/mL",
-            "20 ug/mL",
-            "30 ug/mL",
-            "40 ug/mL",
-            "50 ug/mL"
+            "WT",
+            "$\\Delta dbfQ$",
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR"
         ]
     },
     "plot_normalization": {
-        "plot1": ""
+        "plot1": "WT"
     },
     "normalization_method": {
         "plot1": [
-            ""
+            "fold-change"
         ]
     },
     "plot_xaxis": {
-        "plot1": "default"
+        "plot1": "Time"
     },
     "plot_scale": {
         "plot1": [
-            "log"
+            "linear"
         ]
     },
     "plot_font": {
-        "plot1": "courier new"
+        "plot1": "arial"
     },
     "plot_color": {
-        "plot1": "#53a3a2"
+        "plot1": "#0339fc"
     },
     "plot_titles": {
         "plot1": ""
     },
     "plot_xlabs": {
-        "plot1": "[thymol] ($\\mu$g/mL)"
+        "plot1": "Time (hrs)"
     },
     "plot_ylabs": {
         "plot1": [
-            "RLU"
+            "Biofillm Biomass (A.U.)"
         ]
     },
     "plot_xticks": {
         "plot1": [
-            "0",
-            "10",
-            "20",
-            "30",
-            "40",
-            "50"
+            ""
         ]
     },
     "plot_yticks": {
@@ -174,7 +201,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "test"
+        "plot1": "Complementation_042324"
     },
     "sig": 2,
     "blockDiameter": [
