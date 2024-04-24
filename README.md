@@ -9,6 +9,7 @@ Scripts for analyzing imaging and bulk population data from multi-well experimen
 5. B drive should be connected prior to running the GUI.
 6. Specify conditions for all wells in the experiment, even if you do not plan on plotting data from certain wells.
 7. Y-limits can be manually specified (for now, only for jitter plots) like the following: 0,3 (lower and upper) or 0, (just lower) or ,3 (just upper)
+8. For grouped boxplots: ensure that for each condition, characters before the last 6 (including spaces) are common to a given group (e.g., "WT +01uM": "WT" is identified as a group). The part that refers to the group name should also be written as it would appear in a plot (e.g., "$\Delta vpsL$ +01uM")  
 
 ## To-do's
 1. Allow more user specifications for plot aesthetics (colors, fonts, ...)

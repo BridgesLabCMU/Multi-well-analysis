@@ -112,13 +112,13 @@ function dose_response(conditions, plot_conditions,
     xbase = collect(range(minimum(x), maximum(x), 100))
     plot!(plt, xbase, model.(xbase, (pstar,)), yscale=yscale, color="black", label="Fit")
     if occursin("\$", plot_xlabel) 
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(convert_latex(plot_title))
     end
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
@@ -249,16 +249,16 @@ function heatplot(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", clab_title)
-        clab_title = convert_latex(clab_title)
+        clab_title = latexstring(convert_latex(clab_title))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(convert_latex(plot_title))
     end
     plt = heatmap(plot_xticks, reverse(plot_yticks), block_mean[:,:,1], xrotation = 45, yflip=true, color=:cool,
                   colorbar_title=clab_title, size=plot_size)
@@ -346,7 +346,7 @@ function twin_y(conditions, plot_conditions,
                 end
             end
             if occursin("\$", plot_ylabel[j])
-                plot_ylabel[j] = convert_latex(plot_ylabel[j])
+                plot_ylabel[j] = latexstring(convert_latex(plot_ylabel[j]))
             end
             if plot_xaxis == "Time"
                 xaxis=xaxis_data
@@ -356,7 +356,7 @@ function twin_y(conditions, plot_conditions,
                 error("Can only plot time or OD on the x-axis.")
             end
             if occursin("\$", condition)
-                condition = convert_latex(condition)
+                condition = latexstring(convert_latex(condition))
             end
             if j == 1
                 if yscale[1] == "linear"
@@ -383,10 +383,10 @@ function twin_y(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(convert_latex(plot_title))
     end
     xlabel!(p, plot_xlabel)
     xlabel!(p_twin, "")
@@ -402,13 +402,13 @@ function line_plot(conditions, plot_conditions,
                       xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
 
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(convert_latex(plot_title))
     end
     p = plot(size=plot_size)
 
@@ -479,7 +479,7 @@ function line_plot(conditions, plot_conditions,
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
         if occursin("\$", condition)
-            condition = convert_latex(condition)
+            condition = latexstring(convert_latex(condition))
         end
         plot!(p, xaxis, means, yscale=yscale, marker=:circle, ribbon=stds, label=condition)
     end
@@ -542,17 +542,17 @@ function jitter_plot(conditions, plot_conditions,
     x_max = maximum(x_vals) + 0.5
     box_x = [cat_indices[cat] for cat in categories]
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(convert_latex(plot_title))
     end
     for (k,e) in enumerate(unique_cats)
         if occursin("\$", e)
-            unique_cats[k] = convert_latex(e)
+            unique_cats[k] = latexstring(convert_latex(e))
         end
     end
     if yscale == "linear"
@@ -561,10 +561,10 @@ function jitter_plot(conditions, plot_conditions,
         yscale = :log10
     end
     if ylims == "default"
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, alpha=0.4, 
-                    xrotation=45, yscale=yscale, 
-                    xlims=(x_min, x_max), size=plot_size)
+        p = plot() #scatter(x_vals, values, group=categories, color=default_color, 
+            #        markerstrokecolor=default_color, alpha=0.4, 
+            #        xrotation=45, yscale=yscale, 
+            #        xlims=(x_min, x_max), size=plot_size)
         boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
@@ -579,10 +579,10 @@ function jitter_plot(conditions, plot_conditions,
             end
         end
         ylims = Tuple(ylims)
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
-                    xrotation=45, 
-                    xlims=(x_min, x_max), ylims=ylims, size=plot_size)
+        p = plot() #scatter(x_vals, values, group=categories, color=default_color, 
+            #        markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
+            #        xrotation=45, 
+            #        xlims=(x_min, x_max), ylims=ylims, size=plot_size)
         boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
                  markerstrokecolor=default_color, leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
@@ -598,11 +598,33 @@ function jitter_plot(conditions, plot_conditions,
     savefig(p, "$plots_directory/$plot_filename"*".svg")
 end
 
+function extract_groups(arr)
+    groups = []
+    group_dict = Dict{String, String}()
+    for str in arr
+        group = str[begin:end-6]
+        if occursin("\$", group)
+            group = latexstring(convert_latex(group))
+        end
+        push!(groups, group)
+        group_dict[str] = group
+    end
+	groups = unique(groups) 	
+    return group_dict, collect(groups)
+end
+
 function grouped_jitter_plot(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
+
+    if plot_xticks == []
+        error("Can't plot a grouped jitter plot without specifying x-ticks.")
+    end
+
+    group_dict, groups = extract_groups(plot_conditions)
+
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -622,16 +644,20 @@ function grouped_jitter_plot(conditions, plot_conditions,
     values = Float64[]
     cat_labels = String[]
 
+    groups_plot = []
+
     for condition in plot_conditions
         for i in eachindex(conditions)
             if condition in keys(conditions[i])
                 for col in conditions[i][condition]
+                    group = group_dict[condition]
+                    push!(groups_plot, group)
                     append!(categories, repeat([condition], length(data[i][!, col])))
                     if normalization_method == "percent"
                         append!(values, (data[i][!, col] ./ norm_mean .- 1) .* 100)
-                   elseif normalization_method == "fold-change"
+                    elseif normalization_method == "fold-change"
                         append!(values, data[i][!, col] ./ norm_mean)
-                   elseif normalization_method == ""
+                    elseif normalization_method == ""
                         append!(values, data[i][!, col])
                     end
                     append!(cat_labels, repeat([col], length(data[i][!, col])))
@@ -642,23 +668,15 @@ function grouped_jitter_plot(conditions, plot_conditions,
 
     unique_cats = unique(categories)
     cat_indices = Dict(cat => i for (i, cat) in enumerate(unique_cats))
-    x_vals = [cat_indices[cat] + jitter_vals([0]; width=0.1)[1] for cat in categories]
-    x_min = minimum(x_vals) - 0.5
-    x_max = maximum(x_vals) + 0.5
     box_x = [cat_indices[cat] for cat in categories]
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(convert_latex(plot_xlabel))
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
-    end
-    for (k,e) in enumerate(unique_cats)
-        if occursin("\$", e)
-            unique_cats[k] = convert_latex(e)
-        end
+        plot_title = latexstring(convert_latex(plot_title))
     end
     if yscale == "linear"
         yscale = :identity
@@ -666,12 +684,9 @@ function grouped_jitter_plot(conditions, plot_conditions,
         yscale = :log10
     end
     if ylims == "default"
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, alpha=0.4, 
-                    xrotation=45, yscale=yscale, 
-                    xlims=(x_min, x_max), size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
-                 markerstrokecolor=default_color, leg=false, outliers=false, 
+        p = plot()
+        groupedboxplot!(p, box_x, values, group=groups_plot, yscale=yscale, 
+                 leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     else
         for (k, e) in enumerate(ylims)
@@ -684,12 +699,9 @@ function grouped_jitter_plot(conditions, plot_conditions,
             end
         end
         ylims = Tuple(ylims)
-        p = scatter(x_vals, values, group=categories, color=default_color, 
-                    markerstrokecolor=default_color, yscale=yscale, alpha=0.4, 
-                    xrotation=45, 
-                    xlims=(x_min, x_max), ylims=ylims, size=plot_size)
-        boxplot!(p, box_x, values, color=default_color, yscale=yscale, linecolor=default_color, 
-                 markerstrokecolor=default_color, leg=false, outliers=false, 
+        p = plot()
+        groupedboxplot!(p, box_x, values, group=groups_plot, 
+                 leg=false, outliers=false, 
                  fillalpha=0.1, linewidth=1.5)
     end
     if plot_xlabel == ""
