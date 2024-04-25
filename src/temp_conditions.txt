@@ -1,4 +1,5 @@
-$\Delta dbfQ$ $\Delta vc1807$::Ptac-dbfQ-mNG-KanR
-random
-$\Delta dbfQ$
-WT
+WT +10 ug/mL
+WT untreated
+dbfQ untreated
+test
+dbfQ +10 ug/mL

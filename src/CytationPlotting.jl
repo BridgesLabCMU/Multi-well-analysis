@@ -7,41 +7,7 @@ using LsqFit
 using Colors: JULIA_LOGO_COLORS
 using CategoricalArrays
     
-gr()
-
-function convert_latex(string)
-    latex_to_unicode = Dict(
-        "\$\\alpha\$" => "α",
-        "\$\\beta\$" => "β",
-        "\$\\gamma\$" => "γ",
-        "\$\\delta\$" => "δ",
-        "\$\\Delta\$" => "Δ",
-        "\$\\epsilon\$" => "ε",
-        "\$\\zeta\$" => "ζ",
-        "\$\\eta\$" => "η",
-        "\$\\theta\$" => "θ",
-        "\$\\iota\$" => "ι",
-        "\$\\kappa\$" => "κ",
-        "\$\\lambda\$" => "λ",
-        "\$\\mu\$" => "μ",
-        "\$\\nu\$" => "ν",
-        "\$\\xi\$" => "ξ",
-        "\$\\omicron\$" => "ο",
-        "\$\\pi\$" => "π",
-        "\$\\rho\$" => "ρ",
-        "\$\\sigma\$" => "σ",
-        "\$\\tau\$" => "τ",
-        "\$\\upsilon\$" => "υ",
-        "\$\\phi\$" => "φ",
-        "\$\\chi\$" => "χ",
-        "\$\\psi\$" => "ψ",
-        "\$\\omega\$" => "ω"
-    )
-    for (latex, unicode) in latex_to_unicode
-        string = replace(string, latex => unicode)
-    end
-    return string
-end
+pgfplotsx()
 
 propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
@@ -113,13 +79,13 @@ function dose_response(conditions, plot_conditions,
     xbase = collect(range(minimum(x), maximum(x), 100))
     plot!(plt, xbase, model.(xbase, (pstar,)), yscale=yscale, color="black", label="Fit")
     if occursin("\$", plot_xlabel) 
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(plot_title)
     end
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
@@ -250,16 +216,16 @@ function heatplot(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(plot_ylabel[1])
     end
     if occursin("\$", clab_title)
-        clab_title = convert_latex(clab_title)
+        clab_title = latexstring(clab_title)
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(plot_title)
     end
     plt = heatmap(plot_xticks, reverse(plot_yticks), block_mean[:,:,1], xrotation = 45, yflip=true, color=:cool,
                   colorbar_title=clab_title, size=plot_size)
@@ -347,7 +313,7 @@ function twin_y(conditions, plot_conditions,
                 end
             end
             if occursin("\$", plot_ylabel[j])
-                plot_ylabel[j] = convert_latex(plot_ylabel[j])
+                plot_ylabel[j] = latexstring(plot_ylabel[j])
             end
             if plot_xaxis == "Time"
                 xaxis=xaxis_data
@@ -357,7 +323,7 @@ function twin_y(conditions, plot_conditions,
                 error("Can only plot time or OD on the x-axis.")
             end
             if occursin("\$", condition)
-                condition = convert_latex(condition)
+                condition = latexstring(condition)
             end
             if j == 1
                 if yscale[1] == "linear"
@@ -384,10 +350,10 @@ function twin_y(conditions, plot_conditions,
         end
     end
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(plot_title)
     end
     xlabel!(p, plot_xlabel)
     xlabel!(p_twin, "")
@@ -403,13 +369,13 @@ function line_plot(conditions, plot_conditions,
                       xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
 
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(plot_title)
     end
     p = plot(size=plot_size)
 
@@ -485,7 +451,7 @@ function line_plot(conditions, plot_conditions,
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
         if occursin("\$", condition)
-            condition = convert_latex(condition)
+            condition = latexstring(condition)
         end
         plot!(p, xaxis, means, yscale=yscale, marker=:circle, ribbon=stds, label=condition)
     end
@@ -548,17 +514,17 @@ function jitter_plot(conditions, plot_conditions,
     x_max = maximum(x_vals) + 0.5
     box_x = [cat_indices[cat] for cat in categories]
     if occursin("\$", plot_xlabel)
-        plot_xlabel = convert_latex(plot_xlabel)
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = convert_latex(plot_ylabel[1])
+        plot_ylabel[1] = latexstring(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = convert_latex(plot_title)
+        plot_title = latexstring(plot_title)
     end
     for (k,e) in enumerate(unique_cats)
         if occursin("\$", e)
-            unique_cats[k] = convert_latex(e)
+            unique_cats[k] = latexstring(e)
         end
     end
     if yscale == "linear"
@@ -610,7 +576,7 @@ function extract_groups(arr)
     for str in arr
         group = split(str, " ", limit=2)[1] 
         if occursin("\$", group)
-            group = latexstring(convert_latex(group))
+            group = latexstring(group)
         end
         push!(groups, group)
         group_dict[str] = group
@@ -689,13 +655,13 @@ function grouped_jitter_plot(conditions, plot_conditions,
 	levels!(ctg, unique(groups_plot))
 
     if occursin("\$", plot_xlabel)
-        plot_xlabel = latexstring(convert_latex(plot_xlabel))
+        plot_xlabel = latexstring(plot_xlabel)
     end
     if occursin("\$", plot_ylabel[1])
-        plot_ylabel[1] = latexstring(convert_latex(plot_ylabel[1]))
+        plot_ylabel[1] = latexstring(plot_ylabel[1])
     end
     if occursin("\$", plot_title)
-        plot_title = latexstring(convert_latex(plot_title))
+        plot_title = latexstring(plot_title)
     end
     if yscale == "linear"
         yscale = :identity
@@ -961,8 +927,15 @@ end
 
 function main()
     config = JSON.parsefile("experiment_config.json")
-    font = config["plot_font"]["plot1"]
-    default(fontfamily=font, titlefont = (15, "computer modern"), legendfontsize = 15, 
+    push!(PGFPlotsX.CUSTOM_PREAMBLE,
+          """
+    \\usepackage[scaled]{helvet}
+    \\renewcommand\\familydefault{\\sfdefault}
+    \\usepackage[T1]{fontenc}
+    \\usepackage{helvet, sansmath}
+    \\sansmath
+    """)
+    default(fontfamily="Helvetica", titlefont = (15, "computer modern"), legendfontsize = 15, 
             guidefont = (15, :black), colorbar_tickfontsize=12, colorbar_titlefontsize=15, tickfont = (12, :black), 
             guide = L"x", linewidth=2, grid=false, formatter = :plain)
 
