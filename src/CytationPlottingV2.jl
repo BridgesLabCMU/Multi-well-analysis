@@ -650,8 +650,8 @@ function grouped_jitter_plot(conditions, plot_conditions,
 	unique_vals = unique(box_x)
 	val_to_str = Dict(zip(unique_vals, plot_xticks))
     box_x = [val_to_str[val] for val in box_x]
-	ctg = CategoricalArray(groups_plot)
-	levels!(ctg, unique(groups_plot))
+	#ctg = CategoricalArray(groups_plot)
+	#levels!(ctg, unique(groups_plot))
 
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
@@ -662,9 +662,10 @@ function grouped_jitter_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
+    @show box_x, values, groups_plot
     fig, ax1 = pyplot.subplots(figsize=plot_size)
-    sns.boxplot(x=box_x, y=values, hue=ctg, showfliers=false, palette="Set2")
-    sns.stripplot(x=box_x, y=values, hue=ctg, dodge=true, alpha=0.8, palette="Set2", legend=nothing)
+    sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
+    sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", legend=nothing)
     if ylims != "default"
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -682,9 +683,10 @@ function grouped_jitter_plot(conditions, plot_conditions,
     pyplot.xticks(0:length(unique_vals)-1, string.(plot_xticks))
     ax1.set_xlabel(plot_xlabel)
     ax1.set_ylabel(plot_ylabel[1])
-    ax1_set_title(plot_title)
+    ax1.set_title(plot_title)
     pyplot.tight_layout()
-    savefig("$plots_directory/$plot_filename"*".svg")
+    plotshow()
+    savefig("$plots_directory/$plot_filename"*".png")
 end
 
 function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
@@ -920,7 +922,7 @@ end
 function main()
     config = JSON.parsefile("experiment_config.json")
     color = config["plot_color"] 
-    font = config["plot_font"][1]
+    font = config["plot_font"]["plot1"]
     conditions = config["conditions"]
     nplates = length(conditions)
     acquisition_frequency = config["acquisition_frequency"]
@@ -945,8 +947,8 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    #images_directories = linux_path.(images_directories)
-    #bulk_data = linux_path.(bulk_data)
+    images_directories = linux_path.(images_directories)
+    bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)

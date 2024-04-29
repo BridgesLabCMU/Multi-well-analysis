@@ -152,6 +152,11 @@
             ""
         ]
     },
+    "plot_font": {
+        "plot1": [
+            "Helvetica"
+        ]
+    }, 
     "plot_xaxis": {
         "plot1": "default"
     },
