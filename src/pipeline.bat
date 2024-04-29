@@ -18,7 +18,7 @@ if "%image_analysis%"=="True" (
 	if %errorlevel% neq 0 goto end
 )
 
-julia CytationPlotting.jl
+julia CytationPlottingV2.jl
 if %errorlevel% neq 0 goto end
 
 setlocal enabledelayedexpansion

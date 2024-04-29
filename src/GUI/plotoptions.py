@@ -165,7 +165,11 @@ if __name__ == "__main__":
                     plot_scales[f"plot{i+1}"] = plot_scale_selections[i]
             def save_plot_color(plot_color_entries):
                 for i in range(0, len(plot_color_entries)):
-                    plot_colors[f"plot{i+1}"] = plot_color_entries[i].get()
+                    plot_color_i = plot_color_entries[i].get()
+                    if plot_color_i == "":
+                        plot_colors[f"plot{i+1}"] = "#4ba2bf"
+                    else:
+                        plot_colors[f"plot{i+1}"] = plot_color_i
             def save_plot_font(plot_font_selections):
                 for i in range(0,len(plot_font_selections)):
                     plot_fonts[f"plot{i+1}"] = plot_font_selections[i].get()
@@ -209,9 +213,9 @@ if __name__ == "__main__":
                     plot_sizes_i = plot_size_entries[i].get()
                     if plot_sizes_i != "":
                         if "," in plot_sizes_i:
-                            plot_sizes[f"plot{i+1}"] = [int(x) for x in plot_sizes_i.split(",")]
+                            plot_sizes[f"plot{i+1}"] = [float(x) for x in plot_sizes_i.split(",")]
                     else:
-                        plot_sizes[f"plot{i+1}"] = [300, 250]
+                        plot_sizes[f"plot{i+1}"] = [3, 2.5]
             def save_ylims(ylim_entries):
                 for i in range(0, len(ylim_entries)):
                     ylims_i = ylim_entries[i].get()
@@ -609,7 +613,7 @@ if __name__ == "__main__":
             plot_font_selections = []
             plot_font_labels = []
             plot_font_option_menus = []
-            plot_font_options = ["Helvetica", "Computer modern"]
+            plot_font_options = ["Helvetica", "Arial", "Computer modern"]
             plot_font_frm = ttk.Frame(self.frame.interior)
             plot_font_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
