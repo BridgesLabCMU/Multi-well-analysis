@@ -93,6 +93,8 @@ function dose_response(conditions, plot_conditions,
 	ax.set_ylabel(plot_ylabel[1])
 	ax.set_title(plot_title)
     ax.set_yscale(yscale)
+    pyplot.locator_params(axis='x', min_n_ticks=5)
+    pyplot.locator_params(axis='y', min_n_ticks=5)
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
     ax.legend(bbox_to_anchor=(1, 1), frameon=false)
@@ -347,18 +349,20 @@ function twin_y(conditions, plot_conditions,
             end
             if j == 1
                 stds .= ifelse.(isnan.(stds), 0, stds)
-                ax1.plot(xaxis, means, marker="o", color=colors[j])
+                ax1.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=colors[j])
                 ax1.tick_params(axis="y", colors=colors[j])
                 ax1.set_yscale(yscale[1])
                 ax1.set_ylabel(plot_ylabel[j], color=colors[j])
                 ax1.fill_between(xaxis, means .- stds, means .+ stds, color=colors[j], alpha=0.3)
+                ax1.locator_params(axis='y', min_n_ticks=5)
             else
                 stds .= ifelse.(isnan.(stds), 0, stds)
-                ax2.plot(xaxis, means, marker="o", color=colors[j])
+                ax2.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=colors[j])
                 ax2.tick_params(axis="y", colors=colors[j])
                 ax2.set_yscale(yscale[2])
                 ax2.set_ylabel(plot_ylabel[j], color=colors[j])
                 ax2.fill_between(xaxis, means .- stds, means .+ stds, color=colors[j], alpha=0.3)
+                ax2.locator_params(axis='y', min_n_ticks=5)
             end
         end
     end
@@ -370,9 +374,8 @@ function twin_y(conditions, plot_conditions,
     end
     ax1.set_xlabel(plot_xlabel)
     ax1.set_title(plot_title)
-    ax1.spines["right"].set_visible(false)
+    pyplot.locator_params(axis='x', min_n_ticks=5)
     ax1.spines["top"].set_visible(false)
-    pyplot.gca().legend.set_visible(False)
     savefig("$plots_directory/$plot_filename"*".svg")
 end
 
@@ -465,13 +468,15 @@ function line_plot(conditions, plot_conditions,
             condition = latexstring(condition)
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
-        ax.plot(xaxis, means, marker="o", label=condition)
+        ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", label=condition)
         ax.fill_between(xaxis, means .- stds, means .+ stds, alpha=0.3)
     end
     ax.set_ylabel(plot_ylabel[1])
     ax.set_xlabel(plot_xlabel)
     ax.set_title(plot_title)
     ax.set_yscale(yscale)
+    pyplot.locator_params(axis='x', min_n_ticks=5)
+    pyplot.locator_params(axis='y', min_n_ticks=5)
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
     ax.legend(bbox_to_anchor=(1, 1), frameon=false)
@@ -564,6 +569,7 @@ function jitter_plot(conditions, plot_conditions,
     ax1.set_xlabel(plot_xlabel)
     ax1.set_ylabel(plot_ylabel[1])
     ax1.set_title(plot_title)
+    pyplot.locator_params(axis='y', min_n_ticks=5)
     ax1.spines["right"].set_visible(false)
     ax1.spines["top"].set_visible(false)
     pyplot.gca().legend.set_visible(False)
@@ -690,6 +696,7 @@ function grouped_jitter_plot(conditions, plot_conditions,
     ax1.set_xlabel(plot_xlabel)
     ax1.set_ylabel(plot_ylabel[1])
     ax1.set_title(plot_title)
+    pyplot.locator_params(axis='y', min_n_ticks=5)
     ax1.spines["right"].set_visible(false)
     ax1.spines["top"].set_visible(false)
     ax1.legend(bbox_to_anchor=(1, 1), frameon=false)
