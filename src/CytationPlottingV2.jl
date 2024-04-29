@@ -22,7 +22,7 @@ function dose_response(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      dose_concs, plot_size, plots_directory)
+                      dose_concs, plots_directory)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
     x = dose_concs
     y = []
@@ -75,7 +75,7 @@ function dose_response(conditions, plot_conditions,
 
     fit = curve_fit(model, x, y, p0, lower=lb, upper=ub)
     pstar = coef(fit)
-    fig, ax = pyplot.subplots(figsize=plot_size)
+    fig, ax = pyplot.subplots()
 	ax.errorbar(x, y, yerr=error, fmt="o", color="black", mfc="white", label="Data")
 	xbase = collect(range(minimum(x), maximum(x), 100))
 	ax.plot(xbase, model.(xbase, (pstar,)), color="black", label="Fit")
@@ -93,8 +93,9 @@ function dose_response(conditions, plot_conditions,
 	ax.set_ylabel(plot_ylabel[1])
 	ax.set_title(plot_title)
     ax.set_yscale(yscale)
-    ax.legend()
-    pyplot.tight_layout()
+    ax.spines["right"].set_visible(false)
+    ax.spines["top"].set_visible(false)
+    ax.legend(bbox_to_anchor=(1, 1), frameon=false)
     savefig("$plots_directory/$plot_filename"*".svg")
 end
 
@@ -124,7 +125,7 @@ function heatplot(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      plot_clab, plot_size, plots_directory)
+                      plot_clab, plots_directory)
 
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
     if nums != nothing
@@ -232,7 +233,7 @@ function heatplot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
-    	fig, ax = pyplot.subplots(figsize=plot_size)
+    fig, ax = pyplot.subplots()
 	im = ax.imshow(block_mean[:,:,1], cmap="cool", origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
 	ax.set_xticklabels(plot_xticks, rotation=45)
@@ -245,7 +246,7 @@ function heatplot(conditions, plot_conditions,
 	cbar.ax.set_ylabel(clab_title)
 	pyplot.tight_layout()
 	savefig("$plot_filename" * "_mean.svg")
-	fig, ax = pyplot.subplots(figsize=plot_size)
+	fig, ax = pyplot.subplots()
 	im = ax.imshow(block_std[:,:,1], cmap="cool", origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
 	ax.set_xticklabels(plot_xticks, rotation=45)
@@ -265,9 +266,9 @@ function twin_y(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
+                      xaxis_data, plot_xaxis, plots_directory, yscale)
     colors = ["#de8466", "#7dc6e3"]
-    fig, ax1 = pyplot.subplots(figsize=plot_size)
+    fig, ax1 = pyplot.subplots()
     ax2 = ax1.twinx()
     
     for j in 1:length(data) 
@@ -369,7 +370,9 @@ function twin_y(conditions, plot_conditions,
     end
     ax1.set_xlabel(plot_xlabel)
     ax1.set_title(plot_title)
-    pyplot.tight_layout()
+    ax1.spines["right"].set_visible(false)
+    ax1.spines["top"].set_visible(false)
+    pyplot.gca().legend.set_visible(False)
     savefig("$plots_directory/$plot_filename"*".svg")
 end
 
@@ -378,7 +381,7 @@ function line_plot(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, nums, denoms, 
-                      xaxis_data, plot_xaxis, plot_size, plots_directory, yscale)
+                      xaxis_data, plot_xaxis, plots_directory, yscale)
 
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
@@ -389,7 +392,7 @@ function line_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
-    fig, ax = pyplot.subplots(figsize=plot_size)
+    fig, ax = pyplot.subplots()
     ax.set_prop_cycle(color=pyplot.get_cmap("Set2").colors)
 
     if plot_normalization != ""
@@ -469,8 +472,9 @@ function line_plot(conditions, plot_conditions,
     ax.set_xlabel(plot_xlabel)
     ax.set_title(plot_title)
     ax.set_yscale(yscale)
-    ax.legend()
-    pyplot.tight_layout()
+    ax.spines["right"].set_visible(false)
+    ax.spines["top"].set_visible(false)
+    ax.legend(bbox_to_anchor=(1, 1), frameon=false)
     savefig("$plots_directory/$plot_filename"*".svg")
 end
 
@@ -478,7 +482,7 @@ function jitter_plot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
+                      plot_filename, data, default_color, plots_directory, ylims, yscale)
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -529,11 +533,11 @@ function jitter_plot(conditions, plot_conditions,
         end
     end
 
-    fig, ax1 = pyplot.subplots(figsize=plot_size)
+    fig, ax1 = pyplot.subplots()
 
     if ylims == "default"
-        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false, rotation=45)
-        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, alpha=0.8)
+        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
     else
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -546,8 +550,8 @@ function jitter_plot(conditions, plot_conditions,
         end
         ylims = Tuple(ylims)
         ylims = Tuple(filter(isfinite, ylims))
-        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false, rotation=45)
-        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, alpha=0.8)
+        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
         ax1.set_ylim(ylims)
     end
 
@@ -555,12 +559,14 @@ function jitter_plot(conditions, plot_conditions,
         pyplot.xticks(0:length(unique_cats)-1, string.(plot_xticks))
     end
 
+	ax1.set_xticklabels(rotation=45)
     ax1.set_yscale(yscale)
     ax1.set_xlabel(plot_xlabel)
     ax1.set_ylabel(plot_ylabel[1])
     ax1.set_title(plot_title)
+    ax1.spines["right"].set_visible(false)
+    ax1.spines["top"].set_visible(false)
     pyplot.gca().legend.set_visible(False)
-    pyplot.tight_layout()
     savefig("$plots_directory/$plot_filename"*".svg")
 end
 
@@ -594,7 +600,7 @@ function grouped_jitter_plot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, plots_directory, ylims, yscale)
+                      plot_filename, data, default_color, plots_directory, ylims, yscale)
 
     if plot_xticks == []
         error("Can't plot a grouped jitter plot without specifying x-ticks.")
@@ -662,10 +668,9 @@ function grouped_jitter_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
-    @show box_x, values, groups_plot
-    fig, ax1 = pyplot.subplots(figsize=plot_size)
+    fig, ax1 = pyplot.subplots()
     sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
-    sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", legend=nothing)
+    sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", linewidth=1, legend=nothing)
     if ylims != "default"
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -680,13 +685,15 @@ function grouped_jitter_plot(conditions, plot_conditions,
         ylims = Tuple(filter(isfinite, ylims))
         ax1.set_ylim(ylims)
     end
-    pyplot.xticks(0:length(unique_vals)-1, string.(plot_xticks))
+	
+    pyplot.xticks(0:length(unique_vals)-1, string.(plot_xticks),rotation=45)
     ax1.set_xlabel(plot_xlabel)
     ax1.set_ylabel(plot_ylabel[1])
     ax1.set_title(plot_title)
-    pyplot.tight_layout()
-    plotshow()
-    savefig("$plots_directory/$plot_filename"*".png")
+    ax1.spines["right"].set_visible(false)
+    ax1.spines["top"].set_visible(false)
+    ax1.legend(bbox_to_anchor=(1, 1), frameon=false)
+    savefig("$plots_directory/$plot_filename"*".svg")
 end
 
 function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
@@ -725,7 +732,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
                       texas_red_imaging, CY5_imaging, YFP, CY5, 
                       default_color, dose_concs, plots_directory, ylims, yscale)
-    plot_size = Tuple(plot_size)
+    PythonPlot.matplotlib.rcParams["figure.figsize"] = plot_size 
     if length(plot_dtypes) == 1
         data = select_data(plot_dtypes[1], lum, OD, BF_imaging, CFP_imaging, 
                            YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
@@ -853,14 +860,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, 
+                      plot_filename, data, default_color, 
                       plots_directory, ylims, yscale[1])
     elseif plot_type == "grouped jitter"
         grouped_jitter_plot(conditions, plot_conditions, 
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, default_color, plot_size, 
+                      plot_filename, data, default_color, 
                       plots_directory, ylims, yscale[1])
     elseif plot_type == "line"
         if plot_xaxis == "Time"
@@ -869,14 +876,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, t, plot_xaxis,
                           plots_directory, yscale[1])
         elseif plot_xaxis == "OD"
             line_plot(conditions, plot_conditions, 
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, OD, plot_xaxis,
                           plots_directory, yscale[1])
         else
             error("Can only plot time or OD on the x-axis of a lineplot.")
@@ -888,14 +895,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, t, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, t, plot_xaxis,
                           plots_directory, yscale)
         elseif plot_xaxis == "OD"
             twin_y(conditions, plot_conditions, 
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, OD, plot_xaxis, plot_size,
+                          plot_filename, data, nums, denoms, OD, plot_xaxis,
                           plots_directory, yscale)
         else
             error("Can only plot time or OD on the x-axis of a two-axis plot.")
@@ -905,14 +912,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, plot_clab, plot_size,
+                      plot_filename, data, nums, denoms, plot_clab,
                       plots_directory)
     elseif plot_type == "dose-response"
         dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, dose_concs, plot_size,
+                      plot_filename, data, nums, denoms, dose_concs,
                       plots_directory, yscale[1])
     else
         error("Plot type not implemented yet!")
@@ -922,7 +929,7 @@ end
 function main()
     config = JSON.parsefile("experiment_config.json")
     color = config["plot_color"] 
-    font = config["plot_font"]["plot1"]
+    font = config["plot_font"]["plot1"][1]
     conditions = config["conditions"]
     nplates = length(conditions)
     acquisition_frequency = config["acquisition_frequency"]
@@ -947,8 +954,8 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    images_directories = linux_path.(images_directories)
-    bulk_data = linux_path.(bulk_data)
+    #images_directories = linux_path.(images_directories)
+    #bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)

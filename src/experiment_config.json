@@ -3,7 +3,7 @@
     "acquisition_frequency": 1,
     "images_directory": [],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
+        "/Users/jojo/Downloads/abx_thymol_041824.csv"
     ],
     "conditions": [
         {
@@ -154,7 +154,7 @@
     },
     "plot_font": {
         "plot1": [
-            "Helvetica"
+            "Computer modern"
         ]
     }, 
     "plot_xaxis": {
@@ -164,9 +164,6 @@
         "plot1": [
             "log"
         ]
-    },
-    "plot_font": {
-        "plot1": "helvetica"
     },
     "plot_color": {
         "plot1": "#62b5ad"
@@ -205,8 +202,8 @@
     },
     "plot_size": {
         "plot1": [
-            300,
-            250
+            3.0,
+            2.5
         ]
     },
     "dose_concs": {
