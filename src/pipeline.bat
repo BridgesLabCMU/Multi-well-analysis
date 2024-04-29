@@ -18,7 +18,7 @@ if "%image_analysis%"=="True" (
 	if %errorlevel% neq 0 goto end
 )
 
-julia CytationPlottingV2.jl
+wsl julia "/mnt/c/Users/Imaging Controller/Desktop/Multi-well-analysis/src/CytationPlottingV2.jl"
 if %errorlevel% neq 0 goto end
 
 setlocal enabledelayedexpansion
