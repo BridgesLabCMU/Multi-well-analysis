@@ -18,7 +18,7 @@ if "%image_analysis%"=="True" (
 	if %errorlevel% neq 0 goto end
 )
 
-wsl julia "/mnt/c/Users/Imaging Controller/Desktop/Multi-well-analysis/src/CytationPlottingV2.jl"
+%systemroot%\System32\wsl.exe -d Ubuntu -u jojo -- cd "/mnt/c/Users/Imaging Controller/Desktop/Multi-well-analysis/src" ^&^& /home/jojo/.juliaup/bin/julia CytationPlottingV2.jl
 if %errorlevel% neq 0 goto end
 
 setlocal enabledelayedexpansion

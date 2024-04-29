@@ -1,192 +1,183 @@
 {
-    "notes": "Testing code on Emmy's data",
+    "notes": "Complementation_042324",
     "acquisition_frequency": 1,
-    "images_directory": [],
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240423_BF_10x_Time_Biospa_Emmy_Drawer4 23-Apr-2024 12-53-38/240423_Plate 1!PLATE_ID!_",
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240419_10X_bf_lux_Emmy_biospa_all_Drawer4 19-Apr-2024 12-28-22/240419_Plate 1!PLATE_ID!_"
+    ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
+        "B:/Emmy/Data/20240424_1/Complementation_042324.csv",
+        "B:/Emmy/Data/20240424_1/Complementation.csv"
     ],
     "conditions": [
         {
-            "WT untreated": [
+            "WT": [
+                "A10",
+                "B10",
+                "C10"
+            ],
+            "$\\Delta dbfQ$": [
+                "A11",
+                "B11",
+                "C11"
+            ],
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR": [
+                "C12"
+            ],
+            "random": [
+                "A12",
+                "B12"
+            ]
+        },
+        {
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR": [
+                "A11",
+                "A12"
+            ],
+            "random": [
                 "A1",
+                "A10",
                 "A2",
-                "A3"
-            ],
-            "WT +10 ug/mL": [
-                "B1",
-                "B2",
-                "B3"
-            ],
-            "WT +20 ug/mL": [
-                "C1",
-                "C2",
-                "C3"
-            ],
-            "WT +30 ug/mL": [
-                "D1",
-                "D2",
-                "D3"
-            ],
-            "WT +40 ug/mL": [
-                "E1",
-                "E2",
-                "E3"
-            ],
-            "WT +50 ug/mL": [
-                "F1",
-                "F2",
-                "F3"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ untreated": [
+                "A3",
                 "A4",
                 "A5",
-                "A6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +10 ug/mL": [
-                "B4",
-                "B5",
-                "B6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +20 ug/mL": [
-                "C4",
-                "C5",
-                "C6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +30 ug/mL": [
-                "D4",
-                "D5",
-                "D6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +40 ug/mL": [
-                "E4",
-                "E5",
-                "E6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +50 ug/mL": [
-                "F4",
-                "F5",
-                "F6"
-            ],
-            "$\\Delta dbfR$ untreated": [
+                "A6",
                 "A7",
                 "A8",
-                "A9"
-            ],
-            "$\\Delta dbfR$ +10 ug/mL": [
+                "A9",
+                "B1",
+                "B10",
+                "B11",
+                "B12",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
                 "B7",
                 "B8",
-                "B9"
-            ],
-            "$\\Delta dbfR$ +20 ug/mL": [
+                "B9",
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C2",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
                 "C7",
                 "C8",
-                "C9"
-            ],
-            "$\\Delta dbfR$ +30 ug/mL": [
+                "C9",
+                "D1",
+                "D10",
+                "D11",
+                "D12",
+                "D2",
+                "D3",
+                "D4",
+                "D5",
+                "D6",
                 "D7",
                 "D8",
-                "D9"
-            ],
-            "$\\Delta dbfR$ +40 ug/mL": [
+                "D9",
+                "E1",
+                "E10",
+                "E11",
+                "E12",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6",
                 "E7",
                 "E8",
-                "E9"
-            ],
-            "$\\Delta dbfR$ +50 ug/mL": [
+                "E9",
+                "F1",
+                "F10",
+                "F11",
+                "F12",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
                 "F7",
                 "F8",
-                "F9"
+                "F9",
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6",
+                "G7",
+                "G8",
+                "G9"
             ]
         }
     ],
-    "dust_correction": "False",
-    "good_data_directory": "",
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
     "image_analysis": "False",
     "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "grouped jitter"
+        "plot1": "line"
     },
     "plot_dtypes": {
         "plot1": [
-            "lum",
-            "OD"
+            "BF_imaging"
         ]
     },
     "plot_numerators": {
-        "plot1": [
-            "lum"
-        ]
+        "plot1": []
     },
     "plot_denominators": {
-        "plot1": [
-            "OD"
-        ]
+        "plot1": []
     },
     "plot_conditions": {
         "plot1": [
-            "WT untreated",
-            "WT +10 ug/mL",
-            "WT +20 ug/mL",
-            "WT +30 ug/mL",
-            "WT +40 ug/mL",
-            "WT +50 ug/mL",
-            "$dbfR^{\\mathrm{D51V}}$ untreated",
-            "$dbfR^{\\mathrm{D51V}}$ +10 ug/mL",
-            "$dbfR^{\\mathrm{D51V}}$ +20 ug/mL",
-            "$dbfR^{\\mathrm{D51V}}$ +30 ug/mL",
-            "$dbfR^{\\mathrm{D51V}}$ +40 ug/mL",
-            "$dbfR^{\\mathrm{D51V}}$ +50 ug/mL",
-            "$\\Delta dbfR$ untreated",
-            "$\\Delta dbfR$ +10 ug/mL",
-            "$\\Delta dbfR$ +20 ug/mL",
-            "$\\Delta dbfR$ +30 ug/mL",
-            "$\\Delta dbfR$ +40 ug/mL",
-            "$\\Delta dbfR$ +50 ug/mL"
+            "WT",
+            "$\\Delta dbfQ$",
+            "$\\Delta dbfQ$ $\\Delta vc1807$::Ptac-dbfQ-mNG-KanR"
         ]
     },
     "plot_normalization": {
-        "plot1": ""
+        "plot1": "WT"
     },
     "normalization_method": {
         "plot1": [
-            ""
+            "fold-change"
         ]
     },
-    "plot_font": {
-        "plot1": [
-            "Arial"
-        ]
-    }, 
     "plot_xaxis": {
-        "plot1": "default"
+        "plot1": "Time"
     },
     "plot_scale": {
         "plot1": [
-            "log"
+            "linear"
         ]
     },
+    "plot_font": {
+        "plot1": "Arial"
+    },
     "plot_color": {
-        "plot1": "#62b5ad"
+        "plot1": "#0339fc"
     },
     "plot_titles": {
         "plot1": ""
     },
     "plot_xlabs": {
-        "plot1": "[thymol] ($\\mu$g/mL)"
+        "plot1": "Time (hrs)"
     },
     "plot_ylabs": {
         "plot1": [
-            "RLU"
+            "Biofillm Biomass (A.U.)"
         ]
     },
     "plot_xticks": {
         "plot1": [
-            "0",
-            "10",
-            "20",
-            "30",
-            "40",
-            "50"
+            ""
         ]
     },
     "plot_yticks": {
@@ -210,7 +201,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "test"
+        "plot1": "Complementation_042324"
     },
     "sig": 2,
     "blockDiameter": [
