@@ -1,39 +1,21 @@
 {
     "notes": "test",
     "acquisition_frequency": 1,
-    "images_directory": [],
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240117_BF_Cy5_10x_Time_Biospa_SK_Drawer5 17-Jan-2024 14-50-43"
+    ],
     "bulk_data": [
         "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
     ],
     "conditions": [
         {
             "test": [
-                "D7"
-            ],
-            "WT untreated": [
-                "A1",
-                "A2",
-                "A3"
-            ],
-            "WT +10 ug/mL": [
-                "B1",
-                "B2",
-                "B3"
-            ],
-            "dbfQ untreated": [
-                "C1",
-                "C2",
                 "C3"
-            ],
-            "dbfQ +10 ug/mL": [
-                "D1",
-                "D2",
-                "D3"
             ]
         }
     ],
-    "dust_correction": "False",
-    "good_data_directory": "",
-    "image_analysis": "False",
-    "experiment_directory": "B:/Emmy/Dbf pathway"
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "image_analysis": "True",
+    "experiment_directory": "B:/Jojo"
 }

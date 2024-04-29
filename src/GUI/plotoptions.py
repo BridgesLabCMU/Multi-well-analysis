@@ -67,6 +67,7 @@ normalization_methods = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_xaxes = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_scales = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_colors = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_fonts = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_xlabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -96,6 +97,7 @@ if __name__ == "__main__":
                 json_dict["plot_xaxis"] = plot_xaxes
                 json_dict["plot_scale"] = plot_scales
                 json_dict["plot_color"] = plot_colors
+                json_dict["plot_font"] = plot_fonts
                 json_dict["plot_titles"] = plot_titles
                 json_dict["plot_xlabs"] = plot_xlabs
                 json_dict["plot_ylabs"] = plot_ylabs
@@ -122,6 +124,7 @@ if __name__ == "__main__":
                 save_plot_xaxis(plot_xaxis_selections)
                 save_plot_scale(plot_scale_selections)
                 save_plot_color(plot_color_entries)
+                save_plot_font(plot_font_selections)
                 save_plot_titles(plot_title_entries)
                 save_plot_xlabs(plot_xlab_entries)
                 save_plot_ylabs(plot_ylab_entries)
@@ -163,6 +166,9 @@ if __name__ == "__main__":
             def save_plot_color(plot_color_entries):
                 for i in range(0, len(plot_color_entries)):
                     plot_colors[f"plot{i+1}"] = plot_color_entries[i].get()
+            def save_plot_font(plot_font_selections):
+                for i in range(0,len(plot_font_selections)):
+                    plot_fonts[f"plot{i+1}"] = plot_font_selections[i].get()
             def save_plot_titles(plot_title_entries):
                 for i in range(0, len(plot_title_entries)):
                     plot_titles[f"plot{i+1}"] = plot_title_entries[i].get()
@@ -238,6 +244,8 @@ if __name__ == "__main__":
                 plot_normalization_selections[i-1].set(value)
             def plot_xaxis_select(value, i):
                 plot_xaxis_selections[i-1].set(value)
+            def plot_font_select(value, i):
+                plot_font_selections[i-1].set(value)
 
             def normalization_method_listbox_on_select(event):
                 normalization_method_selections.clear()
@@ -596,6 +604,27 @@ if __name__ == "__main__":
                 plot_colors_entry = ttk.Entry(plot_colors_frm)
                 plot_colors_entry.pack(side=LEFT, after=plot_colors_label, anchor="w", padx=5)
                 plot_color_entries.append(plot_colors_entry)
+
+            # PLOT FONT OPTIONS
+            plot_font_selections = []
+            plot_font_labels = []
+            plot_font_option_menus = []
+            plot_font_options = ["Helvetica", "Computer modern"]
+            plot_font_frm = ttk.Frame(self.frame.interior)
+            plot_font_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
+
+            for i in range(1, num_plots + 1):
+                plot_font_selection = ttk.StringVar()
+                plot_font_selection.set("")
+                plot_font_selections.append(plot_font_selection)
+                plot_font_label = ttk.Label(plot_font_frm, text=f"Plot {i} font:")
+                plot_font_label.pack(side=LEFT, anchor="w", padx=5)
+                plot_font_option_menu = ttk.OptionMenu(plot_font_frm,
+                                                       plot_font_selections[i-1],
+                                                       *plot_font_options,
+                                                       command=lambda value, index = i: plot_font_select(value, index))
+                plot_font_option_menu.pack(side=LEFT, after=plot_font_label, anchor="w", padx=5)
+                plot_font_option_menus.append(plot_font_option_menu)
 
             # PLOT TITLES
             plot_title_frm = ttk.Frame(self.frame.interior)

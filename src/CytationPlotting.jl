@@ -11,6 +11,10 @@ pgfplotsx()
 
 propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
+function linux_path(path)
+	return replace(path, "C:" => "/mnt/c")
+end
+
 function dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
@@ -90,7 +94,7 @@ function dose_response(conditions, plot_conditions,
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
     title!(plt, plot_title)
-    savefig(plt, "$plots_directory/$plot_filename"*".svg")
+    savefig(plt, "$plots_directory/$plot_filename"*".pdf")
 end
 
 function well_name_to_position(well_name::String)
@@ -232,13 +236,13 @@ function heatplot(conditions, plot_conditions,
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
     title!(plt, plot_title)
-    savefig("$plots_directory/$plot_filename"*"_mean.svg")
+    savefig("$plots_directory/$plot_filename"*"_mean.pdf")
     plt = heatmap(plot_xticks, reverse(plot_yticks), block_std[:,:,1], xrotation = 45, yflip=true, color=:cool,
                   colorbar_title=clab_title, size=plot_size)
     xlabel!(plt, plot_xlabel)
     ylabel!(plt, plot_ylabel[1])
     title!(plt, plot_title)
-    savefig(plt, "$plots_directory/$plot_filename"*"_std.svg")
+    savefig(plt, "$plots_directory/$plot_filename"*"_std.pdf")
 end
 
 function twin_y(conditions, plot_conditions,
@@ -358,7 +362,7 @@ function twin_y(conditions, plot_conditions,
     xlabel!(p, plot_xlabel)
     xlabel!(p_twin, "")
     title!(p, plot_title)
-    savefig(p, "$plots_directory/$plot_filename"*".svg")
+    savefig(p, "$plots_directory/$plot_filename"*".pdf")
 end
 
 function line_plot(conditions, plot_conditions, 
@@ -458,7 +462,7 @@ function line_plot(conditions, plot_conditions,
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
-    savefig(p, "$plots_directory/$plot_filename"*".svg")
+    savefig(p, "$plots_directory/$plot_filename"*".pdf")
 end
 
 function jitter_vals(values; width=0.05)
@@ -567,14 +571,19 @@ function jitter_plot(conditions, plot_conditions,
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
-    savefig(p, "$plots_directory/$plot_filename"*".svg")
+    savefig(p, "$plots_directory/$plot_filename"*".pdf")
+end
+
+function tex_split(str::String)
+    m = match(r"^((?:[^$\s]|\$[^$]*\$)*)\s", str)
+    return m !== nothing ? m.captures[1] : str
 end
 
 function extract_groups(arr)
     groups = []
     group_dict = Dict{String, String}()
     for str in arr
-        group = split(str, " ", limit=2)[1] 
+        group = tex_split(str) 
         if occursin("\$", group)
             group = latexstring(group)
         end
@@ -669,10 +678,9 @@ function grouped_jitter_plot(conditions, plot_conditions,
         yscale = :log10
     end
     if ylims == "default"
-        p = plot()
+        p = plot(size=plot_size)
         groupedboxplot!(p, box_x, values, group=ctg, yscale=yscale, 
-                 leg=true, outliers=true,  
-                 linewidth=1.5)
+                 leg=:false, outliers=true)
     else
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -684,15 +692,14 @@ function grouped_jitter_plot(conditions, plot_conditions,
             end
         end
         ylims = Tuple(ylims)
-        p = plot()
+        p = plot(size=plot_size)
         groupedboxplot!(p, box_x, values, group=ctg, 
-                 leg=true, outliers=true,  
-                 linewidth=1.5)
+                 leg=:false, outliers=true)
     end
     xlabel!(p, plot_xlabel)
     ylabel!(p, plot_ylabel[1])
     title!(p, plot_title)
-    savefig(p, "$plots_directory/$plot_filename"*".svg")
+    savefig(p, "$plots_directory/$plot_filename"*".pdf")
 end
 
 function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
@@ -958,12 +965,14 @@ function main()
     plot_ylabels = config["plot_ylabs"] 
     plot_xlabels = config["plot_xlabs"] 
     plot_xticks = config["plot_xticks"] 
-    plot_yticks = config["plot_xticks"] 
+    plot_yticks = config["plot_yticks"] 
     plot_clabs = config["color_label"] 
     plot_size = config["plot_size"] 
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
+    #images_directories = linux_path.(images_directories)
+    #bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)

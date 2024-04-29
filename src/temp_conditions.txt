@@ -1,5 +1,1 @@
-WT +10 ug/mL
-WT untreated
-dbfQ untreated
 test
-dbfQ +10 ug/mL
