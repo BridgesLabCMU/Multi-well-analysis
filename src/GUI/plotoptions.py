@@ -613,7 +613,7 @@ if __name__ == "__main__":
             plot_font_selections = []
             plot_font_labels = []
             plot_font_option_menus = []
-            plot_font_options = ["Helvetica", "Arial", "Computer modern"]
+            plot_font_options = ["Arial", "Computer modern"]
             plot_font_frm = ttk.Frame(self.frame.interior)
             plot_font_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
@@ -711,7 +711,7 @@ if __name__ == "__main__":
             plot_size_entries = []
             for i in range(1, num_plots + 1):
                 plot_sizes_label = ttk.Label(plot_sizes_frm,
-                                             text=f"Plot {i} size:")
+                                             text=f"Plot {i} size (3,2.5 is default):")
                 plot_sizes_label.pack(side=LEFT, anchor="w", padx=5)
                 plot_sizes_entry = ttk.Entry(plot_sizes_frm)
                 plot_sizes_entry.pack(side=LEFT, after=plot_sizes_label, anchor="w", padx=5)

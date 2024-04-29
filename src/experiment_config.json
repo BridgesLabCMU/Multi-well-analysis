@@ -3,7 +3,7 @@
     "acquisition_frequency": 1,
     "images_directory": [],
     "bulk_data": [
-        "/Users/jojo/Downloads/abx_thymol_041824.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/abx_thymol_041824.csv"
     ],
     "conditions": [
         {
@@ -154,7 +154,7 @@
     },
     "plot_font": {
         "plot1": [
-            "Computer modern"
+            "Arial"
         ]
     }, 
     "plot_xaxis": {

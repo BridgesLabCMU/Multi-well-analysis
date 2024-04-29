@@ -954,8 +954,8 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    #images_directories = linux_path.(images_directories)
-    #bulk_data = linux_path.(bulk_data)
+    images_directories = linux_path.(images_directories)
+    bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)
@@ -970,10 +970,7 @@ function main()
     PythonPlot.matplotlib.rcParams["xtick.labelsize"] = 14 
     PythonPlot.matplotlib.rcParams["ytick.labelsize"] = 14
     PythonPlot.matplotlib.rcParams["legend.fontsize"] = 12    
-    if font == "Helvetica"
-        PythonPlot.matplotlib.rcParams["font.family"] = "Helvetica"
-        PythonPlot.matplotlib.rcParams["text.usetex"] = false
-    elseif font == "Arial"
+    if font == "Arial"
         PythonPlot.matplotlib.rcParams["font.family"] = "Arial"
         PythonPlot.matplotlib.rcParams["text.usetex"] = false
     elseif font == "Computer modern"
