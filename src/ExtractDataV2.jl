@@ -34,7 +34,7 @@ function determine_filename(pattern)
     elseif occursin(r"Lum", pattern)
         return "lum.csv"
     elseif occursin(r"485/20,528/20", pattern)
-        return "YFP.csv"
+        return "GFP.csv"
     elseif occursin(r"620/40,680/30", pattern)
         return "CY5.csv"
     else

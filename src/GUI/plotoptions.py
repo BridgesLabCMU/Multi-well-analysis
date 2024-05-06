@@ -405,8 +405,8 @@ if __name__ == "__main__":
             plot_dtype_listboxes = []
             plot_dtype_prev_selected =  []
             plot_dtype_selections = []
-            plot_dtype_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
-                                  "CY5_imaging", "YFP", "CY5"]
+            plot_dtype_options = ["lum", "OD", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+                                  "CY5_imaging", "GFP", "CY5"]
             plot_dtype_options_lens = [len(x) for x in plot_dtype_options]
             max_len_dtype_ind = np.argmax(plot_dtype_options_lens)
             plot_dtype_frm = ttk.Frame(self.frame.interior)
@@ -432,7 +432,7 @@ if __name__ == "__main__":
             plot_numerator_listboxes = []
             plot_numerator_prev_selected =  []
             plot_numerator_selections = []
-            plot_numerator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+            plot_numerator_options = ["lum", "OD", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
             plot_numerator_options_lens = [len(x) for x in plot_numerator_options]
             max_len_numerator_ind = np.argmax(plot_numerator_options_lens)
@@ -459,7 +459,7 @@ if __name__ == "__main__":
             plot_denominator_listboxes = []
             plot_denominator_prev_selected =  []
             plot_denominator_selections = []
-            plot_denominator_options = ["lum", "OD", "RLU", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
+            plot_denominator_options = ["lum", "OD", "BF_imaging", "CFP_imaging", "YFP_imaging", "texas_red_imaging",
                                   "CY5_imaging", "YFP", "CY5"]
             plot_denominator_options_lens = [len(x) for x in plot_denominator_options]
             max_len_denominator_ind = np.argmax(plot_denominator_options_lens)

@@ -704,7 +704,7 @@ function grouped_jitter_plot(conditions, plot_conditions,
 end
 
 function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
-                    YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
+                    YFP_imaging, texas_red_imaging, CY5_imaging, GFP, CY5)
     if plot_dtype == "lum"
         data = lum
     elseif plot_dtype == "OD"
@@ -719,8 +719,8 @@ function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging,
         data = texas_red_imaging
     elseif plot_dtype == "CY5_imaging"
         data = CY5_imaging
-    elseif plot_dtype == "YFP"
-        data = YFP
+    elseif plot_dtype == "GFP"
+        data = GFP
     elseif plot_dtype == "CY5"
         data = CY5
     else
@@ -737,12 +737,12 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_yticks, plot_xticks, 
                       plot_clab, plot_size, plot_filename, 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
-                      texas_red_imaging, CY5_imaging, YFP, CY5, 
+                      texas_red_imaging, CY5_imaging, GFP, CY5, 
                       default_color, dose_concs, plots_directory, ylims, yscale)
     PythonPlot.matplotlib.rcParams["figure.figsize"] = plot_size 
     if length(plot_dtypes) == 1
         data = select_data(plot_dtypes[1], lum, OD, BF_imaging, CFP_imaging, 
-                           YFP_imaging, texas_red_imaging, CY5_imaging, YFP, CY5)
+                           YFP_imaging, texas_red_imaging, CY5_imaging, GFP, CY5)
         nums = nothing
         denoms = nothing
     elseif length(plot_dtypes) == 2 && plot_type != "two-axis" 
@@ -753,10 +753,10 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
         else
             numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                  CY5_imaging, YFP, CY5)
+                                  CY5_imaging, GFP, CY5)
             denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                  CY5_imaging, YFP, CY5)
+                                  CY5_imaging, GFP, CY5)
             data = []
             quotient_df = DataFrame()
             for j in 1:length(numerator)
@@ -776,7 +776,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
         for i in 1:2
             data[i] = select_data(plot_dtypes[i], lum, OD, BF_imaging, 
                                   CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                  CY5_imaging, YFP, CY5)
+                                  CY5_imaging, GFP, CY5)
             push!(nums, nothing)
             push!(denoms, nothing)
         end
@@ -793,10 +793,10 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             if in(plot_dtype1, plot_numerators) || in(plot_dtype1, plot_denominators)  
                 numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5)
+                                      CY5_imaging, GFP, CY5)
                 denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5)
+                                      CY5_imaging, GFP, CY5)
                 quotient_df = DataFrame()
                 quotient_dfs = []
                 for j in 1:length(numerator)
@@ -813,16 +813,16 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                     plot_dtype = filter(x -> x != plot_numerators[1] && x != plot_denominators[1], plot_dtypes)[1]
                     data[2] = select_data(plot_dtype, lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5) 
+                                      CY5_imaging, GFP, CY5) 
                     push!(nums, nothing)
                     push!(denoms, nothing)
                 else
                     numerator = select_data(plot_numerators[2], lum, OD, BF_imaging, 
                                           CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                          CY5_imaging, YFP, CY5)
+                                          CY5_imaging, GFP, CY5)
                     denominator = select_data(plot_denominators[2], lum, OD, BF_imaging, 
                                           CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                          CY5_imaging, YFP, CY5)
+                                          CY5_imaging, GFP, CY5)
                     quotient_df = DataFrame()
                     for j in 1:length(numerator)
                         for col_name in names(numerator[j])
@@ -837,15 +837,15 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
             else
                 data[1] = select_data(plot_dtype1, lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5)
+                                      CY5_imaging, GFP, CY5)
                 push!(nums, nothing)
                 push!(denoms, nothing)
                 numerator = select_data(plot_numerators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5)
+                                      CY5_imaging, GFP, CY5)
                 denominator = select_data(plot_denominators[1], lum, OD, BF_imaging, 
                                       CFP_imaging, YFP_imaging, texas_red_imaging, 
-                                      CY5_imaging, YFP, CY5)
+                                      CY5_imaging, GFP, CY5)
                 quotient_df = DataFrame()
                 for col_name in names(numerator[1])
                     quotient_df[!, col_name] = numerator[1][!, col_name] ./ denominator[1][!, col_name]
@@ -994,7 +994,7 @@ function main()
     YFP_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     texas_red_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     CY5_imaging = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
-    YFP = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
+    GFP = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     CY5 = Array{Union{Nothing, DataFrame}, 1}(undef, nplates)
     for i in 1:nplates
         if i > length(images_directories)
@@ -1036,10 +1036,10 @@ function main()
         else  
             CY5_imaging[i] = nothing
         end
-        if "YFP" in data_types && isfile("$data_directory/YFP.csv")
-            YFP[i] = CSV.read("$data_directory/YFP.csv", DataFrame)
+        if "GFP" in data_types && isfile("$data_directory/GFP.csv")
+            GFP[i] = CSV.read("$data_directory/GFP.csv", DataFrame)
         else  
-            YFP[i] = nothing
+            GFP[i] = nothing
         end
         if "CY5" in data_types && isfile("$data_directory/CY5.csv")
             CY5[i] = CSV.read("$data_directory/CY5.csv", DataFrame)
@@ -1058,7 +1058,7 @@ function main()
                       plot_yticks[plot_num], plot_xticks[plot_num], 
                       plot_clabs[plot_num], plot_size[plot_num], plot_filenames[plot_num], 
                       lum, OD, BF_imaging, CFP_imaging, YFP_imaging, 
-                      texas_red_imaging, CY5_imaging, YFP, CY5, 
+                      texas_red_imaging, CY5_imaging, GFP, CY5, 
                       color[plot_num], dose_concs[plot_num], plots_directory, ylims[plot_num], yscale[plot_num])
     end
 end
