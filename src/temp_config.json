@@ -1,0 +1,35 @@
+{
+    "notes": "these are my notes",
+    "acquisition_frequency": 1,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/231207_BF_10x_Time_Biospa_SK2_Drawer6 07-Dec-2023 15-03-24/231207_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/SandhyaTestData.csv"
+    ],
+    "conditions": [
+        {
+            "sample1": [
+                "A1",
+                "A2",
+                "A3"
+            ],
+            "sample2": [
+                "B1",
+                "B2",
+                "B3"
+            ]
+        },
+        {
+            "sample1": [
+                "A4",
+                "A5",
+                "A6"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "image_analysis": "False",
+    "experiment_directory": "B:/Darin"
+}

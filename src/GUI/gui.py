@@ -13,7 +13,9 @@ IMAGES_DIR = []
 BULK_DIR = []
 json_dict = {}
 conditions_list = []
+strains_list = []
 condition_names = [""]
+strain_names = [""]
 all_conditions = []
 
 
@@ -64,8 +66,10 @@ def read_sample_name():
     sample_prompt_text.config(text = f"Enter cells for sample: {sample_name}")
     enter_cells.configure(state="active")
     plate_count_option_menu.configure(state="active")
-    # for i in range(0, num_plots):
-        # plot_normalization_option_menus[i]['menu'].add_command(label=sample_name, command=ttk._setit(plot_normalization_selections[i], sample_name))
+
+def read_strain_name():
+    strain_names.clear()
+    strain_name = strain_name_entry.get()
 
 # save_sample_cells() saves the current list of sample_cells to
 # the conditions_list dictionary, then clears the selected cells and the table
@@ -73,10 +77,14 @@ def save_sample_cells():
     nplates = plate_count_var.get()
     if len(conditions_list) < nplates:
         conditions_list.append({})
+        strains_list.append({})
     curr_plate = plate_cells_var.get()
     sample_name = sample_name_entry.get()
+    strain_name = strain_name_entry.get()
     conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
+    strains_list[curr_plate-1][strain_name] = sorted(list(sample_cells))
     print(conditions_list)
+    print(strains_list)
     if curr_plate < nplates:
         plate_cells_var.set(plate_cells_var.get() + 1)
     else:
@@ -103,6 +111,7 @@ def create_new_window():
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
     json_dict["conditions"] = conditions_list
+    json_dict["strains"] = strains_list
     if good_data_var.get():
         good_data_directory = "B:/Good imaging data"
     else:
@@ -123,7 +132,6 @@ def create_new_window():
         json.dump(json_dict, file, indent = 4)
 
     all_conditions = list(set(key for d in conditions_list for key in d))
-    print(all_conditions)
     with open("temp_conditions.txt", "w") as fw:
         for cond in all_conditions:
             fw.write(cond)
@@ -215,32 +223,35 @@ if __name__ == "__main__":
     sample_name_label.pack(side=TOP, anchor = "w", padx = 10)
     sample_name_entry = ttk.Entry(root, width = 35)
     sample_name_entry.pack(side=TOP, anchor = "w", padx = 10)
-
     enter_sample_button = ttk.Button(root, text="Enter", command=read_sample_name)
     enter_sample_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
 
+    # BRIDGES LAB STRAINS NAME
+    strain_name_label = ttk.Label(root, text = "Lab Strain Name (with supplements)")
+    strain_name_label.pack(side=TOP, anchor = "w", padx = 10)
+    strain_name_entry = ttk.Entry(root, width = 35)
+    strain_name_entry.pack(side=TOP, anchor = "w", padx = 10)
+    enter_strain_button = ttk.Button(root, text="Enter", command=read_strain_name)
+    enter_strain_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
+
+    # ENTER CELLS
     sample_prompt_text = ttk.Label(root, text = f"Enter cells for sample:")
     sample_prompt_text.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
-
-
     plate_cells_frame = ttk.Frame(root)
     plate_cells_frame.pack(side=TOP, anchor = "w", padx=5)
-
     plate_cells_label = ttk.Label(plate_cells_frame, text = f"Enter cells for plate: ")
     plate_cells_label.pack(side=LEFT, anchor = "w", padx = 10, pady = 3)
-
     plate_cells_var = ttk.IntVar()
     plate_cells_var.set(1)
     plate_cells_entry = ttk.Entry(plate_cells_frame, textvariable=plate_cells_var)
     plate_cells_entry.pack(side=LEFT,anchor="w", padx=10,pady=5)
 
+
     # TABLE
     table = Table(root, rows=8, columns=12)
     table.pack(expand=True, fill = "both", side=TOP, anchor="w",padx = 10)
-
     enter_cells_frame = ttk.Frame(root)
     enter_cells_frame.pack(side=TOP, after=table, anchor = "w", padx=5)
-
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
     enter_cells.pack(side=LEFT, anchor = "w",pady=5)
 
