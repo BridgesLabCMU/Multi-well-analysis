@@ -126,8 +126,13 @@ function heatplot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, 
+                      plot_filename, default_color, data, nums, denoms, 
                       plot_clab, plots_directory)
+    
+    default_color = default_color[1] # In this case, it is either "" or a colorscheme
+    if default_color == ""
+        default_color = "cool"
+    end
 
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
     if nums != nothing
@@ -236,7 +241,7 @@ function heatplot(conditions, plot_conditions,
         plot_title = latexstring(plot_title)
     end
     fig, ax = pyplot.subplots()
-	im = ax.imshow(block_mean[:,:,1], cmap="cool", origin="upper", aspect="auto")
+	im = ax.imshow(block_mean[:,:,1], cmap=default_color, origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
 	ax.set_xticklabels(plot_xticks, rotation=45)
 	ax.set_yticks(0:length(plot_yticks)-1)
@@ -249,7 +254,7 @@ function heatplot(conditions, plot_conditions,
 	pyplot.tight_layout()
 	savefig("$plot_filename" * "_mean.svg")
 	fig, ax = pyplot.subplots()
-	im = ax.imshow(block_std[:,:,1], cmap="cool", origin="upper", aspect="auto")
+	im = ax.imshow(block_std[:,:,1], cmap=default_color, origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
 	ax.set_xticklabels(plot_xticks, rotation=45)
 	ax.set_yticks(0:length(plot_yticks)-1)
@@ -267,9 +272,13 @@ function twin_y(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, 
+                      plot_filename, default_color, data, nums, denoms, 
                       xaxis_data, plot_xaxis, plots_directory, yscale)
-    colors = ["#de8466", "#7dc6e3"]
+    if default_color[1] == ""
+        colors = ["#de8466", "#7dc6e3"]
+    else
+        colors = default_color
+    end
     fig, ax1 = pyplot.subplots()
     ax2 = ax1.twinx()
     
@@ -383,8 +392,19 @@ function line_plot(conditions, plot_conditions,
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, 
+                      plot_filename, default_color, data, nums, denoms, 
                       xaxis_data, plot_xaxis, plots_directory, yscale)
+    
+    fig, ax = pyplot.subplots()
+    
+    if length(default_color) == 1
+        default_color = default_color[1] # In this case, it is either "" or a colorscheme or a color
+        if default_color = ""
+            ax.set_prop_cycle(color=pyplot.get_cmap("Set2").colors)
+        elseif !("#" in default_color) 
+            ax.set_prop_cycle(color=default_color)
+        end
+    end
 
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
@@ -395,8 +415,6 @@ function line_plot(conditions, plot_conditions,
     if occursin("\$", plot_title)
         plot_title = latexstring(plot_title)
     end
-    fig, ax = pyplot.subplots()
-    ax.set_prop_cycle(color=pyplot.get_cmap("Set2").colors)
 
     if plot_normalization != ""
         condition_data = DataFrame() 
@@ -412,7 +430,7 @@ function line_plot(conditions, plot_conditions,
         max_std = std(norm_means)
     end
 
-    for condition in plot_conditions
+    for (k, condition) in enumerate(plot_conditions)
         if plot_xaxis == "OD"
             OD = DataFrame()
         end
@@ -468,8 +486,16 @@ function line_plot(conditions, plot_conditions,
             condition = latexstring(condition)
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
-        ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", label=condition)
-        ax.fill_between(xaxis, means .- stds, means .+ stds, alpha=0.3)
+        if hasproperty(default_color, :length)
+            ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=default_color[k], label=condition)
+            ax.fill_between(xaxis, means .- stds, means .+ stds, color=default_color[k], alpha=0.3)
+        elseif "#" in default_color
+            ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=default_color, label=condition)
+            ax.fill_between(xaxis, means .- stds, means .+ stds, color=default_color, alpha=0.3)
+        else
+            ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", label=condition)
+            ax.fill_between(xaxis, means .- stds, means .+ stds, alpha=0.3)
+        end
     end
     ax.set_ylabel(plot_ylabel[1])
     ax.set_xlabel(plot_xlabel)
@@ -488,6 +514,13 @@ function jitter_plot(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plots_directory, ylims, yscale)
+    if length(default_color) == 1
+        default_color = default_color[1] # In this case, it is either "" or a colorscheme or a color
+        if default_color = ""
+            default_color = "#589fc4"
+        end
+    end
+
     data = [combine(df, names(df) .=> maximum .=> names(df)) for df in data]
 
     if plot_normalization != ""
@@ -541,8 +574,19 @@ function jitter_plot(conditions, plot_conditions,
     fig, ax1 = pyplot.subplots()
 
     if ylims == "default"
-        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
-        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        if hasproperty(default_color, :length)
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
+        elseif "#" in default_color
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        elseif default_color == ""
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        else
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
+        end
     else
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -555,8 +599,19 @@ function jitter_plot(conditions, plot_conditions,
         end
         ylims = Tuple(ylims)
         ylims = Tuple(filter(isfinite, ylims))
-        sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
-        sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        if hasproperty(default_color, :length)
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
+        elseif "#" in default_color
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        elseif default_color == ""
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
+        else
+            sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
+        end
         ax1.set_ylim(ylims)
     end
 
@@ -607,6 +662,10 @@ function grouped_jitter_plot(conditions, plot_conditions,
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
                       plot_filename, data, default_color, plots_directory, ylims, yscale)
+    
+    if length(default_color) == 1
+        default_color = default_color[1] # In this case, it is either "" or a colorscheme
+    end
 
     if plot_xticks == []
         error("Can't plot a grouped jitter plot without specifying x-ticks.")
@@ -662,8 +721,6 @@ function grouped_jitter_plot(conditions, plot_conditions,
 	unique_vals = unique(box_x)
 	val_to_str = Dict(zip(unique_vals, plot_xticks))
     box_x = [val_to_str[val] for val in box_x]
-	#ctg = CategoricalArray(groups_plot)
-	#levels!(ctg, unique(groups_plot))
 
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
@@ -675,8 +732,16 @@ function grouped_jitter_plot(conditions, plot_conditions,
         plot_title = latexstring(plot_title)
     end
     fig, ax1 = pyplot.subplots()
-    sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
-    sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", linewidth=1, legend=nothing)
+    if hasproperty(default_color, :length)
+        sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette=default_color, linewidth=1, legend=nothing)
+    elseif default_color == ""
+        sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", linewidth=1, legend=nothing)
+    else
+        sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette=default_color, linewidth=1, legend=nothing)
+    end
     if ylims != "default"
         for (k, e) in enumerate(ylims)
             if e == "nothing"
@@ -883,14 +948,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, t, plot_xaxis,
+                          plot_filename, default_color, data, nums, denoms, t, plot_xaxis,
                           plots_directory, yscale[1])
         elseif plot_xaxis == "OD"
             line_plot(conditions, plot_conditions, 
                           plot_normalization, normalization_method[1], plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, OD, plot_xaxis,
+                          plot_filename, default_color, data, nums, denoms, OD, plot_xaxis,
                           plots_directory, yscale[1])
         else
             error("Can only plot time or OD on the x-axis of a lineplot.")
@@ -902,14 +967,14 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, t, plot_xaxis,
+                          plot_filename, default_color, data, nums, denoms, t, plot_xaxis,
                           plots_directory, yscale)
         elseif plot_xaxis == "OD"
             twin_y(conditions, plot_conditions, 
                           plot_normalization, normalization_method, plot_title, 
                           plot_ylabel, plot_xlabel, 
                           plot_yticks, plot_xticks, 
-                          plot_filename, data, nums, denoms, OD, plot_xaxis,
+                          plot_filename, default_color, data, nums, denoms, OD, plot_xaxis,
                           plots_directory, yscale)
         else
             error("Can only plot time or OD on the x-axis of a two-axis plot.")
@@ -919,7 +984,7 @@ function generate_plot(conditions, acquisition_frequency, plot_num, plot_type,
                       plot_normalization, normalization_method[1], plot_title, 
                       plot_ylabel, plot_xlabel, 
                       plot_yticks, plot_xticks, 
-                      plot_filename, data, nums, denoms, plot_clab,
+                      plot_filename, default_color, data, nums, denoms, plot_clab,
                       plots_directory)
     elseif plot_type == "dose-response"
         dose_response(conditions, plot_conditions, 

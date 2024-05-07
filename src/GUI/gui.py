@@ -97,8 +97,15 @@ def disable_plate_count():
     plate_count_option_menu.configure(state="disabled")
     plate_cells_var.set(1)
 
+def disable_media():
+    media_option_menu.configure(state="disabled")
+    media_var.set(1)
+
 def plate_count_select(value):
     plate_count_var.set(value)
+
+def media_select(value):
+    media_var.set(value)
 
 def save_plot_number():
     plot_number = plot_number_entry.get("1.0", "end-1c")
@@ -107,6 +114,7 @@ def save_plot_number():
 
 def create_new_window():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
+    json_dict["media"] = media_var.get()
     json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
@@ -153,6 +161,20 @@ if __name__ == "__main__":
 
     notes_entry = Text(root, width = 35, height = 4)
     notes_entry.pack(side=TOP, anchor = "w", padx = 10)
+
+    # EXPERIMENT METADATA
+    media_options = ["LB", "LB+Glucose+CaCl2" "M9+Glucose+CA", "M9+Glucose+CA+2%Na",
+                     "M9+Galactose+CA", "M9+Glycerol+CA", "M63+Glucose+CA"]
+    media_var = ttk.IntVar()
+    media_var.set(media_options[0])
+    media_frame = ttk.Frame(root)
+    media_frame.pack(side=TOP, anchor = "w", padx=5)
+    media_label = ttk.Label(media_frame, text = "Enter media used for this experiment:")
+    media_label.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
+    media_option_menu = ttk.OptionMenu(media_frame, media_var, *media_options, command = media_select)
+    media_option_menu.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
+    media_enter = ttk.Button(media_frame, text="Enter", command = disable_media)
+    media_enter.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
 
     # PLOT NUMBERS
     plot_number_frm = ttk.Frame(root)

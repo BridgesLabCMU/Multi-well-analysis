@@ -66,7 +66,7 @@ plot_normalizations = {f"plot{i}": "" for i in range(1, num_plots+1)}
 normalization_methods = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_xaxes = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_scales = {f"plot{i}": [] for i in range(1, num_plots+1)}
-plot_colors = {f"plot{i}": "" for i in range(1, num_plots+1)}
+plot_colors = {f"plot{i}": [] for i in range(1, num_plots+1)}
 plot_fonts = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_titles = {f"plot{i}": "" for i in range(1, num_plots+1)}
 plot_ylabs = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -166,10 +166,10 @@ if __name__ == "__main__":
             def save_plot_color(plot_color_entries):
                 for i in range(0, len(plot_color_entries)):
                     plot_color_i = plot_color_entries[i].get()
-                    if plot_color_i == "":
-                        plot_colors[f"plot{i+1}"] = "#4ba2bf"
+                    if "," in plot_color_i:
+                        plot_colors[f"plot{i+1}"] = plot_color_i.split(",")
                     else:
-                        plot_colors[f"plot{i+1}"] = plot_color_i
+                        plot_colors[f"plot{i+1}"] = [plot_color_i]
             def save_plot_font(plot_font_selections):
                 for i in range(0,len(plot_font_selections)):
                     plot_fonts[f"plot{i+1}"] = plot_font_selections[i].get()
@@ -603,7 +603,7 @@ if __name__ == "__main__":
             plot_color_entries = []
             for i in range(1, num_plots + 1):
                 plot_colors_label = ttk.Label(plot_colors_frm,
-                                             text=f"Plot {i} default color (hex):")
+                                             text=f"Plot {i} default color (hex, list of hexes, or colorscheme):")
                 plot_colors_label.pack(side=LEFT, anchor="w", padx=5)
                 plot_colors_entry = ttk.Entry(plot_colors_frm)
                 plot_colors_entry.pack(side=LEFT, after=plot_colors_label, anchor="w", padx=5)
