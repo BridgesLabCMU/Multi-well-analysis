@@ -99,7 +99,6 @@ def disable_plate_count():
 
 def disable_media():
     media_option_menu.configure(state="disabled")
-    media_var.set(1)
 
 def plate_count_select(value):
     plate_count_var.set(value)
