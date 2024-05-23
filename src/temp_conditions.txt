@@ -1,1 +1,7 @@
-test
+$\Delta waaC dbfR^{\mathrm{D51V}}$
+$\Delta waaL dbfR^{\mathrm{D51V}}$
+$\Delta wavA dbfR^{\mathrm{D51V}}$
+$\Delta wavA$
+$\Delta waaC$
+WT
+$\Delta waaL$

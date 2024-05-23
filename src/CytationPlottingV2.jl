@@ -14,7 +14,13 @@ sns = pyimport("seaborn")
 propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
 function linux_path(path)
-	return replace(path, "C:" => "/mnt/c")
+	if occursin("C:", path)
+		return replace(path, "C:" => "/mnt/c")
+	elseif occursin("//bridgeslab.bio.cmu.edu/data/", path)
+		return replace(path, "//bridgeslab.bio.cmu.edu/data" => "/mnt/b")
+	elseif occursin("B:", path)
+		return replace(path, "B:" => "/mnt/b")
+	end
 end
 
 function dose_response(conditions, plot_conditions, 
@@ -243,7 +249,7 @@ function heatplot(conditions, plot_conditions,
     fig, ax = pyplot.subplots()
 	im = ax.imshow(block_mean[:,:,1], cmap=default_color, origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
-	ax.set_xticklabels(plot_xticks, rotation=45)
+	ax.set_xticklabels(plot_xticks, rotation=45, ha="right")
 	ax.set_yticks(0:length(plot_yticks)-1)
 	ax.set_yticklabels(reverse(plot_yticks))
 	ax.set_xlabel(plot_xlabel)
@@ -252,11 +258,11 @@ function heatplot(conditions, plot_conditions,
 	cbar = fig.colorbar(im)
 	cbar.ax.set_ylabel(clab_title)
 	pyplot.tight_layout()
-	savefig("$plot_filename" * "_mean.svg")
+	savefig(plots_directory*"/"*"$plot_filename" * "_mean.svg")
 	fig, ax = pyplot.subplots()
 	im = ax.imshow(block_std[:,:,1], cmap=default_color, origin="upper", aspect="auto")
 	ax.set_xticks(0:length(plot_xticks)-1)
-	ax.set_xticklabels(plot_xticks, rotation=45)
+	ax.set_xticklabels(plot_xticks, rotation=45, ha="right")
 	ax.set_yticks(0:length(plot_yticks)-1)
 	ax.set_yticklabels(reverse(plot_yticks))
 	ax.set_xlabel(plot_xlabel)
@@ -265,7 +271,7 @@ function heatplot(conditions, plot_conditions,
 	cbar = fig.colorbar(im)
 	cbar.ax.set_ylabel(clab_title)
 	pyplot.tight_layout()
-	savefig("$plot_filename.svg")
+	savefig(plots_directory*"/"*"$plot_filename" * "_std.svg")
 end
 
 function twin_y(conditions, plot_conditions,
@@ -399,9 +405,9 @@ function line_plot(conditions, plot_conditions,
     
     if length(default_color) == 1
         default_color = default_color[1] # In this case, it is either "" or a colorscheme or a color
-        if default_color = ""
+        if default_color == ""
             ax.set_prop_cycle(color=pyplot.get_cmap("Set2").colors)
-        elseif !("#" in default_color) 
+        elseif !(occursin("#", default_color))
             ax.set_prop_cycle(color=default_color)
         end
     end
@@ -486,10 +492,10 @@ function line_plot(conditions, plot_conditions,
             condition = latexstring(condition)
         end
         stds .= ifelse.(isnan.(stds), 0, stds)
-        if hasproperty(default_color, :length)
+        if isa(default_color, Array)
             ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=default_color[k], label=condition)
             ax.fill_between(xaxis, means .- stds, means .+ stds, color=default_color[k], alpha=0.3)
-        elseif "#" in default_color
+        elseif occursin("#", default_color)
             ax.plot(xaxis, means, marker="o", markeredgewidth=1, markeredgecolor="black", color=default_color, label=condition)
             ax.fill_between(xaxis, means .- stds, means .+ stds, color=default_color, alpha=0.3)
         else
@@ -516,7 +522,7 @@ function jitter_plot(conditions, plot_conditions,
                       plot_filename, data, default_color, plots_directory, ylims, yscale)
     if length(default_color) == 1
         default_color = default_color[1] # In this case, it is either "" or a colorscheme or a color
-        if default_color = ""
+        if default_color == ""
             default_color = "#589fc4"
         end
     end
@@ -574,10 +580,10 @@ function jitter_plot(conditions, plot_conditions,
     fig, ax1 = pyplot.subplots()
 
     if ylims == "default"
-        if hasproperty(default_color, :length)
+        if isa(default_color, Array)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
             sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
-        elseif "#" in default_color
+        elseif occursin("#", default_color)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
             sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
         elseif default_color == ""
@@ -599,10 +605,10 @@ function jitter_plot(conditions, plot_conditions,
         end
         ylims = Tuple(ylims)
         ylims = Tuple(filter(isfinite, ylims))
-        if hasproperty(default_color, :length)
+        if isa(default_color, Array)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
             sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=true, linewidth=1, alpha=0.8)
-        elseif "#" in default_color
+        elseif occursin("#", default_color)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
             sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=true, linewidth=1, alpha=0.8)
         elseif default_color == ""
@@ -732,7 +738,7 @@ function grouped_jitter_plot(conditions, plot_conditions,
         plot_title = latexstring(plot_title)
     end
     fig, ax1 = pyplot.subplots()
-    if hasproperty(default_color, :length)
+    if isa(default_color, Array)
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
         sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette=default_color, linewidth=1, legend=nothing)
     elseif default_color == ""
