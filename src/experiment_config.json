@@ -115,5 +115,107 @@
     "dust_correction": "True",
     "good_data_directory": "B:/Good imaging data",
     "image_analysis": "False",
-    "experiment_directory": "B:/Emmy/Data"
+    "experiment_directory": "B:/Emmy/Data",
+    "plot_types": {
+        "plot1": "grouped jitter"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "BF_imaging"
+        ]
+    },
+    "plot_numerators": {
+        "plot1": []
+    },
+    "plot_denominators": {
+        "plot1": []
+    },
+    "plot_conditions": {
+        "plot1": [
+            "WT Untreated",
+            "WT +PMB",
+            "WT +Amp",
+            "WT +Thy",
+            "WT +Rif",
+            "$dbfR^{\\mathrm{D51V}}$ Untreated",
+            "$dbfR^{\\mathrm{D51V}}$ +PMB",
+            "$dbfR^{\\mathrm{D51V}}$ +Amp",
+            "$dbfR^{\\mathrm{D51V}}$ +Thy",
+            "$dbfR^{\\mathrm{D51V}}$ +Rif"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "WT Untreated"
+    },
+    "normalization_method": {
+        "plot1": [
+            "fold-change"
+        ]
+    },
+    "plot_xaxis": {
+        "plot1": "default"
+    },
+    "plot_scale": {
+        "plot1": [
+            "linear"
+        ]
+    },
+    "plot_color": {
+        "plot1": [
+            "#145ff5",
+            "#cc1f2d"
+        ]
+    },
+    "plot_font": {
+        "plot1": "Arial"
+    },
+    "plot_titles": {
+        "plot1": ""
+    },
+    "plot_xlabs": {
+        "plot1": ""
+    },
+    "plot_ylabs": {
+        "plot1": [
+            "Biofilm Biomass (a.u.)"
+        ]
+    },
+    "plot_xticks": {
+        "plot1": [
+            "Untreated",
+            "+PMB",
+            "+Amp",
+            "+Thy",
+            "+Rif"
+        ]
+    },
+    "plot_yticks": {
+        "plot1": [
+            ""
+        ]
+    },
+    "color_label": {
+        "plot1": ""
+    },
+    "ylims": {
+        "plot1": [0,"nothing"]
+    },
+    "plot_size": {
+        "plot1": [
+            3,
+            2.5
+        ]
+    },
+    "dose_concs": {
+        "plot1": []
+    },
+    "plot_filenames": {
+        "plot1": "Peak biofilm biomass_052224"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
 }

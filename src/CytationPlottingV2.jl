@@ -752,14 +752,13 @@ function grouped_jitter_plot(conditions, plot_conditions,
         for (k, e) in enumerate(ylims)
             if e == "nothing"
                 if k == 1
-                    ylims[k] = -Inf
+                    ylims[k] = nothing 
                 else
-                    ylims[k] = Inf
+                    ylims[k] = nothing 
                 end
             end
         end
         ylims = Tuple(ylims)
-        ylims = Tuple(filter(isfinite, ylims))
         ax1.set_ylim(ylims)
     end
 	

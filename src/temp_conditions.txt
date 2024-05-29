@@ -1,11 +1,10 @@
-WT + Amp 5ug/ml
-$dbfR^{\mathrm{D51V}}$ + Amp 5ug/ml
-$dbfR^{\mathrm{D51V}}$ + PMB 100ug/ml
-WT-Untreated
-WT + Rif 0.1ug/ml
-random
-$dbfR^{\mathrm{D51V}}$-Untreated
-WT + Thy 20ug/ml
-$dbfR^{\mathrm{D51V}}$ + Rif 0.1ug/ml
-WT + PMB 100ug/ml
-$dbfR^{\mathrm{D51V}}$ + Thy 20ug/ml
+$dbfR^{\mathrm{D51V}}$ Untreated
+WT +Amp
+WT +Rif
+$dbfR^{\mathrm{D51V}}$ +PMB
+$dbfR^{\mathrm{D51V}}$ +Amp
+WT Untreated
+WT +Thy
+WT +PMB
+$dbfR^{\mathrm{D51V}}$ +Rif
+$dbfR^{\mathrm{D51V}}$ +Thy
