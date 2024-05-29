@@ -162,7 +162,7 @@ if __name__ == "__main__":
     notes_entry.pack(side=TOP, anchor = "w", padx = 10)
 
     # EXPERIMENT METADATA
-    media_options = ["LB", "LB+Glucose+CaCl2" "M9+Glucose+CA", "M9+Glucose+CA+2%Na",
+    media_options = ["LB", "LB+Glucose+CaCl2", "M9+Glucose+CA", "M9+Glucose+CA+2%Na",
                      "M9+Galactose+CA", "M9+Glycerol+CA", "M63+Glucose+CA"]
     media_var = ttk.StringVar()
     media_var.set(media_options[0])
