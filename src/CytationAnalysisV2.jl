@@ -179,7 +179,7 @@ function main()
         mkdir("$dir/results_data")
         BF_output_file = "$dir/results_data/BF_imaging.csv"
         num_wells = sum(length(v) for v in values(conditions))
-        files = [f for f in readdir(dir) if occursin(r"\.tif$", f) && occursin("Bright Field", f)]
+		files = [f for f in readdir(dir) if occursin(r"\.tif$", f) && occursin("Bright Field", f) && any(occursin(well*"_", f) for well in wells)]
         ntimepoints = div(length(files), num_wells)
         file1 = files[1]
         test_image = load("$dir/$file1"; lazyio=true)

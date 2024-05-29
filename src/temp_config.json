@@ -1,88 +1,182 @@
 {
-    "notes": "BF_LPS biosynthesis mutant_all\n",
+    "notes": "Biofilm Biomass \nWT vs dbfR(D51V)\nUntreated, PMB_100, Amp_5, Thy_20, Rif_0.1 (ug/ml)",
     "media": "LB",
     "acquisition_frequency": 1,
     "images_directory": [
-        "//bridgeslab.bio.cmu.edu/data/Emmy/Cytation/LPS biosynthesis mutants/022724/240227_BF_10x_Time_Biospa_Emmy_022024_Drawer2 27-Feb-2024 11-00-42/240227_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240522_Emmy_10X_bf_lux_biospa_2_Drawer3 22-May-2024 11-25-29/240522_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "B:/Emmy/Cytation/LPS biosynthesis mutants/022724/BF_LPS biosynthesis mutant_022724.csv"
+        "B:/Emmy/Cytation/PvpsL-lux/052224/PvpsL-lux_052224.csv"
     ],
     "conditions": [
         {
-            "WT": [
+            "WT-Untreated": [
                 "A1",
-                "B1",
-                "C1"
-            ],
-            "$\\Delta wavA$": [
                 "A2",
-                "B2",
-                "C2"
-            ],
-            "$\\Delta wavA dbfR^{\\mathrm{D51V}}$": [
                 "A3",
-                "B3",
-                "C3"
-            ],
-            "$\\Delta waaC$": [
+                "A4",
                 "A5",
-                "B5",
-                "C5"
+                "A6"
             ],
-            "$\\Delta waaC dbfR^{\\mathrm{D51V}}$": [
-                "A6",
-                "B6",
-                "C6"
-            ],
-            "$\\Delta waaL$": [
+            "$dbfR^{\\mathrm{D51V}}$-Untreated": [
+                "A10",
+                "A11",
+                "A12",
+                "A7",
                 "A8",
-                "B8",
-                "C8"
+                "A9"
             ],
-            "$\\Delta waaL dbfR^{\\mathrm{D51V}}$": [
-                "A9",
+            "WT + PMB 100ug/ml": [
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "D5",
+                "D6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + PMB 100ug/ml": [
+                "D10",
+                "D11",
+                "D12",
+                "D7",
+                "D8",
+                "D9"
+            ],
+            "WT + Amp 5ug/ml": [
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Amp 5ug/ml": [
+                "E10",
+                "E11",
+                "E12",
+                "E7",
+                "E8",
+                "E9"
+            ],
+            "WT + Thy 20ug/ml": [
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Thy 20ug/ml": [
+                "F10",
+                "F11",
+                "F12",
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "WT + Rif 0.1ug/ml": [
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Rif 0.1ug/ml": [
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
+            ],
+            "random": [
+                "B1",
+                "B10",
+                "B11",
+                "B12",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
+                "B7",
+                "B8",
                 "B9",
-                "C9"
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C2",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
+                "C7",
+                "C8",
+                "C9",
+                "H1",
+                "H10",
+                "H11",
+                "H12",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6",
+                "H7",
+                "H8",
+                "H9"
             ]
         }
     ],
     "strains": [
         {
-            "Vc707": [
-                "A1",
+            "Vc801": [
                 "B1",
-                "C1"
-            ],
-            "Vc2039": [
-                "A2",
+                "B10",
+                "B11",
+                "B12",
                 "B2",
-                "C2"
-            ],
-            "Vc2051": [
-                "A3",
                 "B3",
-                "C3"
-            ],
-            "Vc2088": [
-                "A5",
+                "B4",
                 "B5",
-                "C5"
-            ],
-            "Vc2097": [
-                "A6",
                 "B6",
-                "C6"
-            ],
-            "Vc2043": [
-                "A8",
+                "B7",
                 "B8",
-                "C8"
-            ],
-            "Vc2101": [
-                "A9",
                 "B9",
-                "C9"
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C2",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
+                "C7",
+                "C8",
+                "C9",
+                "H1",
+                "H10",
+                "H11",
+                "H12",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6",
+                "H7",
+                "H8",
+                "H9"
+            ],
+            "Vc2164": [
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
             ]
         }
     ],

@@ -1,0 +1,419 @@
+{
+    "notes": "Biofilm Biomass \nWT vs dbfR(D51V)\nUntreated, PMB_100, Amp_5, Thy_20, Rif_0.1 (ug/ml)",
+    "media": "LB",
+    "acquisition_frequency": 1,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240522_Emmy_10X_bf_lux_biospa_2_Drawer3 22-May-2024 11-25-29/240522_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [
+        "B:/Emmy/Cytation/PvpsL-lux/052224/PvpsL-lux_052224.csv"
+    ],
+    "conditions": [
+        {
+            "WT-Untreated": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A5",
+                "A6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$-Untreated": [
+                "A10",
+                "A11",
+                "A12",
+                "A7",
+                "A8",
+                "A9"
+            ],
+            "WT + PMB 100ug/ml": [
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "D5",
+                "D6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + PMB 100ug/ml": [
+                "D10",
+                "D11",
+                "D12",
+                "D7",
+                "D8",
+                "D9"
+            ],
+            "WT + Amp 5ug/ml": [
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Amp 5ug/ml": [
+                "E10",
+                "E11",
+                "E12",
+                "E7",
+                "E8",
+                "E9"
+            ],
+            "WT + Thy 20ug/ml": [
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Thy 20ug/ml": [
+                "F10",
+                "F11",
+                "F12",
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "WT + Rif 0.1ug/ml": [
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ + Rif 0.1ug/ml": [
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
+            ],
+            "random": [
+                "B1",
+                "B10",
+                "B11",
+                "B12",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
+                "B7",
+                "B8",
+                "B9",
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C2",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
+                "C7",
+                "C8",
+                "C9",
+                "H1",
+                "H10",
+                "H11",
+                "H12",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6",
+                "H7",
+                "H8",
+                "H9"
+            ]
+        }
+    ],
+    "strains": [
+        {
+            "Vc801": [
+                "B1",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
+                "C1",
+                "C2",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
+                "H1",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6",
+            ],
+            "Vc2164": [
+		"B10",
+                "B11",
+                "B12",
+		"B7",
+                "B8",
+                "B9",
+		"C7",
+                "C8",
+                "C9",
+		"H10",
+                "H11",
+                "H12",
+		"H7",
+                "H8",
+                "H9"
+		"C10",
+                "C11",
+                "C12",
+		"G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "image_analysis": "False",
+    "experiment_directory": "B:/Emmy/Data",
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "line",
+        "plot3": "line",
+        "plot4": "line"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "BF_imaging"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "BF_imaging"
+        ],
+        "plot4": [
+            "BF_imaging"
+        ]
+    },
+    "plot_numerators": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_denominators": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_conditions": {
+        "plot1": [
+            "WT-Untreated",
+            "$dbfR^{\\mathrm{D51V}}$-Untreated",
+            "WT + PMB 100ug/ml",
+            "$dbfR^{\\mathrm{D51V}}$ + PMB 100ug/ml"
+        ],
+        "plot2": [
+            "WT-Untreated",
+            "$dbfR^{\\mathrm{D51V}}$-Untreated",
+            "WT + Amp 5ug/ml",
+            "$dbfR^{\\mathrm{D51V}}$ + Amp 5ug/ml"
+        ],
+        "plot3": [
+            "WT-Untreated",
+            "$dbfR^{\\mathrm{D51V}}$-Untreated",
+            "WT + Thy 20ug/ml",
+            "$dbfR^{\\mathrm{D51V}}$ + Thy 20ug/ml"
+        ],
+        "plot4": [
+            "WT-Untreated",
+            "$dbfR^{\\mathrm{D51V}}$-Untreated",
+            "WT + Rif 0.1ug/ml",
+            "$dbfR^{\\mathrm{D51V}}$ + Rif 0.1ug/ml"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "WT-Untreated",
+        "plot2": "WT-Untreated",
+        "plot3": "WT-Untreated",
+        "plot4": "WT-Untreated"
+    },
+    "normalization_method": {
+        "plot1": [
+            "fold-change"
+        ],
+        "plot2": [
+            "fold-change"
+        ],
+        "plot3": [
+            "fold-change"
+        ],
+        "plot4": [
+            "fold-change"
+        ]
+    },
+    "plot_xaxis": {
+        "plot1": "Time",
+        "plot2": "Time",
+        "plot3": "Time",
+        "plot4": "Time"
+    },
+    "plot_scale": {
+        "plot1": [
+            "linear"
+        ],
+        "plot2": [
+            "linear"
+        ],
+        "plot3": [
+            "linear"
+        ],
+        "plot4": [
+            "linear"
+        ]
+    },
+    "plot_color": {
+        "plot1": [
+            "#000000",
+            "#8f8888",
+            "#0015ff",
+            "#6773f5"
+        ],
+        "plot2": [
+            "#000000",
+            "#8f8888",
+            "#00871d",
+            "#63e67f"
+        ],
+        "plot3": [
+            "#000000",
+            "#8f8888",
+            "#d16b04",
+            "#d99f64"
+        ],
+        "plot4": [
+            "#000000",
+            "#8f8888",
+            "#c20202",
+            "#c93c3c"
+        ]
+    },
+    "plot_font": {
+        "plot1": "Arial",
+        "plot2": "Arial",
+        "plot3": "Arial",
+        "plot4": "Arial"
+    },
+    "plot_titles": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "plot_xlabs": {
+        "plot1": "Time (hrs)",
+        "plot2": "Time (hrs)",
+        "plot3": "Time (hrs)",
+        "plot4": "Time (hrs)"
+    },
+    "plot_ylabs": {
+        "plot1": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot2": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot3": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot4": [
+            "Biofilm Biomass (a.u.)"
+        ]
+    },
+    "plot_xticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "plot_yticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "color_label": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "ylims": {
+        "plot1": "default",
+        "plot2": "default",
+        "plot3": "default",
+        "plot4": "default"
+    },
+    "plot_size": {
+        "plot1": [
+            3,
+            2.5
+        ],
+        "plot2": [
+            3,
+            2.5
+        ],
+        "plot3": [
+            3,
+            2.5
+        ],
+        "plot4": [
+            3,
+            2.5
+        ]
+    },
+    "dose_concs": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_filenames": {
+        "plot1": "BB_PMB-100_052224",
+        "plot2": "BB_Amp-5_052224",
+        "plot3": "BB_Thy-20_052224",
+        "plot4": "BB_Rif-0.1_052224"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
+}
