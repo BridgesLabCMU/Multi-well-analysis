@@ -7,17 +7,20 @@ import json
 import numpy as np
 from PIL import Image, ImageTk
 
-class VerticalScrolledFrame(ttk.Frame):
+class DoubleScrolledFrame(ttk.Frame):
     def __init__(self, parent, *args, **kw):
         ttk.Frame.__init__(self, parent, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
         vscrollbar = ttk.Scrollbar(self, orient=VERTICAL)
         vscrollbar.pack(fill=Y, side=RIGHT, expand=FALSE)
+        hscrollbar = ttk.Scrollbar(self, orient=HORIZONTAL)
+        hscrollbar.pack(fill=X, side=BOTTOM, expand=FALSE)
         canvas = tk.Canvas(self, width=2000, height=1000, bd=0, highlightthickness=0,
-                           yscrollcommand=vscrollbar.set)
+                           yscrollcommand=vscrollbar.set, xscrollcommand=hscrollbar.set)
         canvas.pack(side=LEFT, fill=BOTH, expand=TRUE)
         vscrollbar.config(command=canvas.yview)
+        hscrollbar.config(command=canvas.xview)
 
         # Reset the view
         canvas.xview_moveto(0)
@@ -27,24 +30,19 @@ class VerticalScrolledFrame(ttk.Frame):
         self.interior = interior = ttk.Frame(canvas)
         interior_id = canvas.create_window(0, 0, window=interior,
                                            anchor=NW)
-
+        
         # Track changes to the canvas and frame width and sync them,
         # also updating the scrollbar.
         def _configure_interior(event):
-            # Update the scrollbars to match the size of the inner frame.
-            size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
-            canvas.config(scrollregion="0 0 %s %s" % size)
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # Update the canvas's width to fit the inner frame.
-                canvas.config(width=interior.winfo_reqwidth())
+            x1, y1, x2, y2 = canvas.bbox("all")
+            height = canvas.winfo_height()
+            width = canvas.winfo_width()
+            canvas.config(scrollregion = (0,0, max(x2, width), max(y2, height)))
         interior.bind('<Configure>', _configure_interior)
+    
+    
 
-        def _configure_canvas(event):
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # Update the inner frame's width to fill the canvas.
-                canvas.itemconfigure(interior_id, width=canvas.winfo_width())
-        canvas.bind('<Configure>', _configure_canvas)
-
+        
 num_plots = 0
 with open("temp_plot_num.txt", "r") as fr:
     num_plots = int(fr.read())
@@ -370,9 +368,10 @@ if __name__ == "__main__":
             #        if file_name[0:4] == "temp":
             #            os.remove(file_name)
             #    root2.destroy()
-
+            
             root2 = tk.Tk.__init__(self, *args, **kwargs)
-            self.frame = VerticalScrolledFrame(root2)
+            
+            self.frame = DoubleScrolledFrame(root2)
             self.frame.pack()
 
             #background_image = ttk.PhotoImage(self.frame.interior, file="./GUI/resized_image.png")

@@ -1,5 +1,5 @@
 {
-    "notes": "Peak biofilm biomass_052424\nLPS biosynthesis mutants",
+    "notes": "Peak Biofilm Biomass \nLPS biosynthesis mutants\n3 technical replicates",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
@@ -89,7 +89,7 @@
     },
     "plot_color": {
         "plot1": [
-            ""
+            "#525050","#525050","#525050"
         ]
     },
     "plot_font": {
@@ -103,7 +103,7 @@
     },
     "plot_ylabs": {
         "plot1": [
-            "Biofilm Biomass (a.u.)"
+            ""
         ]
     },
     "plot_xticks": {
@@ -135,7 +135,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "PeakBB_LPS mutants_052424"
+        "plot1": "Peak BB_LPS mutants_052424"
     },
     "sig": 2,
     "blockDiameter": [

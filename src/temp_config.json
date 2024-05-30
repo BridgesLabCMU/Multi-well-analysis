@@ -1,114 +1,48 @@
 {
-    "notes": "Peak biofilm biomass_052224",
+    "notes": "Peak biofilm biomass_052424\nLPS biosynthesis mutants",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240522_Emmy_10X_bf_lux_biospa_2_Drawer3 22-May-2024 11-25-29/240522_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240524_Emmy_10X_bf_lux_biospa_Drawer2 24-May-2024 14-03-31/240524_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "B:/Emmy/Cytation/PvpsL-lux/052224/PvpsL-lux_052224.csv"
+        "B:/Emmy/Cytation/LPS biosynthesis mutants/052424/PvpspL-lux_LPS mutants_052424.csv"
     ],
     "conditions": [
         {
-            "WT Untreated": [
-                "A1",
-                "A2",
-                "A3",
-                "A4",
-                "A5",
-                "A6"
-            ],
-            "WT +PMB": [
-                "D1",
-                "D2",
-                "D3",
-                "D4",
-                "D5",
-                "D6"
-            ],
-            "WT +Amp": [
-                "E1",
-                "E2",
-                "E3",
-                "E4",
-                "E5",
-                "E6"
-            ],
-            "WT +Thy": [
-                "F1",
-                "F2",
-                "F3",
-                "F4",
-                "F5",
-                "F6"
-            ],
-            "WT +Rif": [
-                "G1",
-                "G2",
-                "G3",
-                "G4",
-                "G5",
-                "G6"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ Untreated": [
+            "WT": [
                 "A10",
                 "A11",
-                "A12",
-                "A7",
-                "A8",
-                "A9"
+                "A12"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +PMB": [
-                "D10",
-                "D11",
-                "D12",
-                "D7",
-                "D8",
-                "D9"
+            "$\\Delta wavA$": [
+                "B10",
+                "B11",
+                "B12"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +Amp": [
-                "E10",
-                "E11",
-                "E12",
-                "E7",
-                "E8",
-                "E9"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +Thy": [
-                "F10",
-                "F11",
-                "F12",
-                "F7",
-                "F8",
-                "F9"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +Rif": [
-                "G10",
-                "G11",
-                "G12",
-                "G7",
-                "G8",
-                "G9"
+            "$\\Delta wavA$ $dbfR^{\\mathrm{D51V}}$": [
+                "C10",
+                "C11",
+                "C12"
             ]
         }
     ],
     "strains": [
         {
             "Vc801": [
-                "G1",
-                "G2",
-                "G3",
-                "G4",
-                "G5",
-                "G6"
+                "A10",
+                "A11",
+                "A12"
             ],
-            "Vc2164": [
-                "G10",
-                "G11",
-                "G12",
-                "G7",
-                "G8",
-                "G9"
+            "Vc2167": [
+                "B10",
+                "B11",
+                "B12"
+            ],
+            "Vc2169": [
+                "C10",
+                "C11",
+                "C12"
             ]
         }
     ],
