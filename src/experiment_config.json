@@ -1,5 +1,5 @@
 {
-    "notes": "4x_BF_Abx_060424\n1 to 10,000 cell density\nUntreated, Pmb_250, Amp_5, Thy_20, Rif_0.02, Rif_0.01 ",
+    "notes": "4xBF_Biofilm_biomass_curve_Abx_060424\n",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
@@ -18,7 +18,7 @@
                 "A5",
                 "A6"
             ],
-            "WT +Pmb250": [
+            "WT +PMB250": [
                 "B1",
                 "B2",
                 "B3",
@@ -42,14 +42,6 @@
                 "F5",
                 "F6"
             ],
-            "WT +Rif0.02": [
-                "G1",
-                "G2",
-                "G3",
-                "G4",
-                "G5",
-                "G6"
-            ],
             "WT +Rif0.01": [
                 "H1",
                 "H2",
@@ -66,7 +58,7 @@
                 "A8",
                 "A9"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +Pmb250": [
+            "$dbfR^{\\mathrm{D51V}}$ +PMB250": [
                 "B10",
                 "B11",
                 "B12",
@@ -89,14 +81,6 @@
                 "F7",
                 "F8",
                 "F9"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +Rif0.02": [
-                "G10",
-                "G11",
-                "G12",
-                "G7",
-                "G8",
-                "G9"
             ],
             "$dbfR^{\\mathrm{D51V}}$ +Rif0.01": [
                 "H10",
@@ -130,109 +114,233 @@
     ],
     "dust_correction": "True",
     "good_data_directory": "B:/Good imaging data",
-    "image_analysis": "True",
+    "image_analysis": "False",
     "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "grouped jitter"
+        "plot1": "line",
+        "plot2": "line",
+        "plot3": "line",
+        "plot4": "line"
     },
     "plot_dtypes": {
         "plot1": [
             "BF_imaging"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "BF_imaging"
+        ],
+        "plot4": [
+            "BF_imaging"
         ]
     },
     "plot_numerators": {
-        "plot1": []
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
     },
     "plot_denominators": {
-        "plot1": []
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
     },
     "plot_conditions": {
         "plot1": [
             "WT +Untreated",
-            "WT +Pmb250",
-            "WT +Amp5",
-            "WT +Thy20",
-            "WT +Rif0.02",
-            "WT +Rif0.01",
             "$dbfR^{\\mathrm{D51V}}$ +Untreated",
-            "$dbfR^{\\mathrm{D51V}}$ +Pmb250",
-            "$dbfR^{\\mathrm{D51V}}$ +Amp5",
-            "$dbfR^{\\mathrm{D51V}}$ +Thy20",
-            "$dbfR^{\\mathrm{D51V}}$ +Rif0.02",
+            "WT +PMB250",
+            "$dbfR^{\\mathrm{D51V}}$ +PMB250"
+        ],
+        "plot2": [
+            "WT +Untreated",
+            "$dbfR^{\\mathrm{D51V}}$ +Untreated",
+            "WT +Amp5",
+            "$dbfR^{\\mathrm{D51V}}$ +Amp5"
+        ],
+        "plot3": [
+            "WT +Untreated",
+            "$dbfR^{\\mathrm{D51V}}$ +Untreated",
+            "WT +Thy20",
+            "$dbfR^{\\mathrm{D51V}}$ +Thy20"
+        ],
+        "plot4": [
+            "WT +Untreated",
+            "$dbfR^{\\mathrm{D51V}}$ +Untreated",
+            "WT +Rif0.01",
             "$dbfR^{\\mathrm{D51V}}$ +Rif0.01"
         ]
     },
     "plot_normalization": {
-        "plot1": "WT +Untreated"
+        "plot1": "WT +Untreated",
+        "plot2": "WT +Untreated",
+        "plot3": "WT +Untreated",
+        "plot4": "WT +Untreated"
     },
     "normalization_method": {
         "plot1": [
             "fold-change"
+        ],
+        "plot2": [
+            "fold-change"
+        ],
+        "plot3": [
+            "fold-change"
+        ],
+        "plot4": [
+            "fold-change"
         ]
     },
     "plot_xaxis": {
-        "plot1": "Time"
+        "plot1": "Time",
+        "plot2": "Time",
+        "plot3": "Time",
+        "plot4": "Time"
     },
     "plot_scale": {
         "plot1": [
+            "linear"
+        ],
+        "plot2": [
+            "linear"
+        ],
+        "plot3": [
+            "linear"
+        ],
+        "plot4": [
             "linear"
         ]
     },
     "plot_color": {
         "plot1": [
-            "#0099ff",
-            "#ff3333"
+            "#000000",
+            "#8f8888",
+            "#0015ff",
+            "#6773f5"
+        ],
+        "plot2": [
+            "#000000",
+            "#8f8888",
+            "#00871d",
+            "#63e67f"
+        ],
+        "plot3": [
+            "#000000",
+            "#8f8888",
+            "#ebf018",
+            "#d6d968"
+        ],
+        "plot4": [
+            "#000000",
+            "#8f8888",
+            "#fc0505",
+            "#f04f4f"
         ]
     },
     "plot_font": {
-        "plot1": "Arial"
+        "plot1": "Arial",
+        "plot2": "Arial",
+        "plot3": "Arial",
+        "plot4": "Arial"
     },
     "plot_titles": {
-        "plot1": ""
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
     },
     "plot_xlabs": {
-        "plot1": "Time (hrs)"
+        "plot1": "Time (hrs)",
+        "plot2": "Time (hrs)",
+        "plot3": "Time (hrs)",
+        "plot4": "Time (hrs)"
     },
     "plot_ylabs": {
         "plot1": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot2": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot3": [
+            "Biofilm Biomass (a.u.)"
+        ],
+        "plot4": [
             "Biofilm Biomass (a.u.)"
         ]
     },
     "plot_xticks": {
         "plot1": [
-            "Untreated",
-            "Pmb250",
-            "Amp5",
-            "Thy20",
-            "Rif0.02",
-            "Rif0.01"
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
         ]
     },
     "plot_yticks": {
         "plot1": [
             ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
         ]
     },
     "color_label": {
-        "plot1": ""
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
     },
     "ylims": {
-        "plot1": [
-            0,
-            "nothing"
-        ]
+        "plot1": "default",
+        "plot2": "default",
+        "plot3": "default",
+        "plot4": "default"
     },
     "plot_size": {
         "plot1": [
-            4.0,
+            3,
+            2.5
+        ],
+        "plot2": [
+            3,
+            2.5
+        ],
+        "plot3": [
+            3,
+            2.5
+        ],
+        "plot4": [
+            3,
             2.5
         ]
     },
     "dose_concs": {
-        "plot1": []
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
     },
     "plot_filenames": {
-        "plot1": "4x_peakBF_060424"
+        "plot1": "BB_PMB250_060424",
+        "plot2": "BB_Amp5_060424",
+        "plot3": "BB_Thy20_060424",
+        "plot4": "BB_Rif0.01_060424"
     },
     "sig": 2,
     "blockDiameter": [

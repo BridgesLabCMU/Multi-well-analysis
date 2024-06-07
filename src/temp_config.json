@@ -1,5 +1,5 @@
 {
-    "notes": "4x_BF_Abx_060424\n1 to 10,000 cell density\nUntreated, Pmb_250, Amp_5, Thy_20, Rif_0.02, Rif_0.01 ",
+    "notes": "4xBF_Biofilm_biomass_curve_Abx_060424\n",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
@@ -10,7 +10,7 @@
     ],
     "conditions": [
         {
-            "WT +Untreated ": [
+            "WT +Untreated": [
                 "A1",
                 "A2",
                 "A3",
@@ -18,7 +18,7 @@
                 "A5",
                 "A6"
             ],
-            "WT +Pmb250 ": [
+            "WT +PMB250": [
                 "B1",
                 "B2",
                 "B3",
@@ -26,7 +26,7 @@
                 "B5",
                 "B6"
             ],
-            "WT +Amp5 ": [
+            "WT +Amp5": [
                 "E1",
                 "E2",
                 "E3",
@@ -41,14 +41,6 @@
                 "F4",
                 "F5",
                 "F6"
-            ],
-            "WT +Rif0.02": [
-                "G1",
-                "G2",
-                "G3",
-                "G4",
-                "G5",
-                "G6"
             ],
             "WT +Rif0.01": [
                 "H1",
@@ -66,7 +58,7 @@
                 "A8",
                 "A9"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +Pmb250": [
+            "$dbfR^{\\mathrm{D51V}}$ +PMB250": [
                 "B10",
                 "B11",
                 "B12",
@@ -89,14 +81,6 @@
                 "F7",
                 "F8",
                 "F9"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +Rif0.02": [
-                "G10",
-                "G11",
-                "G12",
-                "G7",
-                "G8",
-                "G9"
             ],
             "$dbfR^{\\mathrm{D51V}}$ +Rif0.01": [
                 "H10",
@@ -130,6 +114,6 @@
     ],
     "dust_correction": "True",
     "good_data_directory": "B:/Good imaging data",
-    "image_analysis": "True",
+    "image_analysis": "False",
     "experiment_directory": "B:/Emmy/Data"
 }

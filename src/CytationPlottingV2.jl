@@ -608,16 +608,16 @@ function jitter_plot(conditions, plot_conditions,
         ylims = Tuple(ylims)
         if isa(default_color, Array)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
-            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=false, linewidth=1, alpha=0.8)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=false, linewidth=1, alpha=0.8, jitter=false)
         elseif occursin("#", default_color)
             sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
-            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=false, linewidth=1, alpha=0.8)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=false, linewidth=1, alpha=0.8, jitter=false)
         elseif default_color == ""
             sns.boxplot(x=categories, y=values, ax=ax1, palette=(default_color,), showfliers=false)
-            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=false, linewidth=1, alpha=0.8)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=(default_color,), dodge=false, linewidth=1, alpha=0.8, jitter=false)
         else
             sns.boxplot(x=categories, y=values, ax=ax1, palette=default_color, showfliers=false)
-            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=false, linewidth=1, alpha=0.8)
+            sns.stripplot(x=categories, y=values, ax=ax1, palette=default_color, dodge=false, linewidth=1, alpha=0.8, jitter=false)
         end
         ax1.set_ylim(ylims)
     end
@@ -740,13 +740,13 @@ function grouped_jitter_plot(conditions, plot_conditions,
     fig, ax1 = pyplot.subplots()
     if isa(default_color, Array)
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, jitter=false, legend=nothing)
     elseif default_color == ""
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette="Set2", linewidth=1, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette="Set2", linewidth=1, jitter=false, legend=nothing)
     else
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, jitter=false, legend=nothing)
     end
     if ylims != "default"
         for (k, e) in enumerate(ylims)
