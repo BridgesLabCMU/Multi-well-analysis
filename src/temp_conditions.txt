@@ -1,3 +1,12 @@
-$\Delta wavA$
-WT
-$\Delta wavA$ $dbfR^{\mathrm{D51V}}$
+$dbfR^{\mathrm{D51V}}$ +Rif0.01
+$dbfR^{\mathrm{D51V}}$ +Amp5
+$dbfR^{\mathrm{D51V}}$ +Rif0.02
+WT +Rif0.02
+$dbfR^{\mathrm{D51V}}$ +Untreated
+WT +Amp5 
+WT +Rif0.01
+WT +Thy20
+$dbfR^{\mathrm{D51V}}$ +Pmb250
+WT +Pmb250 
+WT +Untreated 
+$dbfR^{\mathrm{D51V}}$ +Thy20

@@ -1,57 +1,139 @@
 {
-    "notes": "Peak biofilm biomass_052424\nLPS biosynthesis mutants",
+    "notes": "4x_BF_Abx_060424\n1 to 10,000 cell density\nUntreated, Pmb_250, Amp_5, Thy_20, Rif_0.02, Rif_0.01 ",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240524_Emmy_10X_bf_lux_biospa_Drawer2 24-May-2024 14-03-31/240524_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240604_Emmy_4x_bf_biospa_Drawer4 04-Jun-2024 11-29-39/240604_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "B:/Emmy/Cytation/LPS biosynthesis mutants/052424/PvpspL-lux_LPS mutants_052424.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240604_Emmy_4x_bf_biospa_Drawer4 04-Jun-2024 11-29-39/Emmy_4x_bf_biospa_240606_.csv"
     ],
     "conditions": [
         {
-            "WT": [
+            "WT +Untreated": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A5",
+                "A6"
+            ],
+            "WT +Pmb250": [
+                "B1",
+                "B2",
+                "B3",
+                "B4",
+                "B5",
+                "B6"
+            ],
+            "WT +Amp5": [
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6"
+            ],
+            "WT +Thy20": [
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "WT +Rif0.02": [
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6"
+            ],
+            "WT +Rif0.01": [
+                "H1",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ +Untreated": [
                 "A10",
                 "A11",
-                "A12"
+                "A12",
+                "A7",
+                "A8",
+                "A9"
             ],
-            "$\\Delta wavA$": [
+            "$dbfR^{\\mathrm{D51V}}$ +Pmb250": [
                 "B10",
                 "B11",
-                "B12"
+                "B12",
+                "B7",
+                "B8",
+                "B9"
             ],
-            "$\\Delta wavA$ $dbfR^{\\mathrm{D51V}}$": [
-                "C10",
-                "C11",
-                "C12"
+            "$dbfR^{\\mathrm{D51V}}$ +Amp5": [
+                "E10",
+                "E11",
+                "E12",
+                "E7",
+                "E8",
+                "E9"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ +Thy20": [
+                "F10",
+                "F11",
+                "F12",
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ +Rif0.02": [
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ +Rif0.01": [
+                "H10",
+                "H11",
+                "H12",
+                "H7",
+                "H8",
+                "H9"
             ]
         }
     ],
     "strains": [
         {
-            "Vc801": [
-                "A10",
-                "A11",
-                "A12"
+            "Vc761": [
+                "H1",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6"
             ],
-            "Vc2167": [
-                "B10",
-                "B11",
-                "B12"
-            ],
-            "Vc2169": [
-                "C10",
-                "C11",
-                "C12"
+            "Vc788": [
+                "H10",
+                "H11",
+                "H12",
+                "H7",
+                "H8",
+                "H9"
             ]
         }
     ],
     "dust_correction": "True",
     "good_data_directory": "B:/Good imaging data",
-    "image_analysis": "False",
+    "image_analysis": "True",
     "experiment_directory": "B:/Emmy/Data",
     "plot_types": {
-        "plot1": "jitter"
+        "plot1": "grouped jitter"
     },
     "plot_dtypes": {
         "plot1": [
@@ -66,13 +148,22 @@
     },
     "plot_conditions": {
         "plot1": [
-            "WT",
-            "$\\Delta wavA$",
-            "$\\Delta wavA$ $dbfR^{\\mathrm{D51V}}$"
+            "WT +Untreated",
+            "WT +Pmb250",
+            "WT +Amp5",
+            "WT +Thy20",
+            "WT +Rif0.02",
+            "WT +Rif0.01",
+            "$dbfR^{\\mathrm{D51V}}$ +Untreated",
+            "$dbfR^{\\mathrm{D51V}}$ +Pmb250",
+            "$dbfR^{\\mathrm{D51V}}$ +Amp5",
+            "$dbfR^{\\mathrm{D51V}}$ +Thy20",
+            "$dbfR^{\\mathrm{D51V}}$ +Rif0.02",
+            "$dbfR^{\\mathrm{D51V}}$ +Rif0.01"
         ]
     },
     "plot_normalization": {
-        "plot1": "WT"
+        "plot1": "WT +Untreated"
     },
     "normalization_method": {
         "plot1": [
@@ -80,7 +171,7 @@
         ]
     },
     "plot_xaxis": {
-        "plot1": "default"
+        "plot1": "Time"
     },
     "plot_scale": {
         "plot1": [
@@ -89,7 +180,8 @@
     },
     "plot_color": {
         "plot1": [
-            ""
+            "#0099ff",
+            "#ff3333"
         ]
     },
     "plot_font": {
@@ -99,7 +191,7 @@
         "plot1": ""
     },
     "plot_xlabs": {
-        "plot1": ""
+        "plot1": "Time (hrs)"
     },
     "plot_ylabs": {
         "plot1": [
@@ -108,7 +200,12 @@
     },
     "plot_xticks": {
         "plot1": [
-            ""
+            "Untreated",
+            "Pmb250",
+            "Amp5",
+            "Thy20",
+            "Rif0.02",
+            "Rif0.01"
         ]
     },
     "plot_yticks": {
@@ -127,7 +224,7 @@
     },
     "plot_size": {
         "plot1": [
-            3,
+            4.0,
             2.5
         ]
     },
@@ -135,7 +232,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "PeakBB_LPS mutants_052424"
+        "plot1": "4x_peakBF_060424"
     },
     "sig": 2,
     "blockDiameter": [

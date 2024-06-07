@@ -179,7 +179,8 @@ function main()
         mkdir("$dir/results_data")
         BF_output_file = "$dir/results_data/BF_imaging.csv"
         num_wells = sum(length(v) for v in values(conditions))
-		files = [f for f in readdir(dir) if occursin(r"\.tif$", f) && occursin("Bright Field", f) && any(occursin(well*"_", f) for well in wells)]
+        all_wells = vcat(values(conditions)...)
+		files = [f for f in readdir(dir) if occursin(r"\.tif$", f) && occursin("Bright Field", f) && any(occursin(well*"_", f) for well in all_wells)]
         ntimepoints = div(length(files), num_wells)
         file1 = files[1]
         test_image = load("$dir/$file1"; lazyio=true)
@@ -189,7 +190,6 @@ function main()
         YFP_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
         texas_red_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
         CY5_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
-        all_wells = vcat(values(conditions)...)
         conditions = values(conditions)
         CFP_flag = false
         YFP_flag = false
