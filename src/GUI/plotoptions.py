@@ -6,7 +6,7 @@ from gui import *
 import json
 import numpy as np
 from PIL import Image, ImageTk
-
+import shutil
 class DoubleScrolledFrame(ttk.Frame):
     def __init__(self, parent, *args, **kw):
         ttk.Frame.__init__(self, parent, *args, **kw)
@@ -81,9 +81,36 @@ plot_filenames = {f"plot{i}": "" for i in range(1, num_plots+1)}
 if __name__ == "__main__":
     class PlotOptions(tk.Tk):
         def __init__(self, *args, **kwargs):
+            with open("temp_config.json", "r") as file:
+                json_dict = json.load(file)
+            images_directories = json_dict["images_directory"]
+            images_sub_dirs = []
+
+            
+            
+            for directory in images_directories:
+                param_list = []
+                for file in os.listdir(directory):
+                    if not os.path.isdir(f"{directory}/{file}"):
+                        params = file.split("_")
+                        param_list.append(params[1])
+                if len(param_list) == 1:
+                    images_sub_dirs.append(directory)
+                    continue
+                else:
+                    print("Copying images to sub-directory")
+                for file in os.listdir(directory):
+                    if not os.path.isdir(f"{directory}/{file}"):
+                        params = file.split("_")
+                        target_dir = f"{directory}/{params[1]}"
+                        if not os.path.exists(target_dir):
+                            os.makedirs(target_dir)
+                            images_sub_dirs.append(target_dir)
+                        shutil.copy(f"{directory}/{file}", target_dir)
+            json_dict["images_directory"] = images_sub_dirs
             def save_to_json():
-                with open("temp_config.json", "r") as file:
-                    json_dict = json.load(file)
+                # with open("temp_config.json", "r") as file:
+                #     json_dict = json.load(file)
                 store_plot_options()
                 json_dict["plot_types"] = plot_types
                 json_dict["plot_dtypes"] = plot_dtypes
