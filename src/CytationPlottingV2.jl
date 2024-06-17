@@ -726,11 +726,8 @@ function grouped_jitter_plot(conditions, plot_conditions,
     end
     
 	unique_vals = unique(box_x)
-    println(unique_vals)
 	val_to_str = Dict(zip(unique_vals, plot_xticks))
     box_x = [val_to_str[val] for val in box_x]
-    println(box_x)
-    println(values)
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
     end
