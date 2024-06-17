@@ -724,10 +724,13 @@ function grouped_jitter_plot(conditions, plot_conditions,
             end
         end
     end
+    
 	unique_vals = unique(box_x)
+    println(unique_vals)
 	val_to_str = Dict(zip(unique_vals, plot_xticks))
     box_x = [val_to_str[val] for val in box_x]
-
+    println(box_x)
+    println(values)
     if occursin("\$", plot_xlabel)
         plot_xlabel = latexstring(plot_xlabel)
     end
@@ -740,13 +743,13 @@ function grouped_jitter_plot(conditions, plot_conditions,
     fig, ax1 = pyplot.subplots()
     if isa(default_color, Array)
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, jitter=false, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette=default_color, linewidth=1, jitter=true, legend=nothing)
     elseif default_color == ""
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette="Set2")
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette="Set2", linewidth=1, jitter=false, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette="Set2", linewidth=1, jitter=true, legend=nothing)
     else
         sns.boxplot(x=box_x, y=values, hue=groups_plot, showfliers=false, palette=default_color)
-        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=false, alpha=0.8, palette=default_color, linewidth=1, jitter=false, legend=nothing)
+        sns.stripplot(x=box_x, y=values, hue=groups_plot, dodge=true, alpha=0.8, palette=default_color, linewidth=1, jitter=true, legend=nothing)
     end
     if ylims != "default"
         for (k, e) in enumerate(ylims)
@@ -1031,8 +1034,8 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    images_directories = linux_path.(images_directories)
-    bulk_data = linux_path.(bulk_data)
+    # images_directories = linux_path.(images_directories)
+    # bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)
