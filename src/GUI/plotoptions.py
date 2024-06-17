@@ -94,7 +94,8 @@ if __name__ == "__main__":
                     if not os.path.isdir(f"{directory}/{file}"):
                         params = file.split("_")
                         param_list.append(params[1])
-                if len(param_list) == 1:
+                n_unique = len(np.unique(param_list))
+                if n_unique == 1:
                     images_sub_dirs.append(directory)
                     continue
                 else:
