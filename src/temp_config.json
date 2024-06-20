@@ -1,12 +1,12 @@
 {
-    "notes": "4xBF_Biofilm_biomass_curve_Abx_060424\n",
+    "notes": "PeakBB_4x_BF_Abx_061424\n",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240604_Emmy_4x_bf_biospa_Drawer4 04-Jun-2024 11-29-39/240604_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240614_Emmy_Multi_4x_10x_bf_biospa_Drawer1 14-Jun-2024 14-22-42/240614_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240604_Emmy_4x_bf_biospa_Drawer4 04-Jun-2024 11-29-39/Emmy_4x_bf_biospa_240606_.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240614_Emmy_Multi_4x_10x_bf_biospa_Drawer1 14-Jun-2024 14-22-42/Emmy_Multi_4x_10x_bf_biospa_240616_.csv"
     ],
     "conditions": [
         {
@@ -18,7 +18,7 @@
                 "A5",
                 "A6"
             ],
-            "WT +PMB250": [
+            "WT +Pmb250": [
                 "B1",
                 "B2",
                 "B3",
@@ -27,6 +27,14 @@
                 "B6"
             ],
             "WT +Amp5": [
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "D5",
+                "D6"
+            ],
+            "WT +Thy20": [
                 "E1",
                 "E2",
                 "E3",
@@ -34,21 +42,13 @@
                 "E5",
                 "E6"
             ],
-            "WT +Thy20": [
-                "F1",
-                "F2",
-                "F3",
-                "F4",
-                "F5",
-                "F6"
-            ],
-            "WT +Rif0.01": [
-                "H1",
-                "H2",
-                "H3",
-                "H4",
-                "H5",
-                "H6"
+            "WT +Rif0.1": [
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6"
             ],
             "$dbfR^{\\mathrm{D51V}}$ +Untreated": [
                 "A10",
@@ -58,7 +58,7 @@
                 "A8",
                 "A9"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +PMB250": [
+            "$dbfR^{\\mathrm{D51V}}$ +Pmb250": [
                 "B10",
                 "B11",
                 "B12",
@@ -67,6 +67,14 @@
                 "B9"
             ],
             "$dbfR^{\\mathrm{D51V}}$ +Amp5": [
+                "D10",
+                "D11",
+                "D12",
+                "D7",
+                "D8",
+                "D9"
+            ],
+            "$dbfR^{\\mathrm{D51V}}$ +Thy20": [
                 "E10",
                 "E11",
                 "E12",
@@ -74,46 +82,38 @@
                 "E8",
                 "E9"
             ],
-            "$dbfR^{\\mathrm{D51V}}$ +Thy20": [
-                "F10",
-                "F11",
-                "F12",
-                "F7",
-                "F8",
-                "F9"
-            ],
-            "$dbfR^{\\mathrm{D51V}}$ +Rif0.01": [
-                "H10",
-                "H11",
-                "H12",
-                "H7",
-                "H8",
-                "H9"
+            "$dbfR^{\\mathrm{D51V}}$ +Rif0.1": [
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
             ]
         }
     ],
     "strains": [
         {
             "Vc761": [
-                "H1",
-                "H2",
-                "H3",
-                "H4",
-                "H5",
-                "H6"
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6"
             ],
             "Vc788": [
-                "H10",
-                "H11",
-                "H12",
-                "H7",
-                "H8",
-                "H9"
+                "G10",
+                "G11",
+                "G12",
+                "G7",
+                "G8",
+                "G9"
             ]
         }
     ],
     "dust_correction": "True",
-    "good_data_directory": "B:/Good imaging data",
-    "image_analysis": "False",
+    "good_data_directory": "",
+    "image_analysis": "True",
     "experiment_directory": "B:/Emmy/Data"
 }

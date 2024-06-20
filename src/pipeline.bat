@@ -6,7 +6,7 @@ set "batch_path=%batch_path:~0,-1%"
 if not exist "%batch_path%\experiment_config.json" (
     python3 .\GUI\gui.py
     if %errorlevel% neq 0 goto end
-)
+) 
 
 julia ExtractDataV2.jl
 if %errorlevel% neq 0 goto end

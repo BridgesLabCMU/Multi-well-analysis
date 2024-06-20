@@ -1031,8 +1031,8 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    # images_directories = linux_path.(images_directories)
-    # bulk_data = linux_path.(bulk_data)
+    images_directories = linux_path.(images_directories)
+    bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)

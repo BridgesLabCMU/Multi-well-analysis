@@ -76,7 +76,7 @@
     "image_analysis": "True",
     "experiment_directory": "B:/Sandhya/PlateReaderAssays/RNA+RNAseq Mutants",
     "plot_types": {
-        "plot1": "line"
+        "plot1": ""
     },
     "plot_dtypes": {
         "plot1": [
@@ -93,8 +93,8 @@
         "plot1": [
             "VpsU-2",
             "VC2705",
-            "WT",
-            "VpsU-1"
+            "VpsU-1",
+            "WT"
         ]
     },
     "plot_normalization": {
@@ -158,7 +158,7 @@
         "plot1": []
     },
     "plot_filenames": {
-        "plot1": "10X"
+        "plot1": "10x_bioreps"
     },
     "sig": 2,
     "blockDiameter": [
