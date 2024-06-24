@@ -104,7 +104,11 @@ function dose_response(conditions, plot_conditions,
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
     ax.legend(bbox_to_anchor=(1, 1), frameon=false)
-    savefig("$plots_directory/$plot_filename"*".svg")
+    if length(plot_filename) == 0
+        savefig("$plots_directory/plot.svg")
+    else 
+        savefig("$plots_directory/$plot_filename"*".svg")
+    end
 end
 
 function well_name_to_position(well_name::String)
@@ -391,7 +395,11 @@ function twin_y(conditions, plot_conditions,
     ax1.set_title(plot_title)
     pyplot.locator_params(axis='x', min_n_ticks=5)
     ax1.spines["top"].set_visible(false)
-    savefig("$plots_directory/$plot_filename"*".svg")
+    if length(plot_filename) == 0
+        savefig("$plots_directory/plot.svg")
+    else 
+        savefig("$plots_directory/$plot_filename"*".svg")
+    end
 end
 
 function line_plot(conditions, plot_conditions, 
@@ -512,7 +520,11 @@ function line_plot(conditions, plot_conditions,
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
     ax.legend(bbox_to_anchor=(1, 1), frameon=false)
-    savefig("$plots_directory/$plot_filename"*".svg")
+    if length(plot_filename) == 0
+        savefig("$plots_directory/plot.svg")
+    else 
+        savefig("$plots_directory/$plot_filename"*".svg")
+    end
 end
 
 function jitter_plot(conditions, plot_conditions, 
@@ -634,7 +646,11 @@ function jitter_plot(conditions, plot_conditions,
     pyplot.locator_params(axis='y', min_n_ticks=5)
     ax1.spines["right"].set_visible(false)
     ax1.spines["top"].set_visible(false)
-    savefig("$plots_directory/$plot_filename"*".svg")
+    if length(plot_filename) == 0
+        savefig("$plots_directory/plot.svg")
+    else 
+        savefig("$plots_directory/$plot_filename"*".svg")
+    end
 end
 
 function tex_split(str::String)
@@ -770,7 +786,11 @@ function grouped_jitter_plot(conditions, plot_conditions,
     ax1.spines["right"].set_visible(false)
     ax1.spines["top"].set_visible(false)
     ax1.legend(bbox_to_anchor=(1, 1), frameon=false)
-    savefig("$plots_directory/$plot_filename"*".svg")
+    if length(plot_filename) == 0
+        savefig("$plots_directory/plot.svg")
+    else 
+        savefig("$plots_directory/$plot_filename"*".svg")
+    end
 end
 
 function select_data(plot_dtype, lum, OD, BF_imaging, CFP_imaging, 
