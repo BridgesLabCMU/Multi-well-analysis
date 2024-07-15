@@ -3,6 +3,7 @@ from tkinter import *
 
 sample_cells = set()
 
+
 def num_to_letter(num):
     if num == 0:
         return "A"
@@ -34,11 +35,10 @@ class Table(ttk.Frame):
     def create_widgets(self):
         self.canvas = ttk.Canvas(self, borderwidth=0, highlightthickness=0)
         self.canvas.pack(side="top", fill="both", expand=True)
-
-        self.canvas.bind("<Button-1>", self.on_click)
-
         self.draw_table()
-
+        self.canvas.bind("<Button-1>", self.on_click)
+        
+        
     def draw_table(self):
         for row in range(self.rows):
             for col in range(self.columns):
@@ -47,9 +47,21 @@ class Table(ttk.Frame):
                 x1 = x0 + self.cell_width
                 y1 = y0 + self.cell_height
 
-                cell_id = self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="white")
-                self.canvas.tag_bind(cell_id, "<Button-1>", lambda event, cell=(row, col): self.cell_clicked(cell))
 
+                
+                if col == 0:
+                    if row >= 1:
+                        letter = num_to_letter(row - 1)
+                        # self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="lightgreen")
+                        self.canvas.create_text(x0 + 25, y1 - 15, text=letter)
+                    continue
+                if row == 0:
+                    if col >= 1:
+                        # self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="lightgreen")
+                        self.canvas.create_text(x1 - 25, y0 + 15, text = str(col))
+                    continue
+                self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="white")
+                
     def cell_clicked(self, cell):
         row, col = cell
         
@@ -71,7 +83,41 @@ class Table(ttk.Frame):
     def on_click(self, event):
         self.start_cell = self.get_coords(event)
         self.end_cell = self.get_coords(event) + (self.cell_width,self.cell_height)
+        self.canvas.bind("<ButtonRelease-1>", lambda event, cell=(self.start_cell[0], self.end_cell[1]): self.on_release(cell, event))
+    
+    def on_release(self, cell, event):
+        click_row, click_col = cell
+        self.release_start_cell = self.get_coords(event)
+        release_row, release_col = self.release_start_cell
         
+        
+        
+        if click_row == 0 or click_col == 0 or release_row == 0 or release_col == 0:
+            return
+        if click_row > release_row:
+            temp_row = click_row
+            click_row = release_row
+            release_row = temp_row
+        if click_col > release_col:
+            temp_col = click_col
+            click_col = release_col
+            release_col = temp_col
+            
+        
+        for i in range(click_row, release_row + 1):
+            for j in range(click_col - 1, release_col):
+                cell_id = self.get_cell_id(i,j)
+                r = num_to_letter(i - 1)
+                c = str(j + 1)
+                cell_val = r + c
+                if cell_id not in self.selected_cells:
+                    self.selected_cells.add(cell_id)
+                    self.canvas.itemconfig(cell_id, fill = "lightblue")
+                    sample_cells.add(cell_val)
+                else:
+                    self.selected_cells.remove(cell_id)
+                    self.canvas.itemconfig(cell_id, fill="white")
+                    sample_cells.remove(cell_val)
     
     def get_coords(self, event):
         col = event.x // self.cell_width
@@ -85,4 +131,3 @@ class Table(ttk.Frame):
         for cell in self.selected_cells:
             self.canvas.itemconfig(cell, fill="white")
         self.selected_cells = set()
-

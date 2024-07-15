@@ -1,12 +1,13 @@
+from tkinter import *
 from tkinter import ttk
 import tkinter as tk
-from tkinter import *
 from tkinter.constants import *
-from gui import *
 import json
 import numpy as np
-from PIL import Image, ImageTk
 import shutil
+import platform
+import os
+
 class DoubleScrolledFrame(ttk.Frame):
     def __init__(self, parent, *args, **kw):
         ttk.Frame.__init__(self, parent, *args, **kw)
@@ -40,9 +41,6 @@ class DoubleScrolledFrame(ttk.Frame):
             canvas.config(scrollregion = (0,0, max(x2, width), max(y2, height)))
         interior.bind('<Configure>', _configure_interior)
     
-    
-
-        
 num_plots = 0
 with open("temp_plot_num.txt", "r") as fr:
     num_plots = int(fr.read())
@@ -391,21 +389,17 @@ if __name__ == "__main__":
                         plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
                 plot_condition_prev_selected.clear()
                 plot_condition_prev_selected.extend(plot_condition_selections)
-
-            #def destroy_windows():
-            #    for file_name in os.listdir(os.getcwd()):
-            #        if file_name[0:4] == "temp":
-            #            os.remove(file_name)
-            #    root2.destroy()
+            
+            def go_back():
+                if platform.system() == "Windows":
+                    os.system('set LANG=en_US.UTF-8 && python3 ./GUI/gui.py')
+                elif platform.system() == "Darwin":
+                    os.system("export LANG='en_US.UTF-8' && python3 ./GUI/gui.py")
             
             root2 = tk.Tk.__init__(self, *args, **kwargs)
             
             self.frame = DoubleScrolledFrame(root2)
             self.frame.pack()
-
-            #background_image = ttk.PhotoImage(self.frame.interior, file="./GUI/resized_image.png")
-            #bg = ttk.Label(self.frame.interior, image = background_image)
-            #bg.place(x = 0,y = 0)
 
             # PLOT TYPE OPTIONS
             plot_type_selections = []
@@ -416,7 +410,7 @@ if __name__ == "__main__":
             plot_type_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
-                plot_type_selection = ttk.StringVar()
+                plot_type_selection = tk.StringVar()
                 plot_type_selection.set("")
                 plot_type_selections.append(plot_type_selection)
                 plot_type_label = ttk.Label(plot_type_frm, text=f"Plot {i} type:")
@@ -444,15 +438,15 @@ if __name__ == "__main__":
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
                 plot_dtype_label = ttk.Label(plot_dtype_frm, text=f"Plot {i} data type:")
                 plot_dtype_label.pack(side=LEFT, anchor="w")
-                plot_dtype_listbox = ttk.Listbox(plot_dtype_frm,
-                                                 selectmode=ttk.MULTIPLE,
+                plot_dtype_listbox = tk.Listbox(plot_dtype_frm,
+                                                 selectmode=tk.MULTIPLE,
                                                  height=len(plot_dtype_options),
                                                  width = plot_dtype_options_lens[max_len_dtype_ind],
                                                  exportselection=False)
                 for option in plot_dtype_options:
-                    plot_dtype_listbox.insert(ttk.END, option)
+                    plot_dtype_listbox.insert(tk.END, option)
                 plot_dtype_listbox.bind("<<ListboxSelect>>", dtype_listbox_on_select)
-                plot_dtype_listbox.pack(side=ttk.LEFT, after = plot_dtype_label, padx=10)
+                plot_dtype_listbox.pack(side=tk.LEFT, after = plot_dtype_label, padx=10)
                 plot_dtype_listboxes.append(plot_dtype_listbox)
 
             # PLOT NUMERATOR OPTIONS
@@ -471,15 +465,15 @@ if __name__ == "__main__":
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
                 plot_numerator_label = ttk.Label(plot_numerator_frm, text=f"Plot {i} numerator(s):")
                 plot_numerator_label.pack(side=LEFT, anchor="w")
-                plot_numerator_listbox = ttk.Listbox(plot_numerator_frm,
-                                                 selectmode=ttk.MULTIPLE,
+                plot_numerator_listbox = tk.Listbox(plot_numerator_frm,
+                                                 selectmode=tk.MULTIPLE,
                                                  height=len(plot_numerator_options),
                                                  width = plot_numerator_options_lens[max_len_numerator_ind],
                                                  exportselection=False)
                 for option in plot_numerator_options:
-                    plot_numerator_listbox.insert(ttk.END, option)
+                    plot_numerator_listbox.insert(tk.END, option)
                 plot_numerator_listbox.bind("<<ListboxSelect>>", numerator_listbox_on_select)
-                plot_numerator_listbox.pack(side=ttk.LEFT, after = plot_numerator_label, padx=10)
+                plot_numerator_listbox.pack(side=tk.LEFT, after = plot_numerator_label, padx=10)
                 plot_numerator_listboxes.append(plot_numerator_listbox)
 
             # PLOT DENOMINATOR OPTIONS
@@ -498,15 +492,15 @@ if __name__ == "__main__":
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
                 plot_denominator_label = ttk.Label(plot_denominator_frm, text=f"Plot {i} denominator(s):")
                 plot_denominator_label.pack(side=LEFT, anchor="w")
-                plot_denominator_listbox = ttk.Listbox(plot_denominator_frm,
-                                                 selectmode=ttk.MULTIPLE,
+                plot_denominator_listbox = tk.Listbox(plot_denominator_frm,
+                                                 selectmode=tk.MULTIPLE,
                                                  height=len(plot_denominator_options),
                                                  width = plot_denominator_options_lens[max_len_denominator_ind],
                                                  exportselection=False)
                 for option in plot_denominator_options:
-                    plot_denominator_listbox.insert(ttk.END, option)
+                    plot_denominator_listbox.insert(tk.END, option)
                 plot_denominator_listbox.bind("<<ListboxSelect>>", denominator_listbox_on_select)
-                plot_denominator_listbox.pack(side=ttk.LEFT, after = plot_denominator_label, padx=10)
+                plot_denominator_listbox.pack(side=tk.LEFT, after = plot_denominator_label, padx=10)
                 plot_denominator_listboxes.append(plot_denominator_listbox)
 
 
@@ -522,17 +516,17 @@ if __name__ == "__main__":
             for i in range(1, num_plots + 1):
                 plot_condition_label = ttk.Label(plot_condition_frm, text=f"Plot {i} condition(s):")
                 plot_condition_label.pack(side=LEFT, anchor="w", padx=5)
-                plot_condition_listbox = ttk.Listbox(plot_condition_frm,
-                                                     selectmode=ttk.MULTIPLE,
+                plot_condition_listbox = tk.Listbox(plot_condition_frm,
+                                                     selectmode=tk.MULTIPLE,
                                                      height=len(condition_names),
                                                      width = plot_condition_options_lens[max_len_condition_ind]*2,
                                                      exportselection=False)
                 for option in condition_names:
-                    plot_condition_listbox.insert(ttk.END, option)
+                    plot_condition_listbox.insert(tk.END, option)
                 plot_condition_listbox.bind("<<ListboxSelect>>", condition_listbox_on_select)
 
                 plot_condition_listboxes.append(plot_condition_listbox)
-                plot_condition_listbox.pack(side=ttk.LEFT, after = plot_condition_label, padx=10)
+                plot_condition_listbox.pack(side=tk.LEFT, after = plot_condition_label, padx=10)
 
             # PLOT NORMALIZATION OPTIONS
             plot_normalization_selections = []
@@ -542,7 +536,7 @@ if __name__ == "__main__":
             plot_normalization_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
-                plot_normalization_selection = ttk.StringVar()
+                plot_normalization_selection = tk.StringVar()
                 plot_normalization_selection.set("")
                 plot_normalization_selections.append(plot_normalization_selection)
                 plot_normalization_label = ttk.Label(plot_normalization_frm, text=f"Plot {i} normalization:")
@@ -568,15 +562,15 @@ if __name__ == "__main__":
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
                 normalization_method_label = ttk.Label(normalization_method_frm, text=f"Plot {i} normalization method(s):")
                 normalization_method_label.pack(side=LEFT, anchor="w")
-                normalization_method_listbox = ttk.Listbox(normalization_method_frm,
-                                                 selectmode=ttk.MULTIPLE,
+                normalization_method_listbox = tk.Listbox(normalization_method_frm,
+                                                 selectmode=tk.MULTIPLE,
                                                  height=len(normalization_method_options),
                                                  width = normalization_method_options_lens[max_len_norm_ind],
                                                  exportselection=False)
                 for option in normalization_method_options:
-                    normalization_method_listbox.insert(ttk.END, option)
+                    normalization_method_listbox.insert(tk.END, option)
                 normalization_method_listbox.bind("<<ListboxSelect>>", normalization_method_listbox_on_select)
-                normalization_method_listbox.pack(side=ttk.LEFT, after = normalization_method_label, padx=10)
+                normalization_method_listbox.pack(side=tk.LEFT, after = normalization_method_label, padx=10)
                 normalization_method_listboxes.append(normalization_method_listbox)
 
             # PLOT XAXIS OPTIONS
@@ -588,7 +582,7 @@ if __name__ == "__main__":
             plot_xaxis_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
-                plot_xaxis_selection = ttk.StringVar()
+                plot_xaxis_selection = tk.StringVar()
                 plot_xaxis_selection.set("")
                 plot_xaxis_selections.append(plot_xaxis_selection)
                 plot_xaxis_label = ttk.Label(plot_xaxis_frm, text=f"Plot {i} x-axis:")
@@ -614,15 +608,15 @@ if __name__ == "__main__":
                 # scrollbar = ttk.Scrollbar(frm2, orient=ttk.VERTICAL)
                 plot_scale_label = ttk.Label(plot_scale_frm, text=f"Plot {i} y-scale:")
                 plot_scale_label.pack(side=LEFT, anchor="w")
-                plot_scale_listbox = ttk.Listbox(plot_scale_frm,
-                                                 selectmode=ttk.MULTIPLE,
+                plot_scale_listbox = tk.Listbox(plot_scale_frm,
+                                                 selectmode=tk.MULTIPLE,
                                                  height=len(plot_scale_options),
                                                  width = plot_scale_options_lens[plot_scale_ind],
                                                  exportselection=False)
                 for option in plot_scale_options:
-                    plot_scale_listbox.insert(ttk.END, option)
+                    plot_scale_listbox.insert(tk.END, option)
                 plot_scale_listbox.bind("<<ListboxSelect>>", plot_scale_listbox_on_select)
-                plot_scale_listbox.pack(side=ttk.LEFT, after = plot_scale_label, padx=10)
+                plot_scale_listbox.pack(side=tk.LEFT, after = plot_scale_label, padx=10)
                 plot_scale_listboxes.append(plot_scale_listbox)
 
             # DEFAULT PLOT COLOR
@@ -646,7 +640,7 @@ if __name__ == "__main__":
             plot_font_frm.pack(side=TOP, anchor="w", padx=5, pady=5)
 
             for i in range(1, num_plots + 1):
-                plot_font_selection = ttk.StringVar()
+                plot_font_selection = tk.StringVar()
                 plot_font_selection.set("")
                 plot_font_selections.append(plot_font_selection)
                 plot_font_label = ttk.Label(plot_font_frm, text=f"Plot {i} font:")
@@ -780,6 +774,11 @@ if __name__ == "__main__":
                 plot_filename_entry = ttk.Entry(plot_filename_frm)
                 plot_filename_entry.pack(side=LEFT, after=plot_filename_label, anchor="w", padx=5)
                 plot_filename_entries.append(plot_filename_entry)
+            
+            back_btn = ttk.Button(self.frame.interior,
+                                  text="Back",
+                                  command=go_back)
+            back_btn.pack(side=TOP, anchor="sw",padx=10)
 
             # SAVE TO JSON FILE
             save_to_json_btn = ttk.Button(self.frame.interior,

@@ -7,16 +7,19 @@ import os
 import subprocess
 import numpy as np
 import json
+import platform
 
 HOME_DIR = os.getcwd()
 IMAGES_DIR = []
 BULK_DIR = []
 json_dict = {}
+temp_json = {}
 conditions_list = []
 strains_list = []
 condition_names = [""]
 strain_names = [""]
 all_conditions = []
+
 
 
 # toggle_checkbox shows folder selection widgets if checkbox is checked
@@ -35,7 +38,8 @@ def toggle_checkbox_imaging():
         image_analysis_checkbox.pack_forget()
 
 def send_directory():
-    send_dir_entry.insert(0, string=filedialog.askdirectory(initialdir="B:/"))
+    send_dir_entry.delete(0, END)
+    send_dir_entry.insert(END, string=filedialog.askdirectory(initialdir="B:/"))
 
 def images_directory():
     dir_entry.delete(0, "end")
@@ -45,6 +49,7 @@ def images_directory():
             dir_entry.insert(i, string=IMAGES_DIR[i][0]+",")
         else:
             dir_entry.insert(len(dir_entry.get())+1, string=IMAGES_DIR[i][0]+",")
+    print(IMAGES_DIR)
     return IMAGES_DIR
 
 def bulk_directory():
@@ -55,19 +60,15 @@ def bulk_directory():
             bulk_dir_entry.insert(i, string=BULK_DIR[i][0]+",")
         else:
             bulk_dir_entry.insert(len(bulk_dir_entry.get())+1, string=BULK_DIR[i][0]+",")
+    print(BULK_DIR)
     return BULK_DIR
 
-# read_sample_name grabs the entry from the sample_name_entry widget
-# if the enter_cells widget is inactive (widget to save cells in table)
-# then it re-enables the widget, also re-enables the plate_count_option_menu widget
-def read_sample_name():
+def read_sample_and_strain_name():
     condition_names.clear()
-    sample_name = sample_name_entry.get()
-    sample_prompt_text.config(text = f"Enter cells for sample: {sample_name}")
+    # sample_prompt_text.config(text = f"Enter cells for sample: {sample_name}")
+    prompt_text.config(text = f"Enter cells for sample ({sample_name_entry.get()}) and plate ({str(plate_counter.get())})")
     enter_cells.configure(state="active")
-    plate_count_option_menu.configure(state="active")
-
-def read_strain_name():
+    # plate_count_option_menu.configure(state="active")
     strain_names.clear()
     strain_name = strain_name_entry.get()
 
@@ -78,7 +79,7 @@ def save_sample_cells():
     if len(conditions_list) < nplates:
         conditions_list.append({})
         strains_list.append({})
-    curr_plate = plate_cells_var.get()
+    curr_plate = plate_counter.get()
     sample_name = sample_name_entry.get()
     strain_name = strain_name_entry.get()
     conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
@@ -86,19 +87,25 @@ def save_sample_cells():
     print(conditions_list)
     print(strains_list)
     if curr_plate < nplates:
-        plate_cells_var.set(plate_cells_var.get() + 1)
+        plate_counter.set(plate_counter.get() + 1)
     else:
         enter_cells.configure(state="disabled")
+        plate_counter.set(1)
+        sample_name = sample_name_entry.delete(0, ttk.END)
+        strain_name = strain_name_entry.delete(0, ttk.END)
+        # proceed_text = ttk.Label(text="Done! You can proceed to the next step.", fg="#70d000")
+        # proceed_text.pack(side=LEFT, after=enter_cells, anchor="w",padx=5,pady=3)
+    prompt_text.config(text = f"Enter cells for sample ({sample_name_entry.get()}) and plate ({str(plate_counter.get())})")
     sample_cells.clear()
     table.clear_color()
+    
 
 # disable_plate_count disables the plate_count_option_menu widget, prevents user from editing it after hitting "Enter"
 def disable_plate_count():
     plate_count_option_menu.configure(state="disabled")
-    plate_cells_var.set(1)
-
-def disable_media():
-    media_option_menu.configure(state="disabled")
+    
+# def disable_media():
+    # media_option_menu.configure(state="disabled")
 
 def plate_count_select(value):
     plate_count_var.set(value)
@@ -106,15 +113,16 @@ def plate_count_select(value):
 def media_select(value):
     media_var.set(value)
 
-def save_plot_number():
-    plot_number = plot_number_entry.get("1.0", "end-1c")
-    with open("temp_plot_num.txt", "w") as fw:
-        fw.write(plot_number)
+# def save_plot_number():
+#     plot_number = plot_number_entry.get("1.0", "end-1c")
+#     with open("temp_plot_num.txt", "w") as fw:
+#         fw.write(plot_number)
 
 def create_new_window():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
     json_dict["media"] = media_var.get()
     json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
+    print(IMAGES_DIR)
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
     json_dict["conditions"] = conditions_list
@@ -143,17 +151,81 @@ def create_new_window():
         for cond in all_conditions:
             fw.write(cond)
             fw.write("\n")
-    os.system('set LANG=en_US.UTF-8 && python3 ./GUI/plotoptions.py')
+    root.destroy()
+    if platform.system() == "Windows":
+        os.system('set LANG=en_US.UTF-8 && python3 ./GUI/plotoptions.py')
+    elif platform.system() == "Darwin":
+        os.system("export LANG='en_US.UTF-8' && python3 ./GUI/plotoptions.py")
+
+
+def on_yes_click():
+    file = open(HOME_DIR + "/temp_config.json", "r")
+    temp_json = json.load(file)
+    file.close()
+
+    # repopulate notes entry
+    notes_entry.insert(END, temp_json["notes"])
+    
+    # repopulate media option
+    media_var.set(media_options[media_options.index(temp_json["media"])])
+    plot_num_file = open(HOME_DIR + "/GUI/temp_plot_num.txt", "r")
+    plot_number_entry.delete(1.0,END)
+    plot_number_entry.insert(END, plot_num_file.read())
+    plot_num_file.close()
+    file.close()
+    
+    # acquisition frequency option
+    acquisition_freq.delete(1.0, END)
+    acquisition_freq.insert(END, temp_json["acquisition_frequency"])
+
+    # experiment dir option
+    send_dir_entry.delete(0, END)
+    send_dir_entry.insert(END, temp_json["experiment_directory"])
+    
+    # image analysis checkbox option
+    if temp_json["image_analysis"] == "True":
+        
+        var.set(1)
+        toggle_checkbox_imaging()
+        images_dirs = temp_json["images_directory"]
+        for images_dir in images_dirs:
+            IMAGES_DIR.append(tuple([images_dir]))
+        # print([s[0].replace("\\", "/") for s in IMAGES_DIR])
+        dir_entry.delete(0, END)
+        dir_entry.insert(END, temp_json["images_directory"])
+        if len(temp_json["good_data_directory"]) > 0:
+            good_data_var.set(1)
+        if temp_json["dust_correction"] == "True":
+            dust_var.set(1)
+        if temp_json["image_analysis"] == "True":
+            image_analysis_var.set(1)
+    bulk_dirs = temp_json["bulk_data"]
+    for bulk_dir in bulk_dirs:
+        BULK_DIR.append(tuple([bulk_dir]))
+    bulk_dir_entry.delete(0,END)
+    bulk_dir_entry.insert(END, temp_json["bulk_data"])
+        
+    
+    
+    
+    
+    root2.destroy()
+
 
 
 if __name__ == "__main__":
+    
     root = Tk()
     root.title("Scanner")
     root.geometry("1000x1000")
+    
+    
+    
     frm = ttk.Frame(root)
     frm.grid()
     frm.pack(padx=2, pady=0)
-
+    plate_counter = ttk.IntVar()
+    plate_counter.set(1)
     # EXPERIMENT NOTES ENTRY
     notes_lbl = ttk.Label(root, text = "Experiment Notes")
     notes_lbl.pack(side=TOP, anchor = "w", padx = 10)
@@ -172,8 +244,8 @@ if __name__ == "__main__":
     media_label.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
     media_option_menu = ttk.OptionMenu(media_frame, media_var, *media_options, command = media_select)
     media_option_menu.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
-    media_enter = ttk.Button(media_frame, text="Enter", command = disable_media)
-    media_enter.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
+    # media_enter = ttk.Button(media_frame, text="Enter", command = disable_media)
+    # media_enter.pack(side=LEFT, anchor = "w", padx = 5, pady = 3)
 
     # PLOT NUMBERS
     plot_number_frm = ttk.Frame(root)
@@ -182,8 +254,8 @@ if __name__ == "__main__":
     plot_number_lbl.pack(side=LEFT, anchor = "w", padx = 10)
     plot_number_entry = Text(plot_number_frm, width = 5, height = 1)
     plot_number_entry.pack(side=LEFT, anchor = "w", padx = 10)
-    plot_number_btn = ttk.Button(plot_number_frm, text = "Enter", command = save_plot_number)
-    plot_number_btn.pack(side=LEFT, anchor = "w", padx = 10)
+    # plot_number_btn = ttk.Button(plot_number_frm, text = "Enter", command = save_plot_number)
+    # plot_number_btn.pack(side=LEFT, anchor = "w", padx = 10)
 
     # ACQUISITION FREQUENCY
     acquisition_lbl = ttk.Label(root, text = "Acquisition Frequency (#/hr)")
@@ -244,39 +316,61 @@ if __name__ == "__main__":
     sample_name_label.pack(side=TOP, anchor = "w", padx = 10)
     sample_name_entry = ttk.Entry(root, width = 35)
     sample_name_entry.pack(side=TOP, anchor = "w", padx = 10)
-    enter_sample_button = ttk.Button(root, text="Enter", command=read_sample_name)
-    enter_sample_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
+    # enter_sample_button = ttk.Button(root, text="Enter", command=read_sample_name)
+    # enter_sample_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
 
     # BRIDGES LAB STRAINS NAME
     strain_name_label = ttk.Label(root, text = "Lab Strain Name (with supplements)")
     strain_name_label.pack(side=TOP, anchor = "w", padx = 10)
     strain_name_entry = ttk.Entry(root, width = 35)
     strain_name_entry.pack(side=TOP, anchor = "w", padx = 10)
-    enter_strain_button = ttk.Button(root, text="Enter", command=read_strain_name)
+    enter_strain_button = ttk.Button(root, text="Enter", command=read_sample_and_strain_name)
     enter_strain_button.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
 
     # ENTER CELLS
-    sample_prompt_text = ttk.Label(root, text = f"Enter cells for sample:")
-    sample_prompt_text.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
-    plate_cells_frame = ttk.Frame(root)
-    plate_cells_frame.pack(side=TOP, anchor = "w", padx=5)
-    plate_cells_label = ttk.Label(plate_cells_frame, text = f"Enter cells for plate: ")
-    plate_cells_label.pack(side=LEFT, anchor = "w", padx = 10, pady = 3)
-    plate_cells_var = ttk.IntVar()
-    plate_cells_var.set(1)
-    plate_cells_entry = ttk.Entry(plate_cells_frame, textvariable=plate_cells_var)
-    plate_cells_entry.pack(side=LEFT,anchor="w", padx=10,pady=5)
+    # sample_prompt_text = ttk.Label(root, text = f"Enter cells for sample:")
+    # sample_prompt_text.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
+    prompt_text = ttk.Label(root, text = f"Enter cells for sample () and plate ()")
+    prompt_text.pack(side=TOP, anchor = "w", padx = 10, pady = 3)
+    # plate_cells_frame = ttk.Frame(root)
+    # plate_cells_frame.pack(side=TOP, anchor = "w", padx=5)
+    # plate_cells_label = ttk.Label(plate_cells_frame, text = f"Enter cells for plate: ")
+    # plate_cells_label.pack(side=LEFT, anchor = "w", padx = 10, pady = 3)
+    # plate_cells_var = ttk.IntVar()
+    # plate_cells_var.set(1)
+    # plate_cells_entry = ttk.Entry(plate_cells_frame, textvariable=plate_cells_var)
+    # plate_cells_entry.pack(side=LEFT,anchor="w", padx=10,pady=5)
 
 
     # TABLE
-    table = Table(root, rows=8, columns=12)
+    table = Table(root, rows=9, columns=13)
     table.pack(expand=True, fill = "both", side=TOP, anchor="w",padx = 10)
+    
     enter_cells_frame = ttk.Frame(root)
-    enter_cells_frame.pack(side=TOP, after=table, anchor = "w", padx=5)
+    enter_cells_frame.pack(side=LEFT, after=table, anchor = "w", padx=5)
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
     enter_cells.pack(side=LEFT, anchor = "w",pady=5)
 
     # NEXT
     next_btn = ttk.Button(root, text="Next", command=create_new_window)
     next_btn.pack(side=TOP, anchor = "e", padx = 10)
+    
+    # if not back_button_pressed.get():
+    root2 = Tk()
+    root2.title("Repopulate")
+    root2.geometry("300x85")
+    repopulate_frame = ttk.Frame(root2)
+    repopulate_frame.pack(padx=2, pady=0)
+    repopulate_label = ttk.Label(repopulate_frame, text="Repopulate values using config?")
+    repopulate_label.pack(side=TOP, padx=4, pady=10)
+    
+    no_button = ttk.Button(repopulate_frame, text="No", fg="#bb2211",command=root2.destroy)
+    no_button.pack(side=LEFT, after=repopulate_label, anchor = "sw", padx=4, pady=0)
+
+    yes_button = ttk.Button(repopulate_frame, text="Yes",fg="#237911", command=on_yes_click)
+    yes_button.pack(side=RIGHT, after=repopulate_label, anchor = "se", padx=4, pady=0)
+    root2.mainloop()
+    # else:
+    #     root.destroy()
+    
     root.mainloop()
