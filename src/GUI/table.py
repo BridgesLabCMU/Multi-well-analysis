@@ -21,12 +21,29 @@ def num_to_letter(num):
         return "G"
     elif num == 7:
         return "H"
+def letter_to_num(letter):
+    if letter == "A":
+        return 0
+    elif letter == "B":
+        return 1
+    elif letter == "C":
+        return 2
+    elif letter == "D":
+        return 3
+    elif letter == "E":
+        return 4
+    elif letter == "F":
+        return 5
+    elif letter == "G":
+        return 6
+    elif letter == "H":
+        return 7
 
 class Table(ttk.Frame):
     def __init__(self, master, rows, columns):
         super().__init__(master)
-        self.rows = rows
-        self.columns = columns
+        self.rows = rows - 1
+        self.columns = columns - 1
         self.cell_width = 50
         self.cell_height = 30
         self.selected_cells = set()
@@ -64,7 +81,6 @@ class Table(ttk.Frame):
                 
     def cell_clicked(self, cell):
         row, col = cell
-        
         r = num_to_letter(row)
         c = str(col + 1)
         cell_val = r + c
@@ -91,7 +107,6 @@ class Table(ttk.Frame):
         release_row, release_col = self.release_start_cell
         
         
-        
         if click_row == 0 or click_col == 0 or release_row == 0 or release_col == 0:
             return
         if click_row > release_row:
@@ -109,12 +124,13 @@ class Table(ttk.Frame):
                 cell_id = self.get_cell_id(i,j)
                 r = num_to_letter(i - 1)
                 c = str(j + 1)
-                cell_val = r + c
-                if cell_id not in self.selected_cells:
-                    self.selected_cells.add(cell_id)
-                    self.canvas.itemconfig(cell_id, fill = "lightblue")
-                    sample_cells.add(cell_val)
-                else:
+                cell_val = (r  + c)
+                if self.canvas.itemconfig(cell_id)["fill"][4] == "white":
+                    if cell_id not in self.selected_cells:
+                        self.selected_cells.add(cell_id)
+                        self.canvas.itemconfig(cell_id, fill = "lightblue")
+                        sample_cells.add(cell_val)
+                elif self.canvas.itemconfig(cell_id)["fill"][4] == "lightblue":
                     self.selected_cells.remove(cell_id)
                     self.canvas.itemconfig(cell_id, fill="white")
                     sample_cells.remove(cell_val)
@@ -127,7 +143,19 @@ class Table(ttk.Frame):
     def get_cell_id(self, row, col):
         return (row * self.columns) + col + 1
 
-    def clear_color(self):
+    def clear_color(self, cells):
         for cell in self.selected_cells:
             self.canvas.itemconfig(cell, fill="white")
+        for id in range(13,110):
+            if id%12 == 0:
+                continue
+            self.canvas.itemconfig(id, fill="white")
         self.selected_cells = set()
+
+    def gray_out_cells(self, cells):
+        for cell in cells:
+            i = letter_to_num(cell[0]) + 1
+            j = int(cell[1:]) - 1
+            cell_id = self.get_cell_id(i, j)
+            self.canvas.itemconfig(cell_id, fill = "darkgray")
+        

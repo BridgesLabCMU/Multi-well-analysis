@@ -8,7 +8,7 @@ import subprocess
 import numpy as np
 import json
 import platform
-
+from natsort import natsorted
 HOME_DIR = os.getcwd()
 IMAGES_DIR = []
 BULK_DIR = []
@@ -75,18 +75,36 @@ def read_sample_and_strain_name():
 # save_sample_cells() saves the current list of sample_cells to
 # the conditions_list dictionary, then clears the selected cells and the table
 def save_sample_cells():
+    print(natsorted(list(sample_cells)))
     nplates = plate_count_var.get()
-    if len(conditions_list) < nplates:
-        conditions_list.append({})
-        strains_list.append({})
+
+
     curr_plate = plate_counter.get()
     sample_name = sample_name_entry.get()
     strain_name = strain_name_entry.get()
-    conditions_list[curr_plate-1][sample_name] = sorted(list(sample_cells))
-    strains_list[curr_plate-1][strain_name] = sorted(list(sample_cells))
-    print(conditions_list)
-    print(strains_list)
+    
+    conditions_list[curr_plate-1][sample_name] = natsorted(list(sample_cells))
+    strains_list[curr_plate-1][strain_name] = natsorted(list(sample_cells))
+    all_curr_cells = []
     if curr_plate < nplates:
+        for l in conditions_list[curr_plate].values():
+            for li in l:
+                all_curr_cells.append(li)
+    else:
+        for l in conditions_list[0].values():
+            for li in l:
+                all_curr_cells.append(li)
+    print("curr_plate", curr_plate)
+    print("nplates", nplates)
+    print("all_curr_cells", all_curr_cells)
+    print()
+    table.clear_color(all_curr_cells)
+    table.gray_out_cells(all_curr_cells)        
+        
+    
+
+
+    if plate_counter.get() < nplates:
         plate_counter.set(plate_counter.get() + 1)
     else:
         enter_cells.configure(state="disabled")
@@ -97,11 +115,15 @@ def save_sample_cells():
         # proceed_text.pack(side=LEFT, after=enter_cells, anchor="w",padx=5,pady=3)
     prompt_text.config(text = f"Enter cells for sample ({sample_name_entry.get()}) and plate ({str(plate_counter.get())})")
     sample_cells.clear()
-    table.clear_color()
+    
     
 
 # disable_plate_count disables the plate_count_option_menu widget, prevents user from editing it after hitting "Enter"
 def disable_plate_count():
+    nplates = plate_count_var.get()
+    for _ in range(0,nplates):
+        conditions_list.append({})
+        strains_list.append({})
     plate_count_option_menu.configure(state="disabled")
     
 # def disable_media():
@@ -122,6 +144,10 @@ def create_new_window():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
     json_dict["media"] = media_var.get()
     json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
+    plot_number = plot_number_entry.get("1.0", "end-1c")
+    with open("temp_plot_num.txt", "w") as fw:
+        fw.write(plot_number)
+        fw.close()
     print(IMAGES_DIR)
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
@@ -159,7 +185,7 @@ def create_new_window():
 
 
 def on_yes_click():
-    file = open(HOME_DIR + "/temp_config.json", "r")
+    file = open(HOME_DIR + "\\temp_config.json", "r")
     temp_json = json.load(file)
     file.close()
 
