@@ -148,11 +148,11 @@ function output_images!(stack, masks, overlay, dir, well)
     img_max = quantile(flat_stack, 0.9965)
     adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, 
                                               dst_minval=0, dst_maxval=1))
-	stack = Gray{N0f8}.(stack)
+	stack = 1 .- Gray{N0f8}.(stack)
     save("$dir/results_images/$well.tif", stack)
     @inbounds for i in CartesianIndices(stack)
         gray_val = RGB{N0f8}(stack[i], stack[i], stack[i])
-        overlay[i] = masks[i] ? RGB{N0f8}(1, 0, 0) : gray_val
+        overlay[i] = masks[i] ? RGB{N0f8}(0,1,1) : gray_val
     end
     save("$dir/results_images/$well"*"mask.tif", overlay)
 end

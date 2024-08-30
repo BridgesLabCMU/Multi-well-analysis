@@ -70,7 +70,7 @@ function main()
         if length(metadata_row_indices) == 0
             metadata_row_indices = metadata_row_indices2
         end
-        metadata_df = df[1:metadata_row_indices[1], :]
+        metadata_df = df[1:metadata_row_indices[length(metadata_row_indices)], :]
         CSV.write("$output_dir/metadata.csv", metadata_df, header=false)
 
         well_names = [string(c, r) for c in 'A':'H', r in 1:12]

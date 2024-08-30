@@ -82,7 +82,7 @@ def save_sample_cells():
     curr_plate = plate_counter.get()
     sample_name = sample_name_entry.get()
     strain_name = strain_name_entry.get()
-    
+
     conditions_list[curr_plate-1][sample_name] = natsorted(list(sample_cells))
     strains_list[curr_plate-1][strain_name] = natsorted(list(sample_cells))
     all_curr_cells = []
@@ -99,9 +99,9 @@ def save_sample_cells():
     print("all_curr_cells", all_curr_cells)
     print()
     table.clear_color(all_curr_cells)
-    table.gray_out_cells(all_curr_cells)        
-        
-    
+    table.gray_out_cells(all_curr_cells)
+
+
 
 
     if plate_counter.get() < nplates:
@@ -115,8 +115,8 @@ def save_sample_cells():
         # proceed_text.pack(side=LEFT, after=enter_cells, anchor="w",padx=5,pady=3)
     prompt_text.config(text = f"Enter cells for sample ({sample_name_entry.get()}) and plate ({str(plate_counter.get())})")
     sample_cells.clear()
-    
-    
+
+
 
 # disable_plate_count disables the plate_count_option_menu widget, prevents user from editing it after hitting "Enter"
 def disable_plate_count():
@@ -125,7 +125,7 @@ def disable_plate_count():
         conditions_list.append({})
         strains_list.append({})
     plate_count_option_menu.configure(state="disabled")
-    
+
 # def disable_media():
     # media_option_menu.configure(state="disabled")
 
@@ -191,7 +191,7 @@ def on_yes_click():
 
     # repopulate notes entry
     notes_entry.insert(END, temp_json["notes"])
-    
+
     # repopulate media option
     media_var.set(media_options[media_options.index(temp_json["media"])])
     plot_num_file = open(HOME_DIR + "/GUI/temp_plot_num.txt", "r")
@@ -199,7 +199,7 @@ def on_yes_click():
     plot_number_entry.insert(END, plot_num_file.read())
     plot_num_file.close()
     file.close()
-    
+
     # acquisition frequency option
     acquisition_freq.delete(1.0, END)
     acquisition_freq.insert(END, temp_json["acquisition_frequency"])
@@ -207,10 +207,10 @@ def on_yes_click():
     # experiment dir option
     send_dir_entry.delete(0, END)
     send_dir_entry.insert(END, temp_json["experiment_directory"])
-    
+
     # image analysis checkbox option
     if temp_json["image_analysis"] == "True":
-        
+
         var.set(1)
         toggle_checkbox_imaging()
         images_dirs = temp_json["images_directory"]
@@ -230,23 +230,23 @@ def on_yes_click():
         BULK_DIR.append(tuple([bulk_dir]))
     bulk_dir_entry.delete(0,END)
     bulk_dir_entry.insert(END, temp_json["bulk_data"])
-        
-    
-    
-    
-    
+
+
+
+
+
     root2.destroy()
 
 
 
 if __name__ == "__main__":
-    
+
     root = Tk()
     root.title("Scanner")
     root.geometry("1000x1000")
-    
-    
-    
+
+
+
     frm = ttk.Frame(root)
     frm.grid()
     frm.pack(padx=2, pady=0)
@@ -371,7 +371,7 @@ if __name__ == "__main__":
     # TABLE
     table = Table(root, rows=9, columns=13)
     table.pack(expand=True, fill = "both", side=TOP, anchor="w",padx = 10)
-    
+
     enter_cells_frame = ttk.Frame(root)
     enter_cells_frame.pack(side=LEFT, after=table, anchor = "w", padx=5)
     enter_cells = ttk.Button(enter_cells_frame, text="Enter", command=save_sample_cells)
@@ -380,7 +380,7 @@ if __name__ == "__main__":
     # NEXT
     next_btn = ttk.Button(root, text="Next", command=create_new_window)
     next_btn.pack(side=TOP, anchor = "e", padx = 10)
-    
+
     # if not back_button_pressed.get():
     root2 = Tk()
     root2.title("Repopulate")
@@ -389,7 +389,7 @@ if __name__ == "__main__":
     repopulate_frame.pack(padx=2, pady=0)
     repopulate_label = ttk.Label(repopulate_frame, text="Repopulate values using config?")
     repopulate_label.pack(side=TOP, padx=4, pady=10)
-    
+
     no_button = ttk.Button(repopulate_frame, text="No", fg="#bb2211",command=root2.destroy)
     no_button.pack(side=LEFT, after=repopulate_label, anchor = "sw", padx=4, pady=0)
 
@@ -398,5 +398,5 @@ if __name__ == "__main__":
     root2.mainloop()
     # else:
     #     root.destroy()
-    
+
     root.mainloop()
