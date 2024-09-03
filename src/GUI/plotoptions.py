@@ -7,7 +7,8 @@ import numpy as np
 import shutil
 import platform
 import os
-
+from natsort import natsorted
+HOME_DIR = os.getcwd()
 class DoubleScrolledFrame(ttk.Frame):
     def __init__(self, parent, *args, **kw):
         ttk.Frame.__init__(self, parent, *args, **kw)
@@ -31,7 +32,7 @@ class DoubleScrolledFrame(ttk.Frame):
         self.interior = interior = ttk.Frame(canvas)
         interior_id = canvas.create_window(0, 0, window=interior,
                                            anchor=NW)
-
+        
         # Track changes to the canvas and frame width and sync them,
         # also updating the scrollbar.
         def _configure_interior(event):
@@ -40,17 +41,20 @@ class DoubleScrolledFrame(ttk.Frame):
             width = canvas.winfo_width()
             canvas.config(scrollregion = (0,0, max(x2, width), max(y2, height)))
         interior.bind('<Configure>', _configure_interior)
-
+    
 num_plots = 0
 with open("temp_plot_num.txt", "r") as fr:
     num_plots = int(fr.read())
     fr.close()
 
 condition_names = []
-with open("temp_conditions.txt", "r") as fr:
-    for line in fr:
-        if line[:-1] not in condition_names:
-            condition_names.append(line[:-1])
+with open("temp_config.json", "r") as fr:
+    temp_json = json.load(fr)
+    # for line in fr:
+    #     if line[:-1] not in condition_names:
+    #         condition_names.append(line[:-1])
+    cond_dict = temp_json["conditions"][0]
+    condition_names = natsorted(cond_dict.keys())
     fr.close()
 
 plot_types = {f"plot{i}": "" for i in range(1, num_plots+1)}
@@ -82,32 +86,32 @@ if __name__ == "__main__":
             with open("temp_config.json", "r") as file:
                 json_dict = json.load(file)
             images_directories = json_dict["images_directory"]
-            images_sub_dirs = []
+            # images_sub_dirs = []
 
-
-
-            for directory in images_directories:
-                param_list = []
-                for file in os.listdir(directory):
-                    if not os.path.isdir(f"{directory}/{file}"):
-                        params = file.split("_")
-                        if len(params) > 1:
-                            param_list.append(params[1])
-                n_unique = len(np.unique(param_list))
-                if n_unique == 1:
-                    images_sub_dirs.append(directory)
-                    continue
-                else:
-                    print("Copying images to sub-directory")
-                for file in os.listdir(directory):
-                    if not os.path.isdir(f"{directory}/{file}"):
-                        params = file.split("_")
-                        target_dir = f"{directory}/{params[1]}"
-                        if not os.path.exists(target_dir):
-                            os.makedirs(target_dir)
-                            images_sub_dirs.append(target_dir)
-                        shutil.copy(f"{directory}/{file}", target_dir)
-            json_dict["images_directory"] = images_sub_dirs
+            
+            
+            # for directory in images_directories:
+            #     param_list = []
+            #     for file in os.listdir(directory):
+            #         if not os.path.isdir(f"{directory}/{file}"):
+            #             params = file.split("_")
+            #             if len(params) > 1:
+            #                 param_list.append(params[1])
+            #     n_unique = len(np.unique(param_list))
+            #     if n_unique == 1:
+            #         images_sub_dirs.append(directory)
+            #         continue
+            #     else:
+            #         print("Copying images to sub-directory")
+            #     for file in os.listdir(directory):
+            #         if not os.path.isdir(f"{directory}/{file}"):
+            #             params = file.split("_")
+            #             target_dir = f"{directory}/{params[1]}"
+            #             if not os.path.exists(target_dir):
+            #                 os.makedirs(target_dir)
+            #                 images_sub_dirs.append(target_dir)
+            #             shutil.copy(f"{directory}/{file}", target_dir)
+            # json_dict["images_directory"] = images_sub_dirs
             def save_to_json():
                 # with open("temp_config.json", "r") as file:
                 #     json_dict = json.load(file)
@@ -389,15 +393,15 @@ if __name__ == "__main__":
                         plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
                 plot_condition_prev_selected.clear()
                 plot_condition_prev_selected.extend(plot_condition_selections)
-
+            
             def go_back():
                 if platform.system() == "Windows":
                     os.system('set LANG=en_US.UTF-8 && python3 ./GUI/gui.py')
                 elif platform.system() == "Darwin":
                     os.system("export LANG='en_US.UTF-8' && python3 ./GUI/gui.py")
-
+            
             root2 = tk.Tk.__init__(self, *args, **kwargs)
-
+            
             self.frame = DoubleScrolledFrame(root2)
             self.frame.pack()
 
@@ -774,7 +778,7 @@ if __name__ == "__main__":
                 plot_filename_entry = ttk.Entry(plot_filename_frm)
                 plot_filename_entry.pack(side=LEFT, after=plot_filename_label, anchor="w", padx=5)
                 plot_filename_entries.append(plot_filename_entry)
-
+            
             back_btn = ttk.Button(self.frame.interior,
                                   text="Back",
                                   command=go_back)
