@@ -4,8 +4,8 @@ using ImageMorphology: label_components, component_lengths
 using StatsBase: mean, median, quantile
 using TiffImages: load, save
 using NaturalSort: sort, natural
-using DataFrames: DataFrame
-using CSV: write
+using DataFrames
+using CSV
 using JSON: parsefile
 using IntegralArrays: IntegralArray
 using CoordinateTransformations: Translation
@@ -128,7 +128,7 @@ end
 
 function plottingfunc(df, output_file, acquisition_frequency)
     t = range(0,stop=nrow(df) - 1,length=nrow(df)) ./ acquisition_frequency 
-    PythonPlot.matplotlib.rcParams["figure.figsize"] = [3, 3]  
+    PythonPlot.matplotlib.rcParams["figure.figsize"] = [4, 3]  
     PythonPlot.matplotlib.rcParams["lines.linewidth"] = 2.5
     PythonPlot.matplotlib.rcParams["axes.titlesize"] = 20    
     PythonPlot.matplotlib.rcParams["axes.labelsize"] = 20   
@@ -161,29 +161,31 @@ function plottingfunc(df, output_file, acquisition_frequency)
 		ax.plot(t, df[:, i], color=color, alpha=0.2)
 	end
 
-	avg_line = mean(eachcol(df), dims=2)
-	plt.plot(t, avg_line, color="black", linewidth=2, label="Average")
-    fig, ax = pyplot.subplots()
+	avg_line = reduce(+, eachcol(df)) ./ ncol(df)  
+	ax.plot(t, avg_line, color="black", linewidth=2, label="Average")
     ax.set_ylabel("Biofilm biomass (a.u.)")
     ax.set_xlabel("Time (h)")
     pyplot.locator_params(axis='x', min_n_ticks=5)
     pyplot.locator_params(axis='y', min_n_ticks=5)
     ax.spines["right"].set_visible(false)
     ax.spines["top"].set_visible(false)
+    pyplot.tight_layout()
     savefig(output_file)
 end
 
-function multiple_mags(bulk_file)
+function multiple_mags(dir, bulk_file)
     df = DataFrame(CSV.File(bulk_file, header=false))
     objective_rows = passmissing(occursin).([r"Objective"], df.Column2)  
+	objective_rows = [ismissing(x) ? false : x for x in objective_rows]
+    objective_rows = findall(objective_rows)
     if length(objective_rows) > 1
         flags = ["_03_1_", "_04_1_"]
         plot_output_files = []
         BF_output_files = []
-        for i in eachindex(objective_rows)
-            objective = match(r"(\d{1,2}x)", df[objective_rows[i], df.Column2]).match
-            push!("$dir/results_data/plot_"*objective*".svg", plot_output_files)
-            push!("$dir/results_data/BF_imaging_"*objective*".csv", BF_output_files)
+        for i in 1:length(objective_rows)
+            objective = match(r"(\d{1,2}x)", df[objective_rows[i], 2]).match
+            push!(plot_output_files, "$dir/results_data/plot_"*objective*".svg")
+            push!(BF_output_files, "$dir/results_data/BF_imaging_"*objective*".csv")
         end
     else
         flags = ["_04_1_"]
@@ -215,7 +217,7 @@ function main()
         mkdir("$dir/results_images")
         mkdir("$dir/results_data")
         
-        flags, BF_output_files, plot_output_files = multiple_mags(bulk_file)
+        flags, BF_output_files, plot_output_files = multiple_mags(dir, bulk_file)
         for (i, flag) in enumerate(flags)
             num_wells = 96 
             letters = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -261,8 +263,8 @@ function main()
             end # loop over wells for a condition 
             df = DataFrame(BF_data_matrix, Symbol.(all_wells))
             df .= ifelse.(isnan.(df), 0, df)
-            write(BF_output_files[i], df)
-            plottingfun(df, plot_output_files[i], acquisition_frequency)
+            plottingfunc(df, plot_output_files[i], acquisition_frequency)
+            CSV.write(BF_output_files[i], df)
         end # loop over magnifications
     end # loop over directories
 end

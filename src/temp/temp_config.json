@@ -1,0 +1,33 @@
+{
+    "notes": "Pratyush cpsKO C1 CDMglu -2dil",
+    "media": "LB",
+    "acquisition_frequency": 2,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240417_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/BF_4x_Time_Static_Biospa_SGC_3_240722_.csv"
+    ],
+    "conditions": [
+        {
+            "cpsKO_C1_CDMglu_-2dil": [
+                "C7",
+                "C8",
+                "C9"
+            ]
+        }
+    ],
+    "strains": [
+        {
+            "cpsKO": [
+                "C7",
+                "C8",
+                "C9"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "",
+    "image_analysis": "True",
+    "experiment_directory": "B:/Hiller Lab/Pratyush_cpsKO_CDMGlu_-2dil"
+}
