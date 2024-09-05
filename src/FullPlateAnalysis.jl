@@ -117,7 +117,7 @@ function output_images!(stack, masks, overlay, dir, well)
     img_max = quantile(flat_stack, 0.9965)
     adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, 
                                               dst_minval=0, dst_maxval=1))
-	stack = 1 .- Gray{N0f8}.(stack)
+	stack = Gray{N0f8}.(stack)
     save("$dir/results_images/$well.tif", stack)
     @inbounds for i in CartesianIndices(stack)
         gray_val = RGB{N0f8}(stack[i], stack[i], stack[i])
@@ -126,43 +126,54 @@ function output_images!(stack, masks, overlay, dir, well)
     save("$dir/results_images/$well"*"mask.tif", overlay)
 end
 
-function plottingfunc(df, output_file, acquisition_frequency)
-    t = range(0,stop=nrow(df) - 1,length=nrow(df)) ./ acquisition_frequency 
-    PythonPlot.matplotlib.rcParams["figure.figsize"] = [4, 3]  
+function plottingfunc(df, csv_output_file, output_file, acquisition_frequency)
+    t = range(0, stop=nrow(df) - 1, length=nrow(df)) ./ acquisition_frequency
+    PythonPlot.matplotlib.rcParams["figure.figsize"] = [4, 3]
     PythonPlot.matplotlib.rcParams["lines.linewidth"] = 2.5
-    PythonPlot.matplotlib.rcParams["axes.titlesize"] = 20    
-    PythonPlot.matplotlib.rcParams["axes.labelsize"] = 20   
-    PythonPlot.matplotlib.rcParams["xtick.labelsize"] = 14 
+    PythonPlot.matplotlib.rcParams["axes.titlesize"] = 20
+    PythonPlot.matplotlib.rcParams["axes.labelsize"] = 20
+    PythonPlot.matplotlib.rcParams["xtick.labelsize"] = 14
     PythonPlot.matplotlib.rcParams["ytick.labelsize"] = 14
-    PythonPlot.matplotlib.rcParams["legend.fontsize"] = 12    
+    PythonPlot.matplotlib.rcParams["legend.fontsize"] = 12
 
-	final_values = [df[end, i] for i in 1:ncol(df)]
-	peak_values = [maximum(df[:, i]) for i in 1:ncol(df)]
-	avg_final_value = mean(final_values)
-	std_final_value = std(final_values)
-	avg_peak_value = mean(peak_values)
-	std_peak_value = std(peak_values)
+    final_values = [df[end, i] for i in 1:ncol(df)]
+    peak_values = [maximum(df[:, i]) for i in 1:ncol(df)]
+    avg_final_value = mean(final_values)
+    std_final_value = std(final_values)
+    avg_peak_value = mean(peak_values)
+    std_peak_value = std(peak_values)
 
     fig, ax = pyplot.subplots()
+    
+    # List to store data for non-black lines
+    sig_wells = []
 
-	for i in 1:ncol(df)
-		final_val = final_values[i]
-		peak_val = peak_values[i]
-		if final_val >= avg_final_value + 2 * std_final_value && peak_val >= avg_peak_value + 2 * std_peak_value
-			color = "green"
-		elseif final_val >= avg_final_value + 2 * std_final_value
-			color = "red"
-		elseif peak_val >= avg_peak_value + 2 * std_peak_value
-			color = "blue"
-		else
-			color = "black"
-		end
-		
-		ax.plot(t, df[:, i], color=color, alpha=0.2)
-	end
+    for i in 1:ncol(df)
+        final_val = final_values[i]
+        peak_val = peak_values[i]
+        col_name = names(df)[i]
+        if final_val >= avg_final_value + 2 * std_final_value && peak_val >= avg_peak_value + 2 * std_peak_value
+            color = "green"
+        elseif final_val >= avg_final_value + 2 * std_final_value
+            color = "red"
+        elseif peak_val >= avg_peak_value + 2 * std_peak_value
+            color = "blue"
+        elseif peak_val <= avg_peak_value - 2 * std_peak_value
+            color = "purple"
+        else
+            color = "black"
+        end
+        ax.plot(t, df[:, i], color=color, alpha=0.2)
+        
+        if color != "black"
+            normalized_peak_val = peak_val / avg_peak_value
+            normalized_final_val = final_val / avg_final_value
+            push!(sig_wells, (col_name, normalized_peak_val, normalized_final_val))
+        end
+    end
 
-	avg_line = reduce(+, eachcol(df)) ./ ncol(df)  
-	ax.plot(t, avg_line, color="black", linewidth=2, label="Average")
+    avg_line = reduce(+, eachcol(df)) ./ ncol(df)
+    ax.plot(t, avg_line, color="black", linewidth=2, label="Average")
     ax.set_ylabel("Biofilm biomass (a.u.)")
     ax.set_xlabel("Time (h)")
     pyplot.locator_params(axis='x', min_n_ticks=5)
@@ -171,6 +182,14 @@ function plottingfunc(df, output_file, acquisition_frequency)
     ax.spines["top"].set_visible(false)
     pyplot.tight_layout()
     savefig(output_file)
+
+    df_sig = DataFrame(
+        ColumnName = [row[1] for row in sig_wells],
+        NormalizedPeakValue = [row[2] for row in sig_wells],
+        NormalizedFinalValue = [row[3] for row in sig_wells]
+    )
+	csv_output = replace(csv_output_file, "BF_imaging" => "significant_wells")
+	CSV.write(csv_output, df_sig)
 end
 
 function multiple_mags(dir, bulk_file)
@@ -240,7 +259,7 @@ function main()
                 images = Float64.(images)
                 normalized_stack = similar(images)
                 registered_stack = similar(images)
-                fixed_thresh = 0.03
+                fixed_thresh = 0.02
                 images, output_stack = stack_preprocess(images, normalized_stack, registered_stack, blockDiameter[2], ntimepoints, shift_thresh, 
                                                                                                               sig)
                 masks = zeros(Bool, size(images))
@@ -253,7 +272,7 @@ function main()
 					str = BF_output_files[i]
                     well = well*"_"*str[findlast(isequal('_'), str)+1:length(str)-4]
                 end
-                output_images!(output_stack, masks, overlay, dir, well)
+                output_images!(images, masks, overlay, dir, well)
                 let images = images
                     @floop for t in 1:ntimepoints
                         @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
@@ -263,7 +282,7 @@ function main()
             end # loop over wells for a condition 
             df = DataFrame(BF_data_matrix, Symbol.(all_wells))
             df .= ifelse.(isnan.(df), 0, df)
-            plottingfunc(df, plot_output_files[i], acquisition_frequency)
+            plottingfunc(df, BF_output_files[i], plot_output_files[i], acquisition_frequency)
             CSV.write(BF_output_files[i], df)
         end # loop over magnifications
     end # loop over directories

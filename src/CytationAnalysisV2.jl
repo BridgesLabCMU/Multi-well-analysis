@@ -148,7 +148,7 @@ function output_images!(stack, masks, overlay, dir, well)
     img_max = quantile(flat_stack, 0.9965)
     adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, 
                                               dst_minval=0, dst_maxval=1))
-	stack = 1 .- Gray{N0f8}.(stack)
+	stack = Gray{N0f8}.(stack)
     save("$dir/results_images/$well.tif", stack)
     @inbounds for i in CartesianIndices(stack)
         gray_val = RGB{N0f8}(stack[i], stack[i], stack[i])
@@ -247,7 +247,7 @@ function main()
                 images = Float64.(images)
                 normalized_stack = similar(images)
                 registered_stack = similar(images)
-                fixed_thresh = 0.03
+                fixed_thresh = 0.02
                 CFP_images, YFP_images, texas_red_images, CY5_images, images, output_stack = stack_preprocess(images, normalized_stack, 
                                                                                                               registered_stack, blockDiameter[2], 
                                                                                                               ntimepoints, shift_thresh, 
@@ -259,7 +259,7 @@ function main()
                     dust_correct!(masks)
                 end
                 overlay = zeros(RGB{N0f8}, size(output_stack)...)
-                output_images!(output_stack, masks, overlay, dir, well)
+                output_images!(img_stack, masks, overlay, dir, well)
                 let images = images
                     @floop for t in 1:ntimepoints
                         @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
