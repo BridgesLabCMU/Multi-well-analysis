@@ -1,10 +1,7 @@
-$dbfR^{\mathrm{D51V}}$ +Untreated
-WT +Thy20
-WT +Amp5
-$dbfR^{\mathrm{D51V}}$ +Thy20
-WT +Untreated
-WT +Pmb250
-$dbfR^{\mathrm{D51V}}$ +Rif0.1
-WT +Rif0.1
-$dbfR^{\mathrm{D51V}}$ +Amp5
-$dbfR^{\mathrm{D51V}}$ +Pmb250
+WT + 30mM
+WT + 10mM
+WT + 40mM
+WT + 5mM
+UI
+WT
+WT + 20mM
