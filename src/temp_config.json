@@ -1,93 +1,43 @@
 {
-    "notes": "Arginine",
+    "notes": "1:200000, manA::tn vs WT",
     "media": "M9+Glucose+CA",
     "acquisition_frequency": 1,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240903_BF_10x_Time_Biospa_SK_Drawer7 03-Sep-2024 14-56-47/240903_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240829_4x_bf_lux_biospa_imb_Drawer4 29-Aug-2024 16-25-03/240829_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240903_BF_10x_Time_Biospa.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240829_4x_bf_lux_biospa_imb_Drawer4 29-Aug-2024 16-25-03.csv"
     ],
     "conditions": [
         {
-            "WT": [
-                "A3",
-                "A4",
-                "A5"
-            ],
-            "WT + 40mM": [
-                "B3",
-                "B4",
-                "B5"
-            ],
-            "WT + 30mM": [
-                "C3",
-                "C4",
-                "C5"
-            ],
-            "WT + 20mM": [
-                "D3",
+            "wt": [
                 "D4",
-                "D5"
+                "D5",
+                "D6"
             ],
-            "WT + 10mM": [
-                "E3",
+            "manA": [
                 "E4",
-                "E5"
-            ],
-            "WT + 5mM": [
-                "F3",
-                "F4",
-                "F5"
-            ],
-            "UI": [
-                "G3",
-                "G4",
-                "G5"
+                "E5",
+                "E6"
             ]
         }
     ],
     "strains": [
         {
-            "WT + 50mM": [
-                "A3",
-                "A4",
-                "A5"
-            ],
-            "WT + 40mM": [
-                "B3",
-                "B4",
-                "B5"
-            ],
-            "WT + 30mM": [
-                "C3",
-                "C4",
-                "C5"
-            ],
-            "WT + 20mM": [
-                "D3",
+            "761": [
                 "D4",
-                "D5"
+                "D5",
+                "D6"
             ],
-            "WT + 10mM": [
-                "E3",
+            "2222": [
                 "E4",
-                "E5"
-            ],
-            "WT  + 5mM": [
-                "F3",
-                "F4",
-                "F5"
-            ],
-            "UI": [
-                "G3",
-                "G4",
-                "G5"
+                "E5",
+                "E6"
             ]
         }
     ],
-    "dust_correction": "False",
+    "dust_correction": "True",
     "good_data_directory": "",
     "image_analysis": "True",
-    "experiment_directory": "B:/Sandhya/PlateReaderAssays/Arginine"
+    "experiment_directory": "B:/Jesse"
 }

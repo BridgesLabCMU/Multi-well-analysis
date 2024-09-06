@@ -1,7 +1,2 @@
-WT + 30mM
-WT + 10mM
-WT + 40mM
-WT + 5mM
-UI
-WT
-WT + 20mM
+manA
+wt

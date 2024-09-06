@@ -205,6 +205,8 @@ function main()
                 CY5_images = nothing
                 images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
                 well = wells[j]
+                @show well
+                @show [f for f in readdir(dir) if occursin(well*"_", f)]
                 BF_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("Bright Field", f)], 
                              lt=natural)
                 CFP_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("CFP", f)], 
@@ -259,7 +261,7 @@ function main()
                     dust_correct!(masks)
                 end
                 overlay = zeros(RGB{N0f8}, size(output_stack)...)
-                output_images!(img_stack, masks, overlay, dir, well)
+                output_images!(images, masks, overlay, dir, well)
                 let images = images
                     @floop for t in 1:ntimepoints
                         @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
