@@ -1,0 +1,9 @@
+{
+    "directories": [
+        "/Users/jojo/Desktop",
+        "/Users/jojo/Documents",
+        "/Users/jojo/Downloads"
+    ],
+    "batch_processing": "True",
+    "dust_correction": "True"
+}
