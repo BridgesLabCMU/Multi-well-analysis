@@ -100,14 +100,14 @@ function main()
     select_Imax_button = GtkButton("Select Imax file (for single image analysis)")
     push!(vbox, select_Imax_button)
     
-    select_test_images_button = GtkButton("Select one tif or a tif series to test the threshold")
-    push!(vbox, select_test_images_button)
-
     adj = GtkAdjustment(0.03, 0., 1., 0.001, 1.0, 0.0) 
     spin_button = GtkSpinButton(adj, 0.001, 3)
 	Gtk4.value(spin_button, 0.03)
     push!(vbox, GtkLabel("Threshold:"))
     push!(vbox, spin_button)
+    
+    select_test_images_button = GtkButton("Select one tif or a tif series to test the threshold")
+    push!(vbox, select_test_images_button)
 
     function select_directories(button)
         dlg = GtkFileChooserDialog(
@@ -218,9 +218,9 @@ function main()
         if ntimepoints == 1
             image_test!(test_images[1], fixed_thresh, 101, 2)
         else
-            timelapse_test!(test_images, fixed_thresh, 101, 2)
+            timelapse_test!(sort(test_images, lt=natural), fixed_thresh, 101, 2)
         end
-
+        empty!(test_images)
     end
     
     signal_connect(test_button, "clicked") do widget
