@@ -1,6 +1,6 @@
 using Gtk4, JSON
 
-win = GtkWindow("Experiment Configuration", 400, 200)
+win = GtkWindow("Experiment Configuration", 200, 100)
 vbox = GtkBox(:v)
 push!(win, vbox)
 directories = []
@@ -60,12 +60,21 @@ function on_done(button)
     open("experiment_config.json", "w") do f
         write(f, JSON.json(config, 4))
     end
-    
-    close(win)
 end
 
-signal_connect(done_button, "clicked") do widget
-    on_done(widget)
+if !isinteractive()
+    c = Condition()
+    signal_connect(done_button, "clicked") do widget
+		on_done(widget)
+        notify(c)
+    end
+    @async Gtk4.GLib.glib_main()
+    wait(c)
+else
+	signal_connect(done_button, "clicked") do widget
+		on_done(widget)
+		close(win)
+	end
 end
 
 show(win)

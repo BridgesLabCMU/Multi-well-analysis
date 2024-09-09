@@ -1,0 +1,20 @@
+name = "BiofilmAssay"
+uuid = "df26e6ad-f4fa-4b24-82c9-f997a66f8bd5"
+authors = ["TheHedgehog2000 <jprentic@andrew.cmu.edu>"]
+version = "0.1.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+FLoops = "cc61a311-1640-44b5-9fba-1b764f453329"
+Gtk4 = "9db2cae5-386f-4011-9d63-a5602296539b"
+ImageMorphology = "787d08f9-d448-5407-9aad-5290dd7ab264"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+IntegralArrays = "1d092043-8f09-5a30-832f-7509e371ab51"
+IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+NaturalSort = "c020b1a1-e9b0-503a-9c33-f039bfc54a85"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+SubpixelRegistration = "97a7e826-69e2-510e-8af8-254736c4b599"
+TiffImages = "731e570b-9d59-4bfa-96dc-6df516fadf69"
