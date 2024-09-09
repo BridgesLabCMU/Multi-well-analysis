@@ -121,9 +121,12 @@ function output_images!(stack, masks, overlay, dir, filename)
 end
 
 function extract_base_and_ext(filename::String)
-    matches = match(r"(.*?)(\d*)(\.[^\.]+)$", filename)
-    base = matches.match[1]  
-    ext = matches.match[3]  
+    matches = match(r"^(.*\D)\d+(\.[^\.]+)$", filename)
+    if isnothing(matches)
+        error("Filename $filename does not satisfy batch criteria")
+    end
+    base = matches.captures[1]
+    ext = matches.captures[2]
     return base, ext
 end
 
@@ -152,7 +155,7 @@ function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename
     ntimepoints = 1
     image = Float64.(image)
     img_copy = image 
-    img_normalized = normalize_local_contrast(img, img_copy, blockDiameter)
+    img_normalized = normalize_local_contrast(image, img_copy, blockDiameter)
     normalized_blurred = imfilter(img_normalized, Kernel.gaussian(sig))
     mask = normalized_blurred .> fixed_thresh
     overlay = zeros(RGB{N0f8}, size(image)...)
@@ -169,15 +172,15 @@ function main()
     sig = 2
     blockDiameter = 101 
     shift_thresh = 50
-    fixed_thresh = 0.02
+    fixed_thresh = 0.042
 
     @inbounds for k in eachindex(images_directories)
         dir = images_directories[k]
         if isdir("$dir/Processed images")
             rm("$dir/Processed images"; recursive = true)
         end
-        if isdir("$dir/Processed data")
-            rm("$dir/Processed data"; recursive = true)
+        if isdir("$dir/Numerical data")
+            rm("$dir/Numerical data"; recursive = true)
         end
         mkdir("$dir/Processed images")
         mkdir("$dir/Numerical data")
@@ -191,9 +194,11 @@ function main()
             if file ∉ analyzed
                 test_image = load("$dir/$file"; lazyio=true)
                 img_dims = size(test_image)
-                if img_dims == 3
+                if length(filter(x -> x != 1, img_dims)) == 3
                     height, width, ntimepoints = img_dims
                     images = load("$dir/$file")
+                    target_base, target_ext = extract_base_and_ext(file)
+                    push!(columns, target_base)
                     push!(biomass_data, timelapse_processing(images, 
                                                              blockDiameter,
                                                              ntimepoints,
@@ -201,15 +206,15 @@ function main()
                                                              fixed_thresh,
                                                              sig,
                                                              dust_correction,
-                                                             dir, base))
-                    target_base, target_ext = extract_base_and_ext(file)
+                                                             dir, target_base))
                     push!(analyzed, file)
-                elseif img_dims == 2
+                elseif length(filter(x -> x != 1, img_dims)) == 2
                     target_base, target_ext = extract_base_and_ext(file)
                     matching_files = filter(file_name -> begin
                         base, ext = extract_base_and_ext(file_name)
                         base == target_base && ext == target_ext
-                    end, file_names)
+                    end, files)
+                    push!(columns, target_base)
                     if length(matching_files) > 1 && batch == "True"
                         timelapse_files = sort(matching_files, lt=natural)
                         ntimepoints = length(timelapse_files)
@@ -233,14 +238,13 @@ function main()
                         push!(biomass_data, image_processing(image, 
                                                              blockDiameter,
                                                              fixed_thresh, sig,
-                                                             dir, filename))
+                                                             dir, target_base))
                         push!(analyzed, file)
                     end
                 else
                     error("Number of image dimensions must be either 2 or 3")
                 end
             end
-            push!(columns, target_base)
         end
 		max_length = maximum(length, biomass_data)
 		padded = [vcat(l, fill(Missing, max_length - length(l))) for l in biomass_data]

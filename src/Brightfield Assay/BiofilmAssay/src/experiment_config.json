@@ -1,10 +1,7 @@
 {
-    "directories": [
-        "/Users/jojo/Applications",
-        "/Users/jojo/Desktop",
-        "/Users/jojo/Documents",
-        "/Users/jojo/Downloads"
-    ],
     "batch_processing": "True",
+    "images_directory": [
+        "C:\\Users\\Imaging Controller\\Desktop\\GEN5_IMAGE_LIBRARY\\240906_4x_10x_glassbottom_Drawer5 06-Sep-2024 15-05-01\\240906_Plate 1!PLATE_ID!_"
+    ],
     "dust_correction": "True"
 }

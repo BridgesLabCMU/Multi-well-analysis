@@ -52,7 +52,7 @@ function on_done(button)
         batch_processing = "False" 
     end
     config = Dict(
-        "directories" => directories,
+        "images_directory" => directories,
         "dust_correction" => dust_correction,
         "batch_processing" => batch_processing 
     )
