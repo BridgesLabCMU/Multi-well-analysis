@@ -66,7 +66,7 @@ function crop(img_stack)
     return cropped_stack, (i1, i2, j1, j2)
 end
 
-function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDiameter, nframes, mxshift, sig)       
+function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDiameter, nframes, mxshift, sig, Imin)       
     shifts = (0.0, 0.0) 
     @inbounds for t in 1:nframes
         img = img_stack[:,:,t]
@@ -97,7 +97,10 @@ function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDi
     processed_stack, crop_indices = crop(registered_stack)
     row_min, row_max, col_min, col_max = crop_indices
     img_stack = img_stack[row_min:row_max, col_min:col_max, :]
-    return img_stack, processed_stack
+    if Imin != nothing
+        Imin = Imin[row_min:row_max, col_min:col_max]
+    end
+    return img_stack, processed_stack, Imin
 end
 
 function compute_mask!(stack, masks, fixed_thresh, ntimepoints)
@@ -130,11 +133,11 @@ function extract_base_and_ext(filename::String)
     return base, ext
 end
 
-function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, fixed_thresh, sig, dust_correction, dir, filename)
+function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, fixed_thresh, sig, dust_correction, dir, filename, Imin)
     images = Float64.(images)
     normalized_stack = similar(images)
     registered_stack = similar(images)
-    images, output_stack = stack_preprocess(images, normalized_stack, registered_stack, blockDiameter, ntimepoints, shift_thresh, sig)
+    images, output_stack, Imin = stack_preprocess(images, normalized_stack, registered_stack, blockDiameter, ntimepoints, shift_thresh, sig, Imin)
     masks = zeros(Bool, size(images))
     compute_mask!(output_stack, masks, fixed_thresh, ntimepoints)
     if dust_correction == "True"
@@ -144,14 +147,20 @@ function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, 
     output_images!(images, masks, overlay, dir, filename)
     biomasses = zeros(Float64, ntimepoints)
     let images = images
-        @floop for t in 1:ntimepoints
-            @inbounds signal = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
+        if Imin != nothing
+            @floop for t in 1:ntimepoints
+                @inbounds biomasses[t] = @views mean((-1 .* log10.((images[:,:,t] .- Imin) ./ (images[:,:,1] .- Imin))) .* masks[:,:,t])
+            end
+        else
+            @floop for t in 1:ntimepoints
+                @inbounds biomasses[t] = @views mean((1 .- images[:,:,t]) .* masks[:,:,t])
+            end
         end
     end
     return biomasses
 end
 
-function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename)
+function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename, Imin, Imax)
     ntimepoints = 1
     image = Float64.(image)
     img_copy = image 
@@ -160,8 +169,13 @@ function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename
     mask = normalized_blurred .> fixed_thresh
     overlay = zeros(RGB{N0f8}, size(image)...)
     output_images!(image, mask, overlay, dir, filename)
-    biomass = mean((1 .- image) .* mask)
-    return biomass
+    if Imin != nothing && Imax != nothing
+        biomass = mean((-1 .* log10.((image .- Imin) ./ (Imax .- Imin))) .* mask)
+        return biomass
+    else
+        biomass = mean((1 .- image) .* mask)
+        return biomass
+    end
 end
 
 function main()
@@ -169,10 +183,22 @@ function main()
     images_directories  = config["images_directory"]
     dust_correction = config["dust_correction"]
     batch = config["batch_processing"]
+    fixed_thresh = config["fixed_thresh"] 
+    Imin_path = config["Imin_path"]
+    Imax_path = config["Imax_path"]
     sig = 2
     blockDiameter = 101 
     shift_thresh = 50
-    fixed_thresh = 0.042
+
+    Imin = nothing
+    if Imin_path != ""
+        Imin = load(Imin_path)
+    end
+    
+    Imax = nothing
+    if Imax_path != ""
+        Imax = load(Imax_path)
+    end
 
     @inbounds for k in eachindex(images_directories)
         dir = images_directories[k]
@@ -206,7 +232,7 @@ function main()
                                                              fixed_thresh,
                                                              sig,
                                                              dust_correction,
-                                                             dir, target_base))
+                                                             dir, target_base, Imin))
                     push!(analyzed, file)
                 elseif length(filter(x -> x != 1, img_dims)) == 2
                     target_base, target_ext = extract_base_and_ext(file)
@@ -228,7 +254,7 @@ function main()
                                                                  fixed_thresh,
                                                                  sig,
                                                                  dust_correction,
-                                                                 dir, target_base))
+                                                                 dir, target_base, Imin))
                         for f in matching_files
                             push!(analyzed, f)
                         end
@@ -238,7 +264,7 @@ function main()
                         push!(biomass_data, image_processing(image, 
                                                              blockDiameter,
                                                              fixed_thresh, sig,
-                                                             dir, target_base))
+                                                             dir, target_base, Imin, Imax))
                         push!(analyzed, file)
                     end
                 else
