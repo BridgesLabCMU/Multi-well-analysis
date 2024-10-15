@@ -47,8 +47,6 @@ function dust_correct!(masks)
 end
 
 function normalize_local_contrast(img, img_copy, blockDiameter)
-	img = 1 .- img
-	img_copy = 1 .- img_copy
 	img_copy = imfilter(img_copy, Kernel.gaussian(blockDiameter))
 	img = img - img_copy
     return img 
@@ -66,7 +64,7 @@ function crop(img_stack)
     return cropped_stack, (i1, i2, j1, j2)
 end
 
-function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDiameter, nframes, mxshift, sig, Imin)       
+function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDiameter, nframes, mxshift, sig, Imins, Imaxes)       
     shifts = (0.0, 0.0) 
     @inbounds for t in 1:nframes
         img = img_stack[:,:,t]
@@ -97,23 +95,25 @@ function stack_preprocess(img_stack, normalized_stack, registered_stack, blockDi
     processed_stack, crop_indices = crop(registered_stack)
     row_min, row_max, col_min, col_max = crop_indices
     img_stack = img_stack[row_min:row_max, col_min:col_max, :]
-    if Imin != nothing
-        Imin = Imin[row_min:row_max, col_min:col_max]
+	Imin_image = nothing
+	Imax_image = nothing
+    if Imins != nothing
+        Imin_image = Imins[1][row_min:row_max, col_min:col_max]
     end
-    return img_stack, processed_stack, Imin
+    if Imaxes != nothing
+        Imax_image = Imaxes[1][row_min:row_max, col_min:col_max]
+    end
+    return img_stack, processed_stack, Imin_image, Imax_image
 end
 
 function compute_mask!(stack, masks, fixed_thresh, ntimepoints)
     @inbounds for t in 1:ntimepoints
-        @views masks[:,:,t] = stack[:,:,t] .> fixed_thresh
+        @views masks[:,:,t] = (1 .- stack[:,:,t]) .> fixed_thresh
     end
 end
 
-function output_images!(stack, masks, overlay, dir, filename)
-	flat_stack = vec(stack)
-    img_min = quantile(flat_stack, 0.0035)
-    img_max = quantile(flat_stack, 0.9965)
-    adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, dst_minval=0, dst_maxval=1))
+function output_images!(images, stack, masks, overlay, Imin, Imax, dir, filename)
+    stack[stack .< 0] .= 0
 	stack = Gray{N0f8}.(stack)
     save("$dir/Processed images/$filename.tif", stack)
     @inbounds for i in CartesianIndices(stack)
@@ -121,6 +121,15 @@ function output_images!(stack, masks, overlay, dir, filename)
         overlay[i] = masks[i] ? RGB{N0f8}(0,1,1) : gray_val
     end
     save("$dir/Processed images/$filename"*"mask.tif", overlay)
+    if length(size(stack)) == 2
+        save("$dir/Processed images/$filename"*"OD_image.tif", (-1 .* log10.((images .- Imin) ./ (Imax .- Imin))) .* masks)
+    else
+        OD_images = similar(images)
+        for t in 1:size(stack,3)
+            OD_images[:,:,t] = (-1 .* log10.((images[:,:,t] .- Imin) ./ (Imax .- Imin))) .* masks[:,:,t]
+        end
+        save("$dir/Processed images/$filename"*"OD_image.tif", OD_images)
+    end
 end
 
 function extract_base_and_ext(filename::String)
@@ -133,23 +142,26 @@ function extract_base_and_ext(filename::String)
     return base, ext
 end
 
-function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, fixed_thresh, sig, dust_correction, dir, filename, Imin)
-    images = Float64.(images)
+function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, fixed_thresh, sig, dust_correction, dir, filename, Imins, Imaxes)
+    images = Float32.(images)
     normalized_stack = similar(images)
     registered_stack = similar(images)
-    images, output_stack, Imin = stack_preprocess(images, normalized_stack, registered_stack, blockDiameter, ntimepoints, shift_thresh, sig, Imin)
+    images, output_stack, Imin, Imax = stack_preprocess(images, normalized_stack, registered_stack, blockDiameter, ntimepoints, shift_thresh, sig, Imins, Imaxes)
     masks = zeros(Bool, size(images))
     compute_mask!(output_stack, masks, fixed_thresh, ntimepoints)
     if dust_correction == "True"
         dust_correct!(masks)
     end
     overlay = zeros(RGB{N0f8}, size(output_stack)...)
-    output_images!(images, masks, overlay, dir, filename)
-    biomasses = zeros(Float64, ntimepoints)
+    biomasses = zeros(Float32, ntimepoints)
     let images = images
         if Imin != nothing
+            if Imax == nothing
+				Imax = images[:,:,1]
+			end
+            output_images!(images, output_stack, masks, overlay, Imin, Imax, dir, filename)
             @floop for t in 1:ntimepoints
-                @inbounds biomasses[t] = @views mean((-1 .* log10.((images[:,:,t] .- Imin) ./ (images[:,:,1] .- Imin))) .* masks[:,:,t])
+                @inbounds biomasses[t] = @views mean((-1 .* log10.((images[:,:,t] .- Imin) ./ (Imax .- Imin))) .* masks[:,:,t])
             end
         else
             @floop for t in 1:ntimepoints
@@ -160,18 +172,26 @@ function timelapse_processing(images, blockDiameter, ntimepoints, shift_thresh, 
     return biomasses
 end
 
-function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename, Imin, Imax)
+function image_processing(image, blockDiameter, fixed_thresh, sig, dir, filename, Imins, Imaxes)
     ntimepoints = 1
-    image = Float64.(image)
+    image = Float32.(image)
     img_copy = image 
     img_normalized = normalize_local_contrast(image, img_copy, blockDiameter)
-    normalized_blurred = imfilter(img_normalized, Kernel.gaussian(sig))
+    normalized_blurred = imfilter((1 .- img_normalized), Kernel.gaussian(sig))
     mask = normalized_blurred .> fixed_thresh
     overlay = zeros(RGB{N0f8}, size(image)...)
-    output_images!(image, mask, overlay, dir, filename)
-    if Imin != nothing && Imax != nothing
-        biomass = mean((-1 .* log10.((image .- Imin) ./ (Imax .- Imin))) .* mask)
-        return biomass
+    if Imins != nothing && Imaxes != nothing
+        for Imin in Imins
+			if size(Imin) == size(image)
+				for Imax in Imaxes
+					if size(Imax) == size(image)
+                        output_images!(image, img_normalized, mask, overlay, Imin, Imax,dir, filename)
+						biomass = mean((-1 .* log10.((image .- Imin) ./ (Imax .- Imin))) .* mask)
+						return biomass
+					end
+				end
+			end
+		end
     else
         biomass = mean((1 .- image) .* mask)
         return biomass
@@ -184,20 +204,20 @@ function main()
     dust_correction = config["dust_correction"]
     batch = config["batch_processing"]
     fixed_thresh = config["fixed_thresh"] 
-    Imin_path = config["Imin_path"]
-    Imax_path = config["Imax_path"]
+    Imin_paths = config["Imin_path"]
+    Imax_paths = config["Imax_path"]
     sig = 2
     blockDiameter = 101 
     shift_thresh = 50
 
-    Imin = nothing
-    if Imin_path != ""
-        Imin = load(Imin_path)
+    Imins = nothing
+    if length(Imin_paths) > 0
+        Imins = [load(Imin_path) for Imin_path in Imin_paths]
     end
     
-    Imax = nothing
-    if Imax_path != ""
-        Imax = load(Imax_path)
+    Imaxes = nothing
+    if length(Imax_paths) > 0
+        Imaxes = [load(Imax_path) for Imax_path in Imax_paths]
     end
 
     @inbounds for k in eachindex(images_directories)
@@ -232,7 +252,7 @@ function main()
                                                              fixed_thresh,
                                                              sig,
                                                              dust_correction,
-                                                             dir, target_base, Imin))
+                                                             dir, target_base, Imins, Imaxes))
                     push!(analyzed, file)
                 elseif length(filter(x -> x != 1, img_dims)) == 2
                     target_base, target_ext = extract_base_and_ext(file)
@@ -254,7 +274,7 @@ function main()
                                                                  fixed_thresh,
                                                                  sig,
                                                                  dust_correction,
-                                                                 dir, target_base, Imin))
+                                                                 dir, target_base, Imins, Imaxes))
                         for f in matching_files
                             push!(analyzed, f)
                         end
@@ -264,7 +284,7 @@ function main()
                         push!(biomass_data, image_processing(image, 
                                                              blockDiameter,
                                                              fixed_thresh, sig,
-                                                             dir, target_base, Imin, Imax))
+                                                             dir, target_base, Imins, Imaxes))
                         push!(analyzed, file)
                     end
                 else

@@ -1,0 +1,416 @@
+{
+    "notes": "2-fold manual dilutions, 4 compounds",
+    "media": "M9+Glucose+CA",
+    "acquisition_frequency": 1,
+    "images_directory": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240926_BF_10x_Time_Biospa_Makayla_Drawer4 26-Sep-2024 14-54-26/240926_Plate 1!PLATE_ID!_"
+    ],
+    "bulk_data": [
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/BF_10x_Time_Biospa_Makayla_Drawer4 26-Sep-2024 14-54-26BF_10x_Time_Biospa_Makayla_240926_.csv"
+    ],
+    "conditions": [
+        {
+            "9133146 20uM": [
+                "A1",
+                "A2",
+                "A3"
+            ],
+            "9133146 10uM": [
+                "B1",
+                "B2",
+                "B3"
+            ],
+            "9133146 5uM": [
+                "C1",
+                "C2",
+                "C3"
+            ],
+            "9133146 2.5uM": [
+                "D1",
+                "D2",
+                "D3"
+            ],
+            "9133146 1.25uM": [
+                "E1",
+                "E2",
+                "E3"
+            ],
+            "9133146 0.625uM": [
+                "F1",
+                "F2",
+                "F3"
+            ],
+            "9133146 0uM": [
+                "G1",
+                "G2",
+                "G3"
+            ],
+            "707 20uM": [
+                "A4",
+                "A5",
+                "A6"
+            ],
+            "707 10uM": [
+                "B4",
+                "B5",
+                "B6"
+            ],
+            "707 5uM": [
+                "C4",
+                "C5",
+                "C6"
+            ],
+            "707 2.5uM": [
+                "D4",
+                "D5",
+                "D6"
+            ],
+            "707 1.25uM": [
+                "E4",
+                "E5",
+                "E6"
+            ],
+            "707 0.625uM": [
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "707 0uM": [
+                "G4",
+                "G5",
+                "G6"
+            ],
+            "052 20uM": [
+                "A7",
+                "A8",
+                "A9"
+            ],
+            "052 10uM": [
+                "B7",
+                "B8",
+                "B9"
+            ],
+            "052 5uM": [
+                "C7",
+                "C8",
+                "C9"
+            ],
+            "052 2.5uM": [
+                "D7",
+                "D8",
+                "D9"
+            ],
+            "052 1.25uM": [
+                "E7",
+                "E8",
+                "E9"
+            ],
+            "052 0.625uM": [
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "052 0uM": [
+                "G7",
+                "G8",
+                "G9"
+            ],
+            "131 20uM": [
+                "A10",
+                "A11"
+            ],
+            "131 10uM": [
+                "B10",
+                "B11"
+            ],
+            "131 5uM": [
+                "C10",
+                "C11"
+            ],
+            "131 2.5uM": [
+                "D10",
+                "D11"
+            ],
+            "131 1.25uM": [
+                "E10",
+                "E11"
+            ],
+            "131 0.625uM": [
+                "F10",
+                "F11"
+            ],
+            "131 0uM": [
+                "G10",
+                "G11"
+            ]
+        }
+    ],
+    "strains": [
+        {
+            "761": [
+                "G10",
+                "G11"
+            ]
+        }
+    ],
+    "dust_correction": "True",
+    "good_data_directory": "B:/Good imaging data",
+    "image_analysis": "True",
+    "experiment_directory": "B:/Makayla",
+    "plot_types": {
+        "plot1": "line",
+        "plot2": "line",
+        "plot3": "line",
+        "plot4": "line"
+    },
+    "plot_dtypes": {
+        "plot1": [
+            "BF_imaging"
+        ],
+        "plot2": [
+            "BF_imaging"
+        ],
+        "plot3": [
+            "BF_imaging"
+        ],
+        "plot4": [
+            "BF_imaging"
+        ]
+    },
+    "plot_numerators": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_denominators": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_conditions": {
+        "plot1": [
+            "9133146 0uM",
+            "9133146 0.625uM",
+            "9133146 1.25uM",
+            "9133146 2.5uM",
+            "9133146 5uM",
+            "9133146 10uM",
+            "9133146 20uM"
+        ],
+        "plot2": [
+            "707 0uM",
+            "707 0.625uM",
+            "707 1.25uM",
+            "707 2.5uM",
+            "707 5uM",
+            "707 10uM",
+            "707 20uM"
+        ],
+        "plot3": [
+            "052 0uM",
+            "052 0.625uM",
+            "052 1.25uM",
+            "052 2.5uM",
+            "052 5uM",
+            "052 10uM",
+            "052 20uM"
+        ],
+        "plot4": [
+            "131 0uM",
+            "131 0.625uM",
+            "131 1.25uM",
+            "131 2.5uM",
+            "131 5uM",
+            "131 10uM",
+            "131 20uM"
+        ]
+    },
+    "plot_normalization": {
+        "plot1": "9133146 0uM",
+        "plot2": "707 0uM",
+        "plot3": "131 0uM",
+        "plot4": "052 0uM"
+    },
+    "normalization_method": {
+        "plot1": [
+            "fold-change"
+        ],
+        "plot2": [
+            "fold-change"
+        ],
+        "plot3": [
+            "fold-change"
+        ],
+        "plot4": [
+            "fold-change"
+        ]
+    },
+    "plot_xaxis": {
+        "plot1": "Time",
+        "plot2": "Time",
+        "plot3": "Time",
+        "plot4": "Time"
+    },
+    "plot_scale": {
+        "plot1": [
+            "linear"
+        ],
+        "plot2": [
+            "linear"
+        ],
+        "plot3": [
+            "linear"
+        ],
+        "plot4": [
+            "linear"
+        ]
+    },
+    "plot_color": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "plot_font": {
+        "plot1": "Arial",
+        "plot2": "Arial",
+        "plot3": "Arial",
+        "plot4": "Arial"
+    },
+    "plot_titles": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "plot_xlabs": {
+        "plot1": "Time (hr)",
+        "plot2": "Time (hr)",
+        "plot3": "Time (hr)",
+        "plot4": "Time (hr)"
+    },
+    "plot_ylabs": {
+        "plot1": [
+            "Biofilm biomass (a.u)"
+        ],
+        "plot2": [
+            "Biofilm biomass (a.u)"
+        ],
+        "plot3": [
+            "Biofilm biomass (a.u)"
+        ],
+        "plot4": [
+            "Biofilm biomass (a.u)"
+        ]
+    },
+    "plot_xticks": {
+        "plot1": [
+            "0uM",
+            " 0.625uM",
+            " 1.25uM",
+            " 2.5uM",
+            " 5uM",
+            " 10uM",
+            " 20uM"
+        ],
+        "plot2": [
+            "0uM",
+            " 0.625uM",
+            " 1.25uM",
+            " 2.5uM",
+            " 5uM",
+            " 10uM",
+            " 20uM"
+        ],
+        "plot3": [
+            "0uM",
+            " 0.625uM",
+            " 1.25uM",
+            " 2.5uM",
+            " 5uM",
+            " 10uM",
+            " 20uM"
+        ],
+        "plot4": [
+            "0uM",
+            " 0.625uM",
+            " 1.25uM",
+            " 2.5uM",
+            " 5uM",
+            " 10uM",
+            " 20uM"
+        ]
+    },
+    "plot_yticks": {
+        "plot1": [
+            ""
+        ],
+        "plot2": [
+            ""
+        ],
+        "plot3": [
+            ""
+        ],
+        "plot4": [
+            ""
+        ]
+    },
+    "color_label": {
+        "plot1": "",
+        "plot2": "",
+        "plot3": "",
+        "plot4": ""
+    },
+    "ylims": {
+        "plot1": "default",
+        "plot2": "default",
+        "plot3": "default",
+        "plot4": "default"
+    },
+    "plot_size": {
+        "plot1": [
+            3,
+            2.5
+        ],
+        "plot2": [
+            3,
+            2.5
+        ],
+        "plot3": [
+            3,
+            2.5
+        ],
+        "plot4": [
+            3,
+            2.5
+        ]
+    },
+    "dose_concs": {
+        "plot1": [],
+        "plot2": [],
+        "plot3": [],
+        "plot4": []
+    },
+    "plot_filenames": {
+        "plot1": "9133146titration",
+        "plot2": "707titration",
+        "plot3": "052titration",
+        "plot4": "131titration"
+    },
+    "sig": 2,
+    "blockDiameter": [
+        501,
+        101
+    ],
+    "shift_thresh": 50
+}

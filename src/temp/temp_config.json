@@ -1,33 +1,48 @@
 {
-    "notes": "Pratyush cpsKO C1 CDMglu -2dil",
-    "media": "LB",
-    "acquisition_frequency": 2,
+    "notes": "hi",
+    "media": "M9+Glucose+CA",
+    "acquisition_frequency": 1,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240417_Plate 1!PLATE_ID!_"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/240906_chetan_4x_10x_bf_biospa_Drawer6 06-Sep-2024 13-44-25/240906_Plate 1!PLATE_ID!_"
     ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/BF_4x_Time_Static_Biospa_SGC_3_240722_.csv"
+        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/chetan_4x_10x_bf_biospa_240920_.csv"
     ],
     "conditions": [
         {
-            "cpsKO_C1_CDMglu_-2dil": [
-                "C7",
-                "C8",
-                "C9"
+            "DelBF": [
+                "A1",
+                "B1",
+                "C1"
+            ],
+            "0%": [
+                "A2",
+                "B2",
+                "C2"
+            ],
+            "0.1%": [
+                "A11",
+                "B11",
+                "C11"
             ]
         }
     ],
     "strains": [
         {
-            "cpsKO": [
-                "C7",
-                "C8",
-                "C9"
+            "VC487": [
+                "A1",
+                "B1",
+                "C1"
+            ],
+            "VC1109": [
+                "A11",
+                "B11",
+                "C11"
             ]
         }
     ],
-    "dust_correction": "True",
-    "good_data_directory": "",
+    "dust_correction": "False",
+    "good_data_directory": "B:/Good imaging data",
     "image_analysis": "True",
-    "experiment_directory": "B:/Hiller Lab/Pratyush_cpsKO_CDMGlu_-2dil"
+    "experiment_directory": "B:/Chetan"
 }

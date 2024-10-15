@@ -1,7 +1,13 @@
 {
-    "Imin_path": "/Users/jojo/Documents/killua.gif",
-    "batch_processing": "False",
-    "images_directory": [],
-    "Imax_path": "/Users/jojo/Documents/killua.png",
-    "dust_correction": "False"
+    "Imin_path": [
+        "C:\\Users\\Imaging Controller\\Desktop\\4X_Imin.tif",
+        "C:\\Users\\Imaging Controller\\Desktop\\10X_Imin.tif"
+    ],
+    "batch_processing": "True",
+    "images_directory": [
+        "C:\\Users\\Imaging Controller\\Desktop\\GEN5_IMAGE_LIBRARY\\240906_4x_10x_glassbottom_Drawer5 06-Sep-2024 15-05-01\\240906_Plate 1!PLATE_ID!_"
+    ],
+    "Imax_path": [],
+    "fixed_thresh": 0.05,
+    "dust_correction": "True"
 }

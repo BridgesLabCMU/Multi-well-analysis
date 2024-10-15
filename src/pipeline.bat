@@ -8,16 +8,20 @@ if not exist "%batch_path%\experiment_config.json" (
     if %errorlevel% neq 0 goto end
 ) 
 
+echo Extracting Data
 julia ExtractDataV2.jl
 if %errorlevel% neq 0 goto end
 
 for /f "delims=" %%i in ('powershell -Command "Get-Content '%batch_path%\experiment_config.json' | ConvertFrom-Json | Select -ExpandProperty 'image_analysis'"') do set "image_analysis=%%i"
+
+julia CytationAnalysisV2.jl
 if "%image_analysis%"=="True" (
 	echo Performing image analysis 
 	julia CytationAnalysisV2.jl
 	if %errorlevel% neq 0 goto end
 )
 
+echo Plotting 
 %systemroot%\System32\wsl.exe -d Ubuntu -u jojo -- cd "/mnt/c/Users/Imaging Controller/Desktop/Multi-well-analysis/src" ^&^& /home/jojo/.juliaup/bin/julia CytationPlottingV2.jl
 if %errorlevel% neq 0 goto end
 

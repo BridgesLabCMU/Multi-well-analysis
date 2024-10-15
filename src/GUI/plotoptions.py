@@ -32,7 +32,7 @@ class DoubleScrolledFrame(ttk.Frame):
         self.interior = interior = ttk.Frame(canvas)
         interior_id = canvas.create_window(0, 0, window=interior,
                                            anchor=NW)
-        
+
         # Track changes to the canvas and frame width and sync them,
         # also updating the scrollbar.
         def _configure_interior(event):
@@ -41,7 +41,7 @@ class DoubleScrolledFrame(ttk.Frame):
             width = canvas.winfo_width()
             canvas.config(scrollregion = (0,0, max(x2, width), max(y2, height)))
         interior.bind('<Configure>', _configure_interior)
-    
+
 num_plots = 0
 with open("temp_plot_num.txt", "r") as fr:
     num_plots = int(fr.read())
@@ -88,8 +88,8 @@ if __name__ == "__main__":
             images_directories = json_dict["images_directory"]
             # images_sub_dirs = []
 
-            
-            
+
+
             # for directory in images_directories:
             #     param_list = []
             #     for file in os.listdir(directory):
@@ -393,15 +393,15 @@ if __name__ == "__main__":
                         plot_condition_selections.append([listbox.get(idx) for idx in selected_indices])
                 plot_condition_prev_selected.clear()
                 plot_condition_prev_selected.extend(plot_condition_selections)
-            
+
             def go_back():
                 if platform.system() == "Windows":
                     os.system('set LANG=en_US.UTF-8 && python3 ./GUI/gui.py')
                 elif platform.system() == "Darwin":
                     os.system("export LANG='en_US.UTF-8' && python3 ./GUI/gui.py")
-            
+
             root2 = tk.Tk.__init__(self, *args, **kwargs)
-            
+
             self.frame = DoubleScrolledFrame(root2)
             self.frame.pack()
 
@@ -778,7 +778,7 @@ if __name__ == "__main__":
                 plot_filename_entry = ttk.Entry(plot_filename_frm)
                 plot_filename_entry.pack(side=LEFT, after=plot_filename_label, anchor="w", padx=5)
                 plot_filename_entries.append(plot_filename_entry)
-            
+
             back_btn = ttk.Button(self.frame.interior,
                                   text="Back",
                                   command=go_back)

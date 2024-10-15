@@ -54,8 +54,8 @@ class Table(ttk.Frame):
         self.canvas.pack(side="top", fill="both", expand=True)
         self.draw_table()
         self.canvas.bind("<Button-1>", self.on_click)
-        
-        
+
+
     def draw_table(self):
         for row in range(self.rows):
             for col in range(self.columns):
@@ -65,7 +65,7 @@ class Table(ttk.Frame):
                 y1 = y0 + self.cell_height
 
 
-                
+
                 if col == 0:
                     if row >= 1:
                         letter = num_to_letter(row - 1)
@@ -78,13 +78,13 @@ class Table(ttk.Frame):
                         self.canvas.create_text(x1 - 25, y0 + 15, text = str(col))
                     continue
                 self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="white")
-                
+
     def cell_clicked(self, cell):
         row, col = cell
         r = num_to_letter(row)
         c = str(col + 1)
         cell_val = r + c
-        
+
         cell_id = self.get_cell_id(row, col)
         if cell_id not in self.selected_cells:
             self.selected_cells.add(cell_id)
@@ -95,18 +95,18 @@ class Table(ttk.Frame):
             self.canvas.itemconfig(cell_id, fill="white")
             sample_cells.remove(cell_val)
 
-        
+
     def on_click(self, event):
         self.start_cell = self.get_coords(event)
         self.end_cell = self.get_coords(event) + (self.cell_width,self.cell_height)
         self.canvas.bind("<ButtonRelease-1>", lambda event, cell=(self.start_cell[0], self.end_cell[1]): self.on_release(cell, event))
-    
+
     def on_release(self, cell, event):
         click_row, click_col = cell
         self.release_start_cell = self.get_coords(event)
         release_row, release_col = self.release_start_cell
-        
-        
+
+
         if click_row == 0 or click_col == 0 or release_row == 0 or release_col == 0:
             return
         if click_row > release_row:
@@ -117,8 +117,8 @@ class Table(ttk.Frame):
             temp_col = click_col
             click_col = release_col
             release_col = temp_col
-            
-        
+
+
         for i in range(click_row, release_row + 1):
             for j in range(click_col - 1, release_col):
                 cell_id = self.get_cell_id(i,j)
@@ -134,7 +134,7 @@ class Table(ttk.Frame):
                     self.selected_cells.remove(cell_id)
                     self.canvas.itemconfig(cell_id, fill="white")
                     sample_cells.remove(cell_val)
-    
+
     def get_coords(self, event):
         col = event.x // self.cell_width
         row = event.y // self.cell_height
@@ -158,4 +158,4 @@ class Table(ttk.Frame):
             j = int(cell[1:]) - 1
             cell_id = self.get_cell_id(i, j)
             self.canvas.itemconfig(cell_id, fill = "darkgray")
-        
+

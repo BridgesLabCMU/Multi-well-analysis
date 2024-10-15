@@ -87,8 +87,8 @@ function main()
     
     directories = []
     test_images = []
-    Imin = ""
-    Imax = ""
+    Imins = []
+    Imaxes = []
     fixed_thresh = 0.03 
 
     select_dirs_button = GtkButton("Select experiment folders")
@@ -143,12 +143,12 @@ function main()
                                  ("_Open", Gtk4.ResponseType_ACCEPT)))
         
         dlgp = GtkFileChooser(dlg)
-        Gtk4.G_.set_select_multiple(dlgp, false)
+        Gtk4.G_.set_select_multiple(dlgp, true)
         signal_connect(dlg, "response") do widget, response_id
             if response_id == Gtk4.ResponseType_ACCEPT
-                filename = Gtk4.G_.get_file(dlgp)
-                sel = Gtk4.GLib.G_.get_path(Gtk4.GFile(filename))
-                Imin = sel
+                filename_list = Gtk4.G_.get_files(dlgp)
+                sel = String[Gtk4.GLib.G_.get_path(Gtk4.GFile(f)) for f in Gtk4.GListModel(filename_list)]
+                push!(Imins, sel...)
                 destroy(dlg)
             end
         end
@@ -168,12 +168,12 @@ function main()
                                  ("_Open", Gtk4.ResponseType_ACCEPT)))
         
         dlgp = GtkFileChooser(dlg)
-        Gtk4.G_.set_select_multiple(dlgp, false)
+        Gtk4.G_.set_select_multiple(dlgp, true)
         signal_connect(dlg, "response") do widget, response_id
             if response_id == Gtk4.ResponseType_ACCEPT
-                filename = Gtk4.G_.get_file(dlgp)
-                sel = Gtk4.GLib.G_.get_path(Gtk4.GFile(filename))
-                Imax = sel
+                filename_list = Gtk4.G_.get_files(dlgp)
+                sel = String[Gtk4.GLib.G_.get_path(Gtk4.GFile(f)) for f in Gtk4.GListModel(filename_list)]
+                push!(Imaxes, sel...)
                 destroy(dlg)
             end
         end
@@ -237,7 +237,7 @@ function main()
 
     function on_done(button)
         # Read value from spin button
-        fixed_thresh = GtkSpinButton(spin_button).value
+        fixed_thresh = Gtk4.value(spin_button) 
         
         if dust_correction_checkbox.active == true
             dust_correction = "True" 
@@ -251,8 +251,8 @@ function main()
         end
         config = Dict(
             "images_directory" => directories,
-            "Imin_path" => Imin,
-            "Imax_path" => Imax,
+            "Imin_path" => Imins,
+            "Imax_path" => Imaxes,
             "fixed_thresh" => fixed_thresh,
             "dust_correction" => dust_correction,
             "batch_processing" => batch_processing 

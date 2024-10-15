@@ -1,2 +1,8 @@
-manA
-wt
+dil2 0.05ug evs
+dil2 .5ug
+dil 1 .5ug
+dil1 0.05ug
+dil1 no evs
+dil2 no evs
+dil 2 EVs 5ug
+dil1 EVs 5ug

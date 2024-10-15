@@ -46,6 +46,37 @@ function dust_correct!(masks)
     return nothing
 end
 
+function mean_filter!(X, length_scale)
+    iX = IntegralArray(X)
+    @inbounds for i in CartesianIndex(1,1):CartesianIndex(size(X))
+        x, y = i.I
+        x_int = x±length_scale
+        y_int = y±length_scale
+        x_int = Interval(max(leftendpoint(x_int), 1),
+                         min(rightendpoint(x_int), size(X)[1]))
+        y_int = Interval(max(leftendpoint(y_int), 1),
+                         min(rightendpoint(y_int), size(X)[2]))
+        X[i] = iX[x_int, y_int]/(width(x_int)*width(y_int))
+    end
+    return nothing
+end
+
+function normalize_local_contrast_output(normalized, images, images_copy, blockDiameter, fpMean)
+	length_scale = Int((blockDiameter-1)/2)
+    for t in 1:size(images, 3)
+		img = images[:,:,t]
+		img_copy = images_copy[:,:,t]
+		mean_filter!(img_copy, length_scale)
+		img = img - img_copy
+		img .+= fpMean
+		@. img[img < 0.0] = 0.0
+		@. img[img > 1.0] = 1.0
+        normalized[:,:,t] = img  
+    end
+    return normalized 
+end
+
+
 function normalize_local_contrast(img, img_copy, blockDiameter)
 	img = 1 .- img
 	img_copy = 1 .- img_copy
@@ -143,15 +174,15 @@ function compute_mask!(stack, masks, fixed_thresh, ntimepoints)
 end
 
 function output_images!(stack, masks, overlay, dir, well)
-	flat_stack = vec(stack)
-    img_min = quantile(flat_stack, 0.0035)
-    img_max = quantile(flat_stack, 0.9965)
-    adjust_histogram!(stack, LinearStretching(src_minval=img_min, src_maxval=img_max, 
-                                              dst_minval=0, dst_maxval=1))
-	stack = Gray{N0f8}.(stack)
-    save("$dir/results_images/$well.tif", stack)
-    @inbounds for i in CartesianIndices(stack)
-        gray_val = RGB{N0f8}(stack[i], stack[i], stack[i])
+    normalized = similar(stack)
+	fpMax = maximum(stack)
+	fpMin = minimum(stack)
+	fpMean = (fpMax - fpMin) / 2.0 + fpMin
+	normalized = normalize_local_contrast_output(normalized, stack, copy(stack), 101, fpMean)
+	normalized = Gray{N0f8}.(normalized)
+    save("$dir/results_images/$well.tif", normalized)
+    @inbounds for i in CartesianIndices(normalized)
+        gray_val = RGB{N0f8}(normalized[i], normalized[i], normalized[i])
         overlay[i] = masks[i] ? RGB{N0f8}(0,1,1) : gray_val
     end
     save("$dir/results_images/$well"*"mask.tif", overlay)
@@ -183,7 +214,7 @@ function main()
 		files = [f for f in readdir(dir) if occursin(r"\.tif$", f) && occursin("Bright Field", f) && any(occursin(well*"_", f) for well in all_wells)]
         ntimepoints = div(length(files), num_wells)
         file1 = files[1]
-        test_image = load("$dir/$file1"; lazyio=true)
+        test_image = load("$dir/$file1")
         height, width = size(test_image)
         BF_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
         CFP_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
@@ -205,8 +236,6 @@ function main()
                 CY5_images = nothing
                 images = Array{Gray{N0f16}, 3}(undef, height, width, ntimepoints)
                 well = wells[j]
-                @show well
-                @show [f for f in readdir(dir) if occursin(well*"_", f)]
                 BF_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("Bright Field", f)], 
                              lt=natural)
                 CFP_well_files = sort([f for f in readdir(dir) if occursin(well*"_", f) && occursin("CFP", f)], 
