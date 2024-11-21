@@ -256,7 +256,7 @@ function main()
     config = parsefile("experiment_config.json")
     images_directories  = config["images_directory"]
     acquisition_frequency = config["acquisition_frequency"]
-    bulk_file = "BF_10x_Time_Biospa_MJ_Drawer2 10-Oct-2024 15-53-34BF_10x_Time_Biospa_MJ_241011_.csv"
+    bulk_file = config["bulk_data"][1]
     sig = 2
     blockDiameter = [501, 101] 
     shift_thresh = 50
@@ -283,13 +283,8 @@ function main()
             files = [f for f in readdir(dir) if occursin(r"^[A-H]\d{1,2}__raw\.tif$", f)]
             file1 = files[1]
             test_image = load("$dir/$file1")
-            height, width, ntimepoints = size(test_image)
-            if (height > width) 
-                test_image = permutedims(test_image, [2, 1, 3])
-                height, width, ntimepoints = size(test_image)
-            end
-
-            test_image = test_image[Int(round(.15 * height)):Int(round(.85 * height)), Int(round(.15 * width)):Int(round(.85 * width)), :]
+            _, _, ntimepoints = size(test_image)
+            
             BF_data_matrix = Array{Float64, 2}(undef, ntimepoints, num_wells)
             idx = 0
             nlayers = 96 * ntimepoints
