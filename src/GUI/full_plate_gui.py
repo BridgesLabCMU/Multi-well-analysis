@@ -51,7 +51,7 @@ def bulk_directory():
     return BULK_DIR
 
 def finish():
-    json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
+    json_dict["acquisition_frequency"] = float(acquisition_freq.get("1.0", "end-1c"))
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
     if dust_var.get():
