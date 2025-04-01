@@ -1,0 +1,7 @@
+@echo off
+echo Performing optical flow analysis 
+julia optical_flow.jl
+echo Operation completed.
+pause
+endlocal
+:end

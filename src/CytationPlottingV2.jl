@@ -13,16 +13,6 @@ sns = pyimport("seaborn")
     
 propdiv(a,b,c,d) = sqrt.((a./b).^2 .+ (c./d).^2)
 
-function linux_path(path)
-	if occursin("C:", path)
-		return replace(path, "C:" => "/mnt/c")
-	elseif occursin("//bridgeslab.bio.cmu.edu/data/", path)
-		return replace(path, "//bridgeslab.bio.cmu.edu/data" => "/mnt/b")
-	elseif occursin("B:", path)
-		return replace(path, "B:" => "/mnt/b")
-	end
-end
-
 function dose_response(conditions, plot_conditions, 
                       plot_normalization, normalization_method, plot_title, 
                       plot_ylabel, plot_xlabel, 
@@ -1051,8 +1041,6 @@ function main()
     plot_filenames = config["plot_filenames"] 
     yscale = config["plot_scale"] 
     ylims = config["ylims"]
-    images_directories = linux_path.(images_directories)
-    bulk_data = linux_path.(bulk_data)
     parent_directory = length(images_directories) > 0 ? images_directories[1] : bulk_data[1][1:end-4] 
     plots_directory = "$parent_directory/Plots"
     if isdir(plots_directory)

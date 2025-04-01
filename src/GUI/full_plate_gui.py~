@@ -52,19 +52,6 @@ def bulk_directory():
 
 def finish():
     json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
-    if upper_peak.get("1.0", "end-1c") == '':
-        json_dict["upper_peak"] = 1.5
-    else:
-        json_dict["upper_peak"] = float(upper_peak.get("1.0", "end-1c"))
-    if lower_peak.get("1.0", "end-1c") == '':
-        json_dict["lower_peak"] = 0.5
-    else:
-        json_dict["lower_peak"] = float(lower_peak.get("1.0", "end-1c"))
-    if upper_final.get("1.0", "end-1c") == '':
-        json_dict["upper_final"] = 0.1
-    else:
-        json_dict["upper_final"] = float(upper_final.get("1.0", "end-1c"))
-    json_dict["fixed_thresh"] = float(v1.get())
     json_dict["images_directory"] = [s[0].replace("\\", "/") for s in IMAGES_DIR]
     json_dict["bulk_data"] = [s[0] for s in BULK_DIR]
     if dust_var.get():
@@ -81,7 +68,7 @@ if __name__ == "__main__":
 
     root = Tk()
     root.title("Scanner")
-    root.geometry("1000x500")
+    root.geometry("1000x300")
     frm = ttk.Frame(root)
     frm.grid()
     frm.pack(padx=2, pady=0)
@@ -94,33 +81,6 @@ if __name__ == "__main__":
 
     acquisition_freq = Text(root, width = 35, height = 1)
     acquisition_freq.pack(side=TOP, anchor = "w", padx = 10)
-
-    # SLIDER FOR SETTING THRESHOLD
-    v1 = DoubleVar()
-    s1 = Scale(root, variable = v1,
-               from_ = 0.0000, to = 1.0000, resolution=0.0001,
-               orient = HORIZONTAL)
-    v1.set(0.04)
-    l3 = Label(root, text = "Threshold")
-    s1.pack(anchor = "w")
-    l3.pack(anchor = "w")
-
-    # UPPER, LOWER FOR PEAK
-    upper_peak_lbl = ttk.Label(root, text = "Upper FC for peak relative to mean peak for plate (default = 1.5)")
-    upper_peak_lbl.pack(side=TOP, anchor = "w", padx = 10)
-    upper_peak = Text(root, width = 35, height = 1)
-    upper_peak.pack(side=TOP, anchor = "w", padx = 10)
-
-    lower_peak_lbl = ttk.Label(root, text = "Lower FC for peak relative to mean peak for plate (default = 0.5)")
-    lower_peak_lbl.pack(side=TOP, anchor = "w", padx = 10)
-    lower_peak = Text(root, width = 35, height = 1)
-    lower_peak.pack(side=TOP, anchor = "w", padx = 10)
-
-    # UPPER FOR FINAL TIMEPOINT
-    upper_final_lbl = ttk.Label(root, text = "Upper FC of final biomass relative to mean peak of the plate (default = 0.1)")
-    upper_final_lbl.pack(side=TOP, anchor = "w", padx = 10)
-    upper_final = Text(root, width = 35, height = 1)
-    upper_final.pack(side=TOP, anchor = "w", padx = 10)
 
     # CHOOSE FOLDER TO SEND DATA
     send_folder_select_lbl_btn = ttk.Button(root, text="Choose folder to store this experiment", command=send_directory)

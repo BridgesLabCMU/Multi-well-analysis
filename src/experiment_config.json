@@ -1,161 +1,267 @@
 {
-    "notes": "",
-    "media": "LB",
-    "acquisition_frequency": 2,
+    "notes": "032125-lysate or sup titration with 2 day old roomt emp kept lysate (overall way weaker response but i think i can still use tthe data for titration peak biomass since the overall trend still stays true",
+    "media": "M9+Glucose+CA+2%Na",
+    "acquisition_frequency": 1,
+    "fixed_thresh": 0.04,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/241011_BF_4x_Time_Static_Biospa_BES_Drawer6 11-Oct-2024 14-18-45/241011_Plate 1!PLATE_ID!_"
+        "C:/Users/bridg/Desktop/250321_115107_Plate 1"
     ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/BF_4x_Time_Static_Biospa_BES_241012_.csv"
+        "C:/Users/bridg/Desktop/ImageLibrary/250322_10x_BF_YL_Drawer2 21-Mar-2025 11-30-19.csv"
     ],
     "conditions": [
         {
-            "dil1 EVs 5ug": [
+            "sup125": [
+                "A1",
                 "A2",
                 "A3",
-                "A4"
-            ],
-            "dil 2 EVs 5ug": [
+                "B1",
                 "B2",
                 "B3",
-                "B4"
-            ],
-            "dil 1 .5ug": [
+                "C1",
                 "C2",
-                "C3",
-                "C4"
+                "C3"
             ],
-            "dil2 .5ug": [
+            "lys125": [
+                "D1",
                 "D2",
                 "D3",
-                "D4"
-            ],
-            "dil1 0.05ug": [
+                "E1",
                 "E2",
                 "E3",
-                "E4"
-            ],
-            "dil2 0.05ug evs": [
+                "F1",
                 "F2",
-                "F3",
-                "F4"
+                "F3"
             ],
-            "dil1 no evs": [
+            "sup25": [
+                "A4",
+                "A5",
+                "A6",
+                "B4",
+                "B5",
+                "B6",
+                "C4",
+                "C5",
+                "C6"
+            ],
+            "lys25": [
+                "D4",
+                "D5",
+                "D6",
+                "E4",
+                "E5",
+                "E6",
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "sup5": [
+                "A7",
+                "A8",
+                "A9",
+                "B7",
+                "B8",
+                "B9",
+                "C7",
+                "C8",
+                "C9"
+            ],
+            "lys5": [
+                "D7",
+                "D8",
+                "D9",
+                "E7",
+                "E8",
+                "E9",
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "sup10": [
+                "A10",
+                "A11",
+                "A12",
+                "B10",
+                "B11",
+                "B12",
+                "C10",
+                "C11",
+                "C12"
+            ],
+            "lys10": [
+                "D10",
+                "D11",
+                "D12",
+                "E10",
+                "E11",
+                "E12",
+                "F10",
+                "F11",
+                "F12"
+            ],
+            "sup20": [
+                "G1",
                 "G2",
                 "G3",
-                "G4"
+                "G4",
+                "G5",
+                "G6",
+                "G7",
+                "G8",
+                "G9"
             ],
-            "dil2 no evs": [
+            "lys20": [
+                "H1",
                 "H2",
                 "H3",
-                "H4"
+                "H4",
+                "H5",
+                "H6",
+                "H7",
+                "H8",
+                "H9"
             ]
         }
     ],
     "strains": [
         {
-            "D39": [
-                "G2",
-                "G3",
-                "G4"
+            "sup125": [
+                "A1",
+                "A2",
+                "A3",
+                "B1",
+                "B2",
+                "B3",
+                "C1",
+                "C2",
+                "C3"
             ],
-            "d39": [
+            "lys125": [
+                "D1",
+                "D2",
+                "D3",
+                "E1",
+                "E2",
+                "E3",
+                "F1",
+                "F2",
+                "F3"
+            ],
+            "sup25": [
+                "A4",
                 "A5",
                 "A6",
-                "A7"
+                "B4",
+                "B5",
+                "B6",
+                "C4",
+                "C5",
+                "C6"
+            ],
+            "lys25": [
+                "D4",
+                "D5",
+                "D6",
+                "E4",
+                "E5",
+                "E6",
+                "F4",
+                "F5",
+                "F6"
+            ],
+            "sup5": [
+                "A7",
+                "A8",
+                "A9",
+                "B7",
+                "B8",
+                "B9",
+                "C7",
+                "C8",
+                "C9"
+            ],
+            "lys5": [
+                "D7",
+                "D8",
+                "D9",
+                "E7",
+                "E8",
+                "E9",
+                "F7",
+                "F8",
+                "F9"
+            ],
+            "sup10": [
+                "A10",
+                "A11",
+                "A12",
+                "B10",
+                "B11",
+                "B12",
+                "C10",
+                "C11",
+                "C12"
+            ],
+            "lys10": [
+                "D10",
+                "D11",
+                "D12",
+                "E10",
+                "E11",
+                "E12",
+                "F10",
+                "F11",
+                "F12"
+            ],
+            "sup20": [
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6",
+                "G7",
+                "G8",
+                "G9"
+            ],
+            "lys20": [
+                "H1",
+                "H2",
+                "H3",
+                "H4",
+                "H5",
+                "H6",
+                "H7",
+                "H8",
+                "H9"
             ]
         }
     ],
-    "dust_correction": "False",
+    "dust_correction": "True",
     "good_data_directory": "",
     "image_analysis": "True",
-    "experiment_directory": "C:/Users/Imaging Controller/Downloads",
-    "plot_types": {
-        "plot1": "line"
-    },
-    "plot_dtypes": {
-        "plot1": [
-            "BF_imaging"
-        ]
-    },
-    "plot_numerators": {
-        "plot1": [
-            "BF_imaging"
-        ]
-    },
-    "plot_denominators": {
-        "plot1": [
-            "BF_imaging"
-        ]
-    },
-    "plot_conditions": {
-        "plot1": [
-            "dil1 0.05ug"
-        ]
-    },
-    "plot_normalization": {
-        "plot1": "dil1 0.05ug"
-    },
-    "normalization_method": {
-        "plot1": [
-            "fold-change"
-        ]
-    },
-    "plot_xaxis": {
-        "plot1": "default"
-    },
-    "plot_scale": {
-        "plot1": [
-            "linear"
-        ]
-    },
-    "plot_color": {
-        "plot1": [
-            ""
-        ]
-    },
-    "plot_font": {
-        "plot1": "Arial"
-    },
-    "plot_titles": {
-        "plot1": ""
-    },
-    "plot_xlabs": {
-        "plot1": ""
-    },
-    "plot_ylabs": {
-        "plot1": [
-            ""
-        ]
-    },
-    "plot_xticks": {
-        "plot1": [
-            ""
-        ]
-    },
-    "plot_yticks": {
-        "plot1": [
-            ""
-        ]
-    },
-    "color_label": {
-        "plot1": ""
-    },
-    "ylims": {
-        "plot1": "default"
-    },
-    "plot_size": {
-        "plot1": [
-            3,
-            2.5
-        ]
-    },
-    "dose_concs": {
-        "plot1": []
-    },
-    "plot_filenames": {
-        "plot1": "EVstrial"
-    },
+    "experiment_directory": "C:/Users/bridg/Desktop/ImageLibrary/250321_115107_10x_BF_YL_Drawer2 21-Mar-2025 11-30-19",
+    "plot_types": {},
+    "plot_dtypes": {},
+    "plot_numerators": {},
+    "plot_denominators": {},
+    "plot_conditions": {},
+    "plot_normalization": {},
+    "normalization_method": {},
+    "plot_xaxis": {},
+    "plot_scale": {},
+    "plot_color": {},
+    "plot_font": {},
+    "plot_titles": {},
+    "plot_xlabs": {},
+    "plot_ylabs": {},
+    "plot_xticks": {},
+    "plot_yticks": {},
+    "color_label": {},
+    "ylims": {},
+    "plot_size": {},
+    "dose_concs": {},
+    "plot_filenames": {},
     "sig": 2,
     "blockDiameter": [
         501,

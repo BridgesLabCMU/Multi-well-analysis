@@ -162,7 +162,7 @@ function output_images!(stack, masks, overlay, dir, well)
 	fpMax = maximum(stack)
 	fpMin = minimum(stack)
 	fpMean = (fpMax - fpMin) / 2.0 + fpMin
-	normalized = normalize_local_contrast_output(normalized, stack, copy(stack), 101, fpMean)
+	normalized = normalize_local_contrast_output(normalized, stack, copy(stack), 1001, fpMean)
 	normalized = Gray{N0f8}.(normalized)
     save("$dir/results_images/$well.tif", normalized)
     @inbounds for i in CartesianIndices(normalized)

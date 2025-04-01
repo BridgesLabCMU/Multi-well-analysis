@@ -1,8 +1,8 @@
-dil2 0.05ug evs
-dil2 .5ug
-dil 1 .5ug
-dil1 0.05ug
-dil1 no evs
-dil2 no evs
-dil 2 EVs 5ug
-dil1 EVs 5ug
+moi10-4
+control
+moi10-2
+moi10-3
+moi5
+moi10
+moi10-1
+moi1

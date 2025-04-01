@@ -1,73 +1,104 @@
 {
-    "notes": "",
-    "media": "LB",
+    "notes": "032825_OD 0.2 for RIMD, and phage LL1 MOI range test in M9 2% NaCl w/ 10mM MgSO4",
+    "media": "M9+Glucose+CA+2%Na",
     "acquisition_frequency": 2,
+    "fixed_thresh": 0.04,
     "images_directory": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/241011_BF_4x_Time_Static_Biospa_BES_Drawer6 11-Oct-2024 14-18-45/241011_Plate 1!PLATE_ID!_"
+        "C:/Users/bridg/Desktop/ImageLibrary/250328_180142_10x_BF_YL2_Drawer3 28-Mar-2025 17-58-08/250328_180142_Plate 1"
     ],
     "bulk_data": [
-        "C:/Users/Imaging Controller/Desktop/GEN5_IMAGE_LIBRARY/BF_4x_Time_Static_Biospa_BES_241012_.csv"
+        "C:/Users/bridg/Desktop/ImageLibrary/250331_10x_BF_YL2_Drawer3 28-Mar-2025 17-58-08.csv"
     ],
     "conditions": [
         {
-            "dil1 EVs 5ug": [
-                "A2",
-                "A3",
-                "A4"
-            ],
-            "dil 2 EVs 5ug": [
-                "B2",
-                "B3",
-                "B4"
-            ],
-            "dil 1 .5ug": [
-                "C2",
-                "C3",
-                "C4"
-            ],
-            "dil2 .5ug": [
-                "D2",
-                "D3",
-                "D4"
-            ],
-            "dil1 0.05ug": [
-                "E2",
-                "E3",
-                "E4"
-            ],
-            "dil2 0.05ug evs": [
-                "F2",
-                "F3",
-                "F4"
-            ],
-            "dil1 no evs": [
-                "G2",
-                "G3",
-                "G4"
-            ],
-            "dil2 no evs": [
+            "control": [
+                "H1",
                 "H2",
-                "H3",
-                "H4"
+                "H3"
+            ],
+            "moi10": [
+                "A1",
+                "A2",
+                "A3"
+            ],
+            "moi5": [
+                "B1",
+                "B2",
+                "B3"
+            ],
+            "moi1": [
+                "C1",
+                "C2",
+                "C3"
+            ],
+            "moi10-1": [
+                "D1",
+                "D2",
+                "D3"
+            ],
+            "moi10-2": [
+                "E1",
+                "E2",
+                "E3"
+            ],
+            "moi10-3": [
+                "F1",
+                "F2",
+                "F3"
+            ],
+            "moi10-4": [
+                "G1",
+                "G2",
+                "G3"
             ]
         }
     ],
     "strains": [
         {
-            "D39": [
-                "G2",
-                "G3",
-                "G4"
+            "control": [
+                "H1",
+                "H2",
+                "H3"
             ],
-            "d39": [
-                "A5",
-                "A6",
-                "A7"
+            "moi10": [
+                "A1",
+                "A2",
+                "A3"
+            ],
+            "moi5": [
+                "B1",
+                "B2",
+                "B3"
+            ],
+            "moi1": [
+                "C1",
+                "C2",
+                "C3"
+            ],
+            "moi10-1": [
+                "D1",
+                "D2",
+                "D3"
+            ],
+            "moi10-2": [
+                "E1",
+                "E2",
+                "E3"
+            ],
+            "moi10-3": [
+                "F1",
+                "F2",
+                "F3"
+            ],
+            "moi10-4": [
+                "G1",
+                "G2",
+                "G3"
             ]
         }
     ],
-    "dust_correction": "False",
+    "dust_correction": "True",
     "good_data_directory": "",
     "image_analysis": "True",
-    "experiment_directory": "C:/Users/Imaging Controller/Downloads"
+    "experiment_directory": "C:/Users/bridg/Desktop/ImageLibrary/250328_180142_10x_BF_YL2_Drawer3 28-Mar-2025 17-58-08"
 }

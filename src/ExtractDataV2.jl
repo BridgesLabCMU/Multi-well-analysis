@@ -87,14 +87,14 @@ function main()
             end
         end
 
-        if length(row_indices) == 0 && any(!all(ismissing, row) for row in eachrow(df[metadata_row_indices[1]+1:end, :]))  
-            row_indices = metadata_row_indices .+ 2
-            data_matrix = extract_matrix(df, 1, row_indices, well_names)
-            filename = determine_filename(df[row_indices[1], :Column1])
-            if filename != nothing
-                CSV.write("$output_dir/$filename", data_matrix)
-            end
-        end
+        #if length(row_indices) == 0 && any(!all(ismissing, row) for row in eachrow(df[metadata_row_indices[1]+1:end, :]))  
+        #    row_indices = metadata_row_indices .+ 2
+        #    data_matrix = extract_matrix(df, 1, row_indices, well_names)
+        #    filename = determine_filename(df[row_indices[1], :Column1])
+        #    if filename != nothing
+        #        CSV.write("$output_dir/$filename", data_matrix)
+        #    end
+        #end
     end
 end
 

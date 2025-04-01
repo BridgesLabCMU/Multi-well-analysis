@@ -143,6 +143,7 @@ def create_new_window():
     json_dict["notes"] = notes_entry.get("1.0", "end-1c")
     json_dict["media"] = media_var.get()
     json_dict["acquisition_frequency"] = int(acquisition_freq.get("1.0", "end-1c"))
+    json_dict["fixed_thresh"] = float(v1.get())
     plot_number = plot_number_entry.get("1.0", "end-1c")
     with open("temp_plot_num.txt", "w") as fw:
         fw.write(plot_number)
@@ -288,6 +289,16 @@ if __name__ == "__main__":
 
     acquisition_freq = Text(root, width = 35, height = 1)
     acquisition_freq.pack(side=TOP, anchor = "w", padx = 10)
+
+    # SLIDER FOR SETTING THRESHOLD
+    v1 = DoubleVar()
+    s1 = Scale(root, variable = v1,
+               from_ = 0.0000, to = 1.0000, resolution=0.0001,
+               orient = HORIZONTAL)
+    v1.set(0.04)
+    l3 = Label(root, text = "Threshold")
+    s1.pack(anchor = "w")
+    l3.pack(anchor = "w")
 
     # PLATE COUNTS
     plate_count_options = [1,2,3]
