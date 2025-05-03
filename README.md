@@ -7,11 +7,12 @@ If you want to use this code for the first time on a new computer, first install
 Then, download this repository, preferably via git, although downloading it as a zip is fine. If running code through the batch file, this is all you have to do. The first time you run the batch file, it will automatically install necessary packages etc. which will cause a long lag (only the first time). If you are running the code directly from src, you will have to do the following in command prompt/terminal:
 
 ```
+juliaup add 1.11.2
 cd /path/to/Multi-well-analysis/src
-julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia +1.11.2 --project=. -e 'using Pkg; Pkg.instantiate()'
 ```
 
-Thereafter, you can run the code by `cd /path/to/Multi-well-analysis/src`, then run `julia --project=. BiofilmAssay.jl`. 
+Thereafter, you can run the code by `cd /path/to/Multi-well-analysis/src`, then run `julia +1.11.2 --project=. BiofilmAssay.jl`. 
 
 ## Notes
 Guidelines for image analysis parameters (set in the first GUI):
