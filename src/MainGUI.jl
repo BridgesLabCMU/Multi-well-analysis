@@ -1,4 +1,5 @@
 # TODO: 1. fix the dropdown to enable alternative media selection
+round_odd(x) = isodd(x) ? x : x + 1 
 
 function display_images!(stack, masks, overlay)
     normalized = similar(stack)
@@ -312,11 +313,12 @@ function GUI_main()
 
     function on_test(button)
         fixed_thresh = Gtk4.value(spin_button)
+        blockDiameter = round_odd(Gtk4.value(block_spin)) 
         ntimepoints = length(test_images)
         if ntimepoints == 1
-            image_test!(test_images[1], fixed_thresh, 101, 2)
+            image_test!(test_images[1], fixed_thresh, blockDiameter, 2)
         else
-            timelapse_test!(sort(test_images, lt=natural), fixed_thresh, 101, 2)
+            timelapse_test!(sort(test_images, lt=natural), fixed_thresh, blockDiameter, 2)
         end
         empty!(test_images)
     end

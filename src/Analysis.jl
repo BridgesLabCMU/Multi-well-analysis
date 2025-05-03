@@ -1,4 +1,4 @@
-round_odd(x) = div(x, 2) * 2 + 1
+round_odd(x) = isodd(x) ? x : x + 1 
 compmax(x) = length(x) > 1 ? maximum(x[1:end]) : 0
 
 function phase_offset(source::AbstractArray, target::AbstractArray; kwargs...)
@@ -343,7 +343,7 @@ function analysis_main()
     fixed_thresh = config["fixed_thresh"] 
     Imin_path = config["Imin_path"]
     Imax_path = config["Imax_path"]
-    blockDiameter = config["blockDiam"] 
+    blockDiameter = round_odd(config["blockDiam"]) 
     shift_thresh = 50
     sig = 2
 
