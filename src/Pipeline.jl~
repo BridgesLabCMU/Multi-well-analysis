@@ -49,7 +49,7 @@ function pipeline()
     end
 
     if isfile(config_file)
-        cfg = JSON.parsefile(config_file; use_mmap=false)
+        cfg = JSON.parsefile(config_file)
         if haskey(cfg, "bulk_data")
             ExtractMeta_main()
         else
@@ -94,7 +94,7 @@ function pipeline()
     # 4a. Brightfield biomass analysis 
 	data_dir = ""
     if isfile(config_file)
-		cfg = JSON.parsefile(config_file; use_mmap=false)
+		cfg = JSON.parsefile(config_file)
         first_dir = cfg["images_directory"][1]
         data_dir = joinpath(first_dir, "Numerical data")
     else
@@ -121,7 +121,7 @@ function pipeline()
     # 6. Move files
 	if ask_dialog("Do you want to move your files out of the Multi-well-analysis folder? Only select no if you will return to these files quickly", nothing)
         if isfile(config_file)
-            cfg = JSON.parsefile(config_file, use_mmap=false)
+            cfg = JSON.parsefile(config_file)
             first_dir = cfg["images_directory"][1]
             plot_dir = joinpath(first_dir, "Plots")
             if !isdir(plot_dir)

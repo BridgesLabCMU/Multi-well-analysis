@@ -1,0 +1,24 @@
+{
+    "images_directory": [
+        "C:\\Users\\bridg\\Desktop\\ImageLibrary\\250502_164938_10x_BF_YL_Drawer8 02-May-2025 16-46-01\\250502_164938_Plate 1"
+    ],
+    "Imin_path": "",
+    "blockDiam": 101.0,
+    "notes": "050225_lysozyme treatment of pg, extract and lysate_m9 2%nacl",
+    "Imax_path": "",
+    "conditions": {
+        "test": [
+            [
+                "A1",
+                "A2",
+                "A3"
+            ]
+        ]
+    },
+    "bulk_data": "C:\\Users\\bridg\\Desktop\\ImageLibrary\\250505_10x_BF_YL_Drawer8 02-May-2025 16-46-01.csv",
+    "dust_correction": "True",
+    "batch_processing": "True",
+    "media": "M9",
+    "plate_geometry": "96-well",
+    "fixed_thresh": 0.04
+}
