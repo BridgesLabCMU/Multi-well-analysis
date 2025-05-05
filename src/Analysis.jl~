@@ -229,7 +229,7 @@ function write_OD_images!(OD_images, dir, filename)
 end
 
 function output_images!(stack, masks, overlay, OD_images, dir, filename, blockDiameter)
-	filename = basename(filename) 
+	filename = basename(target_base) 
     normalized = similar(stack)
 	fpMax = maximum(stack)
 	fpMin = minimum(stack)
