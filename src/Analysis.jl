@@ -451,7 +451,7 @@ function analysis_main()
 			
 			non_bf_data     = [ [] for _ in groups ]
 			channel_columns = [ [] for _ in groups ]
-
+            progress = ProgressMeter.Progress(length(bf_files), desc="% analysis done")
             for file in bf_files
                 if file ∉ analyzed
                     test_image = load(file; lazyio=true)
@@ -584,7 +584,8 @@ function analysis_main()
                         error("Number of image dimensions must be either 2 or 3")
                     end
                 end
-            end
+		next!(progress)
+            end # loop over files
             if length(biomass_data) > 0
                 max_length = maximum(length, biomass_data)
                 padded = [vcat(l, fill(Missing, max_length - length(l))) for l in biomass_data]

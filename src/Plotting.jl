@@ -36,9 +36,10 @@ function plot_screen_line(upper_FC, lower_FC, upper_final, images_directories, p
           df = CSV.read(joinpath(folder, "Numerical data", data_file), DataFrame)
           old = names(df)
           new = [
-            let m = match(r".*/([^_]+)_.*$", col)
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
               m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-            end for col in old
+              end for col in old
           ]
           rename!(df, new)
           for col in new
@@ -48,6 +49,7 @@ function plot_screen_line(upper_FC, lower_FC, upper_final, images_directories, p
 
         peak_vals = [maximum(y) for (y, _) in all_series]
         mean_peak = mean(peak_vals)
+	final_vals = [last(y) for (y, _) in all_series]
 
         traces = GenericTrace[]
         seen   = Dict(k => false for k in keys(legend_desc))
@@ -97,7 +99,14 @@ function plot_screen_line(upper_FC, lower_FC, upper_final, images_directories, p
         abn_idx     = findall(c -> c != :none, cats)
         abn_wells   = [all_series[i][2] for i in abn_idx]
         abn_cats    = [category_label[cats[i]] for i in abn_idx]
-        df_abnormal = DataFrame(Well = abn_wells, Category = abn_cats)
+	abn_peak_norms = peak_vals[abn_idx] ./ mean_peak
+	abn_final_norms = final_vals[abn_idx] ./ mean_peak
+	df_abnormal = DataFrame(
+	  Well      = abn_wells,
+	  Category  = abn_cats,
+	  NormPeak  = abn_peak_norms,
+	  NormFinal = abn_final_norms
+	)
         CSV.write(results_name, df_abnormal)
 
         layout = Layout(
@@ -141,6 +150,7 @@ function plot_screen_scatter(upper_FC, lower_FC, images_directories, protocol)
         )
 
         peaks  = Float64[]
+	finals = Float64[]
         labels = String[]
 
         for (i, folder) in enumerate(images_directories)
@@ -149,12 +159,17 @@ function plot_screen_scatter(upper_FC, lower_FC, images_directories, protocol)
             end
             df = CSV.read(joinpath(folder, "Numerical data", data_file), DataFrame)
             old = names(df)
-            new = [ let m = match(r".*/([^_]+)_.*$", col)
-                      m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                    end for col in old ]
+            new = [ 
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old
+            ]
             rename!(df, new)
             for col in new
-                push!(peaks, maximum(Float64.(df[!, col])))
+		vals = Float64.(df[!, col])
+                push!(peaks, maximum(vals))
+		push!(finals, last(vals))
                 push!(labels, col)
             end
         end
@@ -174,10 +189,14 @@ function plot_screen_scatter(upper_FC, lower_FC, images_directories, protocol)
         abn_wells  = labels[abn_idx]
         abn_cats   = cats[abn_idx]
         abn_labels = [ category_label[c] for c in abn_cats ]
+	abn_peak_norms  = peaks[abn_idx]   ./ mean_peak
+	abn_final_norms = finals[abn_idx]  ./ mean_peak
 
         df_abnormal = DataFrame(
             Well     = abn_wells,
-            Category = abn_labels
+            Category = abn_labels,
+	    NormPeak = abn_peak_norms,
+	    NormFinal = abn_final_norms
         )
 
         CSV.write(results_name, df_abnormal)
@@ -278,9 +297,10 @@ function plot_all_line(images_directories, protocol, interval)
 
             old_names = names(df)
             new_names = [
-                let m = match(r".*/([^_]+)_.*$", col)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                end for col in old_names
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old_names
             ]
             rename!(df, new_names)
 
@@ -345,9 +365,10 @@ function plot_all_scatter(images_directories, protocol)
 
             old_names = names(df)
             new_names = [
-                let m = match(r".*/([^_]+)_.*$", col)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                end for col in old_names
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old_names
             ]
             rename!(df, new_names)
 
@@ -417,9 +438,10 @@ function plot_wells_line(selected_wells, images_directories, protocol, interval)
 
             old_names = names(df)
             new_names = [
-                let m = match(r".*/([^_]+)_.*$", col)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                end for col in old_names
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old_names
             ]
             rename!(df, new_names)
 
@@ -487,9 +509,10 @@ function plot_wells_scatter(selected_wells, images_directories, protocol)
 
             old_names = names(df)
             new_names = [
-                let m = match(r".*/([^_]+)_.*$", col)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                end for col in old_names
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old_names
             ]
             rename!(df, new_names)
 
@@ -567,9 +590,10 @@ function plot_conditions_line(conditions, conditions_dict,
             df = CSV.read(joinpath(folder, "Numerical data", data_file), DataFrame)
             old = names(df)
             new = [
-                let m = match(r".*/([^_]+)_.*$", col)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                end for col in old
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old
             ]
             rename!(df, new)
             dfs[i] = df
@@ -647,9 +671,12 @@ function plot_conditions_jitter(conditions, conditions_dict,
             end
             df = CSV.read(joinpath(folder, "Numerical data", data_file), DataFrame)
             old = names(df)
-            new = [ let m = match(r".*/([^_]+)_.*$", col)
-                       m !== nothing ? "Plate $(i): $(m.captures[1])" : col
-                   end for col in old ]
+            new = [ 
+	      let fn = basename(col)
+              m = match(r"([^_]+)_.*$", fn)
+              m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+              end for col in old
+		   ]
             rename!(df, new)
             dfs[i] = df
         end

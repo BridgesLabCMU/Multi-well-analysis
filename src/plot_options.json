@@ -1,14 +1,8 @@
 {
-    "plot_peaks": "true",
-    "plot_time_traces": "false",
-    "plot_conditions": "True",
-    "conditions": [
-        "lysate_sonicated",
-        "pg",
-        "lysate_freezethaw_lyso",
-        "lysate_freezethaw",
-        "lysate_sonicated_lyso",
-        "pg_lyso",
-        "control"
-    ]
+    "plot_peaks": "false",
+    "upper_final": 0.1,
+    "plot_time_traces": "true",
+    "upper_FC": 2.0,
+    "lower_FC": 0.25,
+    "screen": "True"
 }
