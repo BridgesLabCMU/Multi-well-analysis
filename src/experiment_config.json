@@ -1,1 +1,133 @@
-{"images_directory":["D:\\ImageLibrary\\250428_114931_10x_Discontinuous_Screening_EN_Drawer1 28-Apr-2025 11-45-57_Cmp_80010\\250428_114931_Plate 1","D:\\ImageLibrary\\250428_115639_10x_Discontinuous_Screening_EN_Drawer2 28-Apr-2025 11-46-34_Cmp_80011\\250428_115639_Plate 1","D:\\ImageLibrary\\250428_120344_10x_Discontinuous_Screening_EN_Drawer3 28-Apr-2025 11-47-02_Cmp_80116\\250428_120344_Plate 1"],"Imin_path":"","blockDiam":101.0,"notes":"Compound screening plate 80010, 80011, 80116","Imax_path":"","bulk_data":"D:\\ImageLibrary\\250428_114931_10x_Discontinuous_Screening_EN_Drawer1 28-Apr-2025 11-45-57_Cmp_80010\\250428_114931_10x_Discontinuous_Screening_EN_Drawer1 28-Apr-2025 11-45-57_Cmp_80010\\10x_Discontinuous_Screening_EN_Drawer1 28-Apr-2025 11-45-57_.csv","dust_correction":"True","batch_processing":"True","media":"M9","plate_geometry":"96-well","fixed_thresh":0.04}
+{
+    "images_directory": [
+        "C:\\Users\\bridg\\Desktop\\ImageLibrary\\250506_144203_10x_BF_YL_Drawer1 06-May-2025 14-38-30\\250506_144203_Plate 1"
+    ],
+    "Imin_path": "",
+    "blockDiam": 101.0,
+    "notes": "050625_lib 32-34 tn mutant rescreen, delta chey and wt in control, pg and vp lysate, as well as unsuccessful v.fisheri in m9 2%nacl ",
+    "Imax_path": "",
+    "conditions": {
+        "chey lysate": [
+            [
+                "D7",
+                "D8",
+                "D9",
+                "E7",
+                "E8",
+                "E9",
+                "F7",
+                "F8",
+                "F9"
+            ]
+        ],
+        "wt pg": [
+            [
+                "A10",
+                "A11",
+                "A12",
+                "B10",
+                "B11",
+                "B12",
+                "C10",
+                "C11",
+                "C12"
+            ]
+        ],
+        "chey pg": [
+            [
+                "A7",
+                "A8",
+                "A9",
+                "B7",
+                "B8",
+                "B9",
+                "C7",
+                "C8",
+                "C9"
+            ]
+        ],
+        "chey control": [
+            [
+                "F1",
+                "F2",
+                "F3",
+                "G1",
+                "G2",
+                "G3",
+                "H1",
+                "H2",
+                "H3"
+            ]
+        ],
+        "tn mutant with lysate": [
+            [
+                "A4",
+                "A5",
+                "A6",
+                "B4",
+                "B5",
+                "B6",
+                "C4",
+                "C5",
+                "C6",
+                "D4",
+                "D5",
+                "D6",
+                "E4",
+                "E5",
+                "E6"
+            ]
+        ],
+        "wt lysate": [
+            [
+                "D10",
+                "D11",
+                "D12",
+                "E10",
+                "E11",
+                "E12",
+                "F10",
+                "F11",
+                "F12"
+            ]
+        ],
+        "tn mutant no lysate": [
+            [
+                "A1",
+                "A2",
+                "A3",
+                "B1",
+                "B2",
+                "B3",
+                "C1",
+                "C2",
+                "C3",
+                "D1",
+                "D2",
+                "D3",
+                "E1",
+                "E2",
+                "E3"
+            ]
+        ],
+        "wt control": [
+            [
+                "F4",
+                "F5",
+                "F6",
+                "G4",
+                "G5",
+                "G6",
+                "H4",
+                "H5",
+                "H6"
+            ]
+        ]
+    },
+    "bulk_data": "C:\\Users\\bridg\\Desktop\\ImageLibrary\\250508_10x_BF_YL_Drawer1 06-May-2025 14-38-30.csv",
+    "dust_correction": "True",
+    "batch_processing": "True",
+    "media": "M9",
+    "plate_geometry": "96-well",
+    "fixed_thresh": 0.04
+}

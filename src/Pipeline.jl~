@@ -22,6 +22,7 @@ using PlotlyJS
 using ImageTracking
 using StaticArrays
 using LinearAlgebra
+using ProgressMeter
 
 include("MainGUI.jl")  
 include("ConditionsGUI.jl")

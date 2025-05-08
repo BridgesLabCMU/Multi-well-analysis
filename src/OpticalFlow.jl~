@@ -9,7 +9,7 @@ function optflow_main()
         image_displacements = []
         for image_path in image_paths
             source_name = basename(image_path)
-            images = Gray{Float32}.(load(image_path))
+            images = Gray{Float32}.(TiffImages.load(image_path))
             height, width, frames = size(images)
 
             algorithm = LucasKanade(10, window_size = 20,

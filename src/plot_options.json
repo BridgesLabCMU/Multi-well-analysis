@@ -1,8 +1,13 @@
 {
-    "plot_peaks": "false",
-    "upper_final": 0.1,
-    "plot_time_traces": "true",
-    "upper_FC": 2.0,
-    "lower_FC": 0.25,
-    "screen": "True"
+    "plot_peaks": "true",
+    "plot_time_traces": "false",
+    "plot_conditions": "True",
+    "conditions": [
+        "chey lysate",
+        "wt pg",
+        "chey pg",
+        "chey control",
+        "wt lysate",
+        "wt control"
+    ]
 }
