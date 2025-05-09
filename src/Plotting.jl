@@ -748,16 +748,22 @@ function interval_to_minutes(s)
 end
 
 function extract_interval(dir)
-	metadata = CSV.read(joinpath(dir,"metadata.csv"), DataFrame;
-                        header=false)
-    col3 = metadata[!, 3]
-    row = findfirst(c -> (c isa AbstractString) && occursin(r"Interval\s+\d+:\d+:\d+", strip(c)),
-                                    col3)
-    if row === nothing
-        error("No “Interval …” entry found in column 3")
+    metadata = CSV.read(joinpath(dir,"metadata.csv"), DataFrame;
+		header=false)
+    for col in eachcol(metadata)
+        for cell in col
+            if cell isa AbstractString
+                # strip leading/trailing whitespace
+                s = strip(cell)
+                # try to match our Interval pattern anywhere in the string
+                if occursin(r"Interval\s+\d+:\d+:\d+", s)
+                    return interval_to_minutes(s)
+                end
+            end
+        end
     end
-    minutes = interval_to_minutes(col3[row])
-    return minutes
+
+    error("No “Interval …” entry found anywhere in metadata.csv")
 end
 
 function plotting_main()
