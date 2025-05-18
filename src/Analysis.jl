@@ -590,6 +590,14 @@ function analysis_main()
                 max_length = maximum(length, biomass_data)
                 padded = [vcat(l, fill(Missing, max_length - length(l))) for l in biomass_data]
                 df = DataFrame(padded, Symbol.(columns))
+                old = names(df)
+                new = [
+                let fn = basename(col)
+                    m = match(r"([^_]+)_.*$", fn)
+                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+                end for col in old
+                  ]
+                rename!(df, new)
                 write(BF_output_file, df)
             end
             for i in eachindex(non_bf_data)
@@ -598,6 +606,14 @@ function analysis_main()
                     max_length = maximum(length, channel_data)
                     padded = [vcat(l, fill(Missing, max_length - length(l))) for l in channel_data]
                     df = DataFrame(padded, Symbol.(channel_columns[i]))
+                    old = names(df)
+                    new = [
+                    let fn = basename(col)
+                        m = match(r"([^_]+)_.*$", fn)
+                        m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+                    end for col in old
+                      ]
+                    rename!(df, new)
                     write(other_output_files[i], df)
                 end
             end

@@ -1,81 +1,140 @@
-function ExtractMeta_main()
-    config = JSON.parsefile("experiment_config.json")
-    bulk_data = config["bulk_data"]
-    images_dirs = config["images_directory"]
-    output_dir = images_dirs[1] 
-    df = CSV.read(bulk_data, DataFrame, header=false; delim=',', ntasks=1)
-    metadata_rows = passmissing(occursin).([r"Delay after plate movement"], df.Column2)  
-    metadata_rows = [ismissing(x) ? false : x for x in metadata_rows]
-    metadata_rows2 = passmissing(occursin).([r"Read Height"], df.Column2)
-    metadata_rows2 = [ismissing(x) ? false : x for x in metadata_rows2]
-    metadata_row_indices = findall(metadata_rows)
-    metadata_row_indices2 = findall(metadata_rows2)
-    if length(metadata_row_indices) == 0
-        metadata_row_indices = metadata_row_indices2
+function extract_matrix(df, i, row_indices, valid_columns)
+    row_index = row_indices[i]
+    if i == lastindex(row_indices)
+        results_rows = passmissing(occursin).([r"Results"], df.Column1)
+        results_rows = [ismissing(x) ? false : x for x in results_rows]
+        results_row_indices = findall(results_rows)
+        if isempty(results_row_indices)
+            df_subset = df[row_index+2:end, :]
+        else
+            test1 = Array(df[row_index+1, :])
+            test2 = Array(df[row_index+2, :])
+            if "A1" in test1
+                idx = 1
+            else
+                idx = 2
+            end
+            df_subset = df[row_index+idx:results_row_indices[1]-1, :]
+        end
+    else
+        next_row_index = row_indices[i+1]
+        df_subset = df[row_index+2:next_row_index-1, :]
     end
-    metadata_df = df[1:metadata_row_indices[end], :]
-    CSV.write("$output_dir/metadata.csv", metadata_df, header=false)
+    delete!(rename!(df_subset, Symbol.(Vector(df_subset[1, :] ))), 1)
+    df_subset = df_subset[:, intersect(valid_columns, names(df_subset))]
+    for (nm, _) in pairs(eachcol(df_subset))
+        if ismissing(df_subset[1, nm])
+            DataFrames.select!(df_subset, Not(nm))
+        end
+    end
 
-    # Extract protocol 
-	steps = DataFrame(
-		step          = Int[],
-		action        = String[],
-		magnification = Union{String,Missing}[],
-		channel       = Union{String,Missing}[],
-	)
+    dropmissing!(df_subset)
+    return df_subset
+end
 
-	step_counter = 0
+function determine_filename(pattern)
+    if occursin(r"600", pattern)
+        return "OD600.csv"
+    elseif occursin(r"Lum", pattern)
+        return "lum.csv"
+    elseif occursin(r"485/20,528/20", pattern) || occursin(r"495", pattern) || occursin(r"485", pattern)
+        return "GFP.csv"
+    elseif occursin(r"620/40,680/30", pattern) || occursin(r"635", pattern) || occursin(r"620", pattern)
+        return "CY5.csv"
+    else
+        return nothing
+    end
+end
 
-	for i in 1:nrow(df)
-		c1 = df[i, 1]
-		c2 = df[i, 2]
+function ExtractMeta_main()
+    config      = JSON.parsefile("experiment_config.json")
+    bulk_data   = config["bulk_data"]
+    images_dirs = config["images_directory"]
+    output_dir  = images_dirs[1]
 
-		if !ismissing(c1) && c1 == "Set Temperature"
-			step_counter += 1
-			push!(steps, (step_counter, "Set Temperature", missing, missing))
+    df = CSV.read(bulk_data, DataFrame; header=false, delim=',', ntasks=1)
 
-		elseif !ismissing(c1) && c1 == "Read"
-			step_counter += 1
+    metadata_rows  = passmissing(occursin).([r"Delay after plate movement"], df.Column2)
+    metadata_rows  = [ismissing(x) ? false : x for x in metadata_rows]
+    metadata_rows2 = passmissing(occursin).([r"Read Height"],              df.Column2)
+    metadata_rows2 = [ismissing(x) ? false : x for x in metadata_rows2]
 
-			if !ismissing(c2) && occursin(r"^\d+x$", c2)
-				push!(steps, (step_counter, "Imaging Read", c2, missing))
+    idx1 = findall(metadata_rows)
+    idx2 = findall(metadata_rows2)
+    if isempty(idx1)
+        idx1 = idx2
+    end
 
-			elseif !ismissing(c2) && c2 == "Image Single Image"
-				objective_val = missing
-				if i + 2 <= nrow(df)
-					obj_cell = df[i+2, 2]
-					if !ismissing(obj_cell)
-						m = match(r"^Objective:\s*(.*)", obj_cell)
-						objective_val = m === nothing ? missing : m.captures[1]
-					end
-				end
-				push!(steps, (step_counter, "Imaging Read", objective_val, missing))
+    metadata_df = df[1:idx1[end], :]
+    CSV.write(joinpath(output_dir, "metadata.csv"), metadata_df; header=false)
 
-			else
-				push!(steps, (step_counter, "Read (non-imaging)", missing, missing))
-			end
+    steps = DataFrame(
+        step          = Int[],
+        action        = String[],
+        magnification = Union{String,Missing}[],
+        channel       = Union{String,Missing}[],
+    )
 
-		elseif !ismissing(c2) && occursin(r"^Channel \d+:\s*", c2)
-			channel_name = replace(c2, r"^Channel \d+:\s*" => "")
-			channel_name = replace(channel_name, r"\s+\d+$" => "")
+    step_counter = 0
+    for i in 1:nrow(df)
+        c1, c2 = df[i,1], df[i,2]
 
-			last_idx = findlast(==( "Imaging Read"), steps.action)
-			if last_idx === nothing
-				@warn "Channel found without preceding Imaging Read: $channel_name"
-				continue
-			end
+        if !ismissing(c1) && c1 == "Set Temperature"
+            step_counter += 1
+            push!(steps, (step_counter, "Set Temperature", missing, missing))
 
-			if ismissing(steps[last_idx, :channel])
-				steps[last_idx, :channel] = channel_name
-			else
-				push!(steps, (
-					steps[last_idx, :step],
-					"Imaging Read",
-					steps[last_idx, :magnification],
-					channel_name
-				))
-			end
-		end
-	end
-	CSV.write(joinpath(output_dir, "protocol.csv"), steps; writeheader=true)
+        elseif !ismissing(c1) && c1 == "Read"
+            step_counter += 1
+
+            if !ismissing(c2) && occursin(r"^\d+x$", c2)
+                push!(steps, (step_counter, "Imaging Read", c2, missing))
+
+            elseif !ismissing(c2) && c2 == "Image Single Image"
+                obj = missing
+                if i+2 ≤ nrow(df)
+                    m = match(r"^Objective:\s*(.*)", df[i+2,2])
+                    obj = m === nothing ? missing : m.captures[1]
+                end
+                push!(steps, (step_counter, "Imaging Read", obj, missing))
+
+            else
+                push!(steps, (step_counter, "Read (non-imaging)", missing, missing))
+            end
+
+        elseif !ismissing(c2) && occursin(r"^Channel \d+:\s*", c2)
+            ch = replace(replace(c2, r"^Channel \d+:\s*" => ""), r"\s+\d+$" => "")
+            last_idx = findlast(==( "Imaging Read"), steps.action)
+            if last_idx === nothing
+                @warn "Channel found without preceding Imaging Read: $ch"
+            else
+                if ismissing(steps[last_idx, :channel])
+                    steps[last_idx, :channel] = ch
+                else
+                    push!(steps, (
+                        steps[last_idx, :step],
+                        "Imaging Read",
+                        steps[last_idx, :magnification],
+                        ch
+                    ))
+                end
+            end
+        end
+    end
+    CSV.write(joinpath(output_dir, "protocol.csv"), steps; writeheader=true)
+
+    well_names  = [ string(c, r) for c in 'A':'H', r in 1:12 ]
+
+    rows = passmissing(occursin).(Ref(r"Read \d+|OD:600"), df.Column1)
+    rows        = [ismissing(x) ? false : x for x in rows]
+    row_indices = findall(rows)
+
+    reads = df[row_indices, :Column1]
+
+    for (i, read_str) in enumerate(reads)
+        mat      = extract_matrix(df, i, row_indices, well_names)
+        fname    = determine_filename(read_str)
+        if fname !== nothing
+            CSV.write(joinpath(output_dir, fname), mat; writeheader=true)
+        end
+    end
 end

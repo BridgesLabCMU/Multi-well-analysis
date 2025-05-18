@@ -13,11 +13,11 @@ using ImageView
 using StatsBase
 using DataFrames
 using CSV: write
+using CSV
 using CoordinateTransformations
 using AbstractFFTs
 using Compat
 using FFTW
-using CSV
 using PlotlyJS
 using ImageTracking
 using StaticArrays
