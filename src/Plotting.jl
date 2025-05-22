@@ -554,7 +554,7 @@ function plot_conditions_line(conditions, conditions_dict,
             conds_stats[key] = (μ, σ)
         end
 
-        f = Figure(size = (6*72, 3*72))
+        f = Figure()
         ax = CairoMakie.Axis(f[1,1];
             xlabel       = "Time (hr)",
             ylabel       = "Biofilm biomass (a.u.)",
@@ -636,7 +636,7 @@ function plot_conditions_jitter(conditions, conditions_dict,
             end
         end
 
-        fig = Figure(size=(3.5*72, 3*72))
+        fig = Figure()
         ax  = CairoMakie.Axis(fig[1, 1];
             xlabel        = "",
             ylabel        = "Peak biofilm biomass (a.u.)",
