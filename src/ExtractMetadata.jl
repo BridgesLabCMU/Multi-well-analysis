@@ -129,7 +129,7 @@ function ExtractMeta_main()
 
     well_names  = [ string(c, r) for c in 'A':'H', r in 1:12 ]
 
-    rows = passmissing(occursin).(Ref(r"Read \d+|OD:600"), df.Column1)
+    rows = passmissing(occursin).(Ref(r"Read \d+|OD:600|600"), df.Column1)
     rows        = [ismissing(x) ? false : x for x in rows]
     row_indices = findall(rows)
 
