@@ -22,8 +22,20 @@ function extract_matrix(df, i, row_indices, valid_columns)
             df_subset = df[row_index+idx:results_row_indices[1]-1, :]
         end
     else
+        test1 = Array(df[row_index+1, :])
+        test2 = Array(df[row_index+2, :])
+	    
+	    if length(unique(test1)) > 1 
+            if "A1" in test1
+                idx = 1
+	        else
+                idx = 2
+            end
+	    else
+            idx = 2
+        end
         next_row_index = row_indices[i+1]
-        df_subset = df[row_index+2:next_row_index-1, :]
+        df_subset = df[row_index+idx:next_row_index-1, :]
     end
     delete!(rename!(df_subset, Symbol.(Vector(df_subset[1, :] ))), 1)
     df_subset = df_subset[:, intersect(valid_columns, names(df_subset))]
