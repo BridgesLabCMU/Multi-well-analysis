@@ -492,6 +492,7 @@ function analysis_main()
                                     @views background = mean(channel_float[:,:,t][.!mask[:,:,t]])
                                     signal = @views !any(mask[:,:,t]) ? 0 : mean((channel_float[:,:,t] .- background).*mask[:,:,t])
                                     channel_biomass[t] = signal
+                                    #channel_registered[:,:,t] = channel_registered[:,:,t] .- background #(if you want to output background subtracted fluorescence images)
                                 end
                                 push!(non_bf_data[j], channel_biomass)
 				channel_filename = basename(target_base) 
@@ -594,7 +595,7 @@ function analysis_main()
                 new = [
                 let fn = basename(col)
                     m = match(r"([^_]+)_.*$", fn)
-                    m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+                    m !== nothing ? "$(m.captures[1])" : col
                 end for col in old
                   ]
                 rename!(df, new)
@@ -610,7 +611,7 @@ function analysis_main()
                     new = [
                     let fn = basename(col)
                         m = match(r"([^_]+)_.*$", fn)
-                        m !== nothing ? "Plate $(i): $(m.captures[1])" : col
+                        m !== nothing ? "$(m.captures[1])" : col
                     end for col in old
                       ]
                     rename!(df, new)
